@@ -1,0 +1,23 @@
+--- RELEASE NOTES - 04-Nov-2022 ---
+
+-- PRE-DEPLOYMENT STEPS --
+
+1. Take backup.
+
+-- DEPLOYMENT --
+
+1. For WINDOWS
+    a. sfdx force:source:convert --rootdir force-app --outputdir drlpackage
+    b. jar -cfM zippackage.zip drlpackage
+    c. rmdir /s drlpackage
+    d. sfdx force:mdapi:deploy --zipfile zippackage.zip --checkonly --testlevel RunSpecifiedTests --runtests 
+2. For MAC
+    a. sfdx force:source:convert --rootdir force-app --outputdir drlpackage
+    b. zip -r zippackage.zip drlpackage
+    c. rm -r drlpackage
+    d. sfdx force:mdapi:deploy --zipfile zippackage.zip --checkonly --testlevel RunSpecifiedTests --runtests 
+    e. rm -r zippackage.zip
+
+
+-- POST-DEPLOYMENT STEPS --
+
