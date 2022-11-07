@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>DRL_LeadTriggerHelper</members>DRL_LeadTriggerHelperTest
+        <members>DRL_LeadTriggerHelperTest</members>
+        <members>DRL_TestUtility</members>
+        <members>DRLUtil</members>
+        <members>LeadTriggerHandler</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -17,7 +21,7 @@
         <name>ApexTestSuite</name>
     </types>
     <types>
-        <members>*</members>
+        <members>LeadTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>
