@@ -5,6 +5,14 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>DRL_ExceptionLog__c.ClassName__c</members>
+        <members>DRL_ExceptionLog__c.ErrorMessage__c</members>
+        <members>DRL_ExceptionLog__c.ExceptionType__c</members>
+        <members>DRL_ExceptionLog__c.MethodName__c</members>
+        <members>DRL_ExceptionLog__c.StackTrace__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
         <members>*</members>
         <name>ApexComponent</name>
     </types>
