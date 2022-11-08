@@ -33,7 +33,6 @@
         <name>StaticResource</name>
     </types>
     <types>
-		<members>Lead.DRL_Email__c</members>
 		<members>Lead.DRL_Source_Campaign__c</members>
 		<members>Lead.DRL_UTM_Campaign__c</members>
 		<members>Lead.DRL_UTM_Source__c</members>
