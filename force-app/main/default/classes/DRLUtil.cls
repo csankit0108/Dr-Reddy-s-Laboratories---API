@@ -231,10 +231,10 @@ else{
     **/
     public static Map<String, Id> getRecordTypeDeveloperNameIdMap(String strObjectName) {
         Schema.DescribeSObjectResult objDescribeSObjectResult = Schema.getGlobalDescribe().get(strObjectName).getDescribe();
-        Map<String, RecordTypeInfo> map_RecordTypes = objDescribeSObjectResult.getRecordTypeInfosByDeveloperName();
+        Map<String, RecordTypeInfo> map_RecordTypeInfoByName = objDescribeSObjectResult.getRecordTypeInfosByDeveloperName();
         Map<String, Id> map_RecordTypeIdByDeveloperName = new Map<String, Id>();
-        for (RecordTypeInfo objRtInfo : map_RecordTypes.values()) {
-            map_RecordTypeIdByDeveloperName.put(objRtInfo.getDeveloperName(), objRtInfo.getRecordTypeId());
+        for (RecordTypeInfo objRecordTypeInfo : map_RecordTypeInfoByName.values()) {
+            map_RecordTypeIdByDeveloperName.put(objRecordTypeInfo.getDeveloperName(), objRecordTypeInfo.getRecordTypeId());
         }
         
         return map_RecordTypeIdByDeveloperName;

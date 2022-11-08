@@ -47,12 +47,12 @@ public class DRL_LeadTriggerHelperTest {
         insert objLead;
         Test.stopTest();
 
-        List<Lead> list_lead = [SELECT 
+        List<Lead> list_leads = [SELECT 
                                 Id,
                                 Email
                                 FROM Lead
                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
-        System.AssertEquals(2,list_lead.size(),'prospect not created!');
+        System.assert(!list_leads.isEmpty(), 'Prospect was not created!');
     }
 
     /**
@@ -78,12 +78,14 @@ public class DRL_LeadTriggerHelperTest {
         insert objNewLead;
         Test.stopTest();
 
-        List<Lead> list_lead = [SELECT 
+        List<Lead> list_leads = [SELECT 
                                 Id,
                                 Email
                                 FROM Lead
-                                WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') AND DRL_Email__c = 'testuser@yopmail.com' AND DRL_Prospect__c =: objLead.Id];
-        System.AssertEquals(2,list_lead.size(),'Lead failed to get linked to existing Prospect!');
+                                WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
+                                AND DRL_Email__c = 'testuser@yopmail.com'
+                                AND DRL_Prospect__c =: objLead.Id];
+        System.assert(!list_leads.isEmpty(), 'Lead failed to get linked to existing Prospect!');
     }
 
     /**
