@@ -60,13 +60,14 @@ public without sharing class DRL_LeadTriggerHelper {
                         Schema.DescribeFieldResult objDescribeFieldResult = objSObjectField.getDescribe();
                         String strFieldAPIName = objDescribeFieldResult.getName();
                         if (map_LeadFieldByName.containsKey(strFieldAPIName)) {
-                            objProspect.put(strFieldAPIName,map_LeadFieldByName.get(strFieldAPIName));
+                            objProspect.put(strFieldAPIName, map_LeadFieldByName.get(strFieldAPIName));
                         }
                     }
 
                     if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Prospect')) {
                         objProspect.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Prospect'); 
                     }
+
                     map_LeadByEmailToInsert.put(objProspect.Email, objProspect);
                     list_ChildLeads.add(objLead);
                 } else {
@@ -78,6 +79,7 @@ public without sharing class DRL_LeadTriggerHelper {
                     if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                         objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
                     }
+
                     list_LeadsToUpdate.add(objLeadToUpdate);
                 }
             }
@@ -92,6 +94,7 @@ public without sharing class DRL_LeadTriggerHelper {
                 if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                     objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
                 }
+
                 list_LeadsToUpdate.add(objLeadToUpdate);
             }
 

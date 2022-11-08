@@ -8,7 +8,8 @@
 * ======================================================================================================
 *   04-11-2022      |  deeksha.suvarna@absyz.com    |  1.0          |  Initial Version
 *
-*******************************************************************************************************/@isTest
+*******************************************************************************************************/
+@isTest
 public class DRL_LeadTriggerHelperTest {
     public static Boolean blnThrowException = false;
     /**
@@ -16,7 +17,7 @@ public class DRL_LeadTriggerHelperTest {
     * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
     **/
     @TestSetup
-    static void createData(){
+    static void createData() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         Lead objLead = new DRL_TestUtility.LeadBuilder()
             .setFirstName('Test')
@@ -84,7 +85,7 @@ public class DRL_LeadTriggerHelperTest {
                                 FROM Lead
                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
                                 AND DRL_Email__c = 'testuser@yopmail.com'
-                                AND DRL_Prospect__c =: objLead.Id];
+                                AND DRL_Prospect__c = :objLead.Id];
         System.assert(!list_leads.isEmpty(), 'Lead failed to get linked to existing Prospect!');
     }
 
