@@ -12,9 +12,13 @@
         <members>DRL_ExceptionLog__c.StackTrace__c</members>
         <name>CustomField</name>
     </types>
+     <types>
+        <members>DRL_ExceptionLog__c</members>
+        <name>CustomObject</name>
+    </types>
     <types>
         <members>*</members>
-        <name>ApexComponent</name>
+        <name>ApexComponent</name> 
     </types>
     <types>
         <members>*</members>
