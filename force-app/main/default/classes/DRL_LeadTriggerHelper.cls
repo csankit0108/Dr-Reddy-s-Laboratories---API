@@ -24,16 +24,19 @@ public without sharing class DRL_LeadTriggerHelper {
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
         //Map of Lead Field Set by their Name
-        Map<String, Schema.FieldSet> map_LeadFieldSet = objDescribeSObjectResult.fieldSets.getMap();
+        Map<String, Schema.FieldSet> map_LeadFieldSetByName = objDescribeSObjectResult.fieldSets.getMap();
         //List of Lead Field Set Members
-        List<FieldSetMember> list_LeadFieldSetMember = map_LeadFieldSet.get('DRL_ProspectFields').getFields();
+        List<FieldSetMember> list_LeadFieldSetMembers = map_LeadFieldSetByName.containsKey('DRL_ProspectFields')
+                                                            ? map_LeadFieldSetByName.get('DRL_ProspectFields').getFields()
+                                                            : new List<FieldSetMember>();
         //List of Fields in the Field Set
         List<Schema.SObjectField> list_LeadObjectFields = new List<Schema.SObjectField>();
         //List of Incoming Lead with no existing Prospect
         List<Lead> list_ChildLeads = new List<Lead>();
         //List of Lead to be updated
         List<Lead> list_LeadsToUpdate = new List<Lead>();
-        for (FieldSetMember objFieldSetMember : list_LeadFieldSetMember) {
+
+        for (FieldSetMember objFieldSetMember : list_LeadFieldSetMembers) {
             list_LeadObjectFields.add(objFieldSetMember.getSObjectField()); 
         }
 
@@ -127,7 +130,6 @@ public without sharing class DRL_LeadTriggerHelper {
             }
 
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
-
         } catch(Exception objException) {
             DRLUtil.logException(
                 'DRL_LeadTriggerHelper',
