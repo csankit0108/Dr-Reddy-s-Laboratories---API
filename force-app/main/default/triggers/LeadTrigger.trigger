@@ -6,7 +6,7 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
         new LeadTriggerHandler().run();
     }
     if(trigger.isInsert && trigger.isBefore){
-         for(Lead ld : trigger.new){
+        for(Lead ld : trigger.new){
               if(ld.Status == 'Open'){
                 ld.Open_Date__c = System.today();
                 
@@ -39,6 +39,8 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
               
         
          } 
+        //DRL 48 & 49
+        DRL_LeadTriggerHelper.populateSourceCampaign(trigger.new);
     }
     
      if(trigger.isUpdate && trigger.isBefore){
