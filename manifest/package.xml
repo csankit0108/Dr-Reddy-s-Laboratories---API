@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>DRLUtil</members>
+		<members>DRL_LeadTriggerHelper</members>
+		<members>DRL_LeadTriggerHelperTest</members>
+		<members>DRL_TestUtility</members>
+		<members>LeadTriggerHandler</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
 		<members>LeadTrigger</members>
 		<name>ApexTrigger</name>
 	</types>
@@ -32,11 +40,11 @@
 		<name>ListView</name>
 	</types>
 	<types>
-		<members>Lead.DRL_Lead_Prospect_Duplication_Rule</members>
+		<members>Lead.DRL_LeadProspectDuplicationRule</members>
 		<name>DuplicateRule</name>
 	</types>
 	<types>
-		<members>Lead.DRL_Lead_Prospect_Email_Matching_Rule</members>
+		<members>Lead.DRL_LeadProspectEmailMatchingRule</members>
 		<name>MatchingRule</name>
 	</types>
 	<types>
