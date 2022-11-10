@@ -13,17 +13,35 @@
 		<name>ApexTrigger</name>
 	</types>
 	<types>
-		<members>DRL_UTMSource__mdt</members>
-		<name>CustomObject</name>
-	</types>
-	<types>
+		<members>DRL_ExceptionLog__c.ClassName__c</members>
+		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
+		<members>DRL_ExceptionLog__c.ExceptionType__c</members>
+		<members>DRL_ExceptionLog__c.MethodName__c</members>
+		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
 		<members>DRL_UTMSource__mdt.Name__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
+		<members>DRL_ExceptionLog__c</members>
+		<members>DRL_UTMSource__mdt</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
 		<members>Lead.DRL_ProspectFields</members>
 		<name>FieldSet</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
+		<name>Layout</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c.All</members>
+		<name>ListView</name>
+	</types>
+	<types>
+		<members>Admin</members>
+		<name>Profile</name>
 	</types>
 	<version>55.0</version>
 </Package>
