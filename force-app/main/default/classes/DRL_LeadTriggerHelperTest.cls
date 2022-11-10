@@ -4,10 +4,10 @@
 * @ Purpose         :   Test class for DRL_LeadTriggerHelper
 * @ Author          :   Deeksha Suvarna
 *
-*   Date            |  Developer Name               |  Version      |  Changes
+*   Date            |  Developer Name                       |  Version      |  Changes
 * ======================================================================================================
-*   04-11-2022      |  deeksha.suvarna@absyz.com    |  1.0          |  Initial Version
-*
+*   04-11-2022      |  deeksha.suvarna@absyz.com            |  1.0          |  Initial Version
+*   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com	|  2.0          |  Campaign Record Creation
 *******************************************************************************************************/
 @isTest
 public class DRL_LeadTriggerHelperTest {
@@ -18,14 +18,30 @@ public class DRL_LeadTriggerHelperTest {
     **/
     @TestSetup
     static void createData() {
+
+        /**
+    	* @ author       :  Mahalakshmi S
+    	* @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper', for Story DRL-48
+	    **/
+        Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
+            .setCampaignName('Test Campaign')
+            .setAllowMassEmail('No')
+            .setDescription('Test Campaign Description')
+            .setCampaignCode('Campaign 1005')
+            .setIsActive(true)
+            .createCampaign();
+        insert objCampaign;
+
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         Lead objLead = new DRL_TestUtility.LeadBuilder()
-            .setFirstName('Test')
-            .setLastName('User')
-            .setEmail('testuser@yopmail.com')
-            .setCompany('Absyz')
-            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-            .createLead();
+        .setFirstName('Test')
+        .setLastName('User')
+        .setEmail('testuser@yopmail.com')
+        .setCompany('Absyz')
+        .setUtmCampaign('Campaign 1005')
+        .setUtmSorce('Test MDT 2')
+        .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+        .createLead();
         insert objLead;
     }
 

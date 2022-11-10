@@ -11,6 +11,10 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         this.oldMap = (Map<Id, Lead>)Trigger.oldMap;
     }
 
+    public override void beforeInsert() {
+        DRL_LeadTriggerHelper.processBeforeInsert(this.newList);
+    }
+
     public override void beforeUpdate(){
         List<Lead> leadList = new List<Lead>();
         for(Lead ld : newList){

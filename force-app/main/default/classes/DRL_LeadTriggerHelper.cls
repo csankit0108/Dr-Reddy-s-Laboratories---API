@@ -7,9 +7,10 @@
                         2) If Prospect does not exist - Create prospect and link it to child.
 * @ Test Class Name :   
 *
-*   Date            |  Developer Name                |  Version    |    Changes    
+*   Date            |  Developer Name                       |  Version      |    Changes    
 * ======================================================================================================        
-*  02-11-2022       |  deeksha.suvarna@absyz.com     |  1.0        |    Initial Version   
+*  02-11-2022       |  deeksha.suvarna@absyz.com            |  1.0          |    Initial Version   
+*  07-11-2022       |  mahalakshmi.sadhanantham@absyz.com	|  2.0          |    Process Before Trigger          
 *******************************************************************************************************/
 public without sharing class DRL_LeadTriggerHelper {
     public static Boolean blnSkipTrigger = false;
@@ -139,4 +140,71 @@ public without sharing class DRL_LeadTriggerHelper {
             );
         }
     } 
+
+    /*
+     * DRL - 48
+     * Check if the utm Source Campaign code on incoming lead record is matching with Campaign code on Campaign records.
+     * If the match exist then update the Source Campaign field on the (child) lead record with the matched Campaign record.
+	 *
+     * DRL - 49
+     * Check if the utm Source code on incoming lead record is matching with the custom metadata UTM Source records with parameter Lable.
+     * If the match exist then the matched record Lead Source value to be updated on the Lead record Lead Source field.
+	 */
+    public static void processBeforeInsert(List<Lead> list_leads){
+        //Attributes for DRL-48
+        set<String> set_CampaignCodes = new set<String>();
+        map<String,Id> map_CampaignCodeWithCampaignID = new map<String,Id>();
+        //Attributes for DRL-49
+        set<String> set_SourceCodes = new set<String>();
+        map<String,String> map_UtmSourcelablewithLeadSource = new map<String,String>();
+        
+        //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
+        for(Lead objLead : list_leads){
+            if(objLead.DRL_UTM_Campaign__c!=null){
+               set_CampaignCodes.add(objLead.DRL_UTM_Campaign__c);
+            }
+            
+            //DRL-49 Fetch source codes from Lead records in a SET(set_SourceCodes)
+            if(objLead.DRL_UTM_Source__c!=null ){
+                set_SourceCodes.add(objLead.DRL_UTM_Source__c);
+            }
+        }
+        
+        //Fetch campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
+        for(Campaign objCampaign : [SELECT 
+                                    Id, 
+                                    Name,
+                                    DRL_CampaignCode__c 
+                                    FROM Campaign 
+                                    WHERE DRL_CampaignCode__c IN: set_CampaignCodes 
+                                    AND IsActive = true]){
+                                        if(!map_CampaignCodeWithCampaignID.containsKey(objCampaign.DRL_CampaignCode__c)){
+                                            map_CampaignCodeWithCampaignID.put(objCampaign.DRL_CampaignCode__c,objCampaign.Id);
+                                        }
+                                    }
+        //DRL-49 Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
+        for(DRL_UTMSource__mdt mdtUTMsource : [SELECT
+                                               Id,
+                                               label,
+                                               LeadSource__c 
+                                               FROM DRL_UTMSource__mdt 
+                                               WHERE label IN: set_SourceCodes ]){
+                                                   if(!map_UtmSourcelablewithLeadSource.containsKey(mdtUTMsource.Label)){
+                                                       map_UtmSourcelablewithLeadSource.put(mdtUTMsource.Label,mdtUTMsource.LeadSource__c);
+
+                                                   }
+                                               }
+        
+        //Assign the fetched campaign records to the Source campaign field on the Lead records
+        for(Lead objLead : list_leads){
+            if(map_CampaignCodeWithCampaignID.containsKey(objLead.DRL_UTM_Campaign__c)){
+                objLead.DRL_Source_Campaign__c = map_CampaignCodeWithCampaignID.get(objLead.DRL_UTM_Campaign__c);
+            }
+            
+            //DRL-49 Assign the fetched Lead source to the Lead record LeadSource field
+            if(map_UtmSourcelablewithLeadSource.containsKey(objLead.DRL_UTM_Source__c)){
+                objLead.LeadSource = map_UtmSourcelablewithLeadSource.get(objLead.DRL_UTM_Source__c);
+            }
+        }
+    }  
 }
