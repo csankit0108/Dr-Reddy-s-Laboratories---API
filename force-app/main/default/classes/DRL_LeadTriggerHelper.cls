@@ -128,7 +128,33 @@ public without sharing class DRL_LeadTriggerHelper {
                 List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate,false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
-
+            /*
+              * DRL-50
+              *When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
+              *For new Campaign member record, populate
+              *Campaign: Source campaign value on the child lead record.
+              *Lead: Prospect parent record of the child lead record.
+            */
+            list_LeadsToUpdate = [SELECT 
+                                  Id,
+                                  RecordTypeId,
+                                  DRL_Prospect__c,
+                                  DRL_Source_Campaign__c 
+                                  FROM Lead 
+                                  WHERE Id 
+                                  IN :list_LeadsToUpdate];
+                for ( Lead objLead : list_LeadsToUpdate) {
+                    if ( 
+                        objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                        objLead.DRL_Source_Campaign__c!= null && objLead.DRL_Prospect__c != null
+                    ) {
+                        CampaignMember objCampaignMember = new CampaignMember();
+                        objCampaignMember.CampaignId = objLead.DRL_Source_Campaign__c;
+                        objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                        list_CampaignMembers.add(objCampaignMember);
+                    }
+                }
+                List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
         } catch(Exception objException) {
             DRLUtil.logException(
