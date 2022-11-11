@@ -41,6 +41,7 @@
 	</types>
 	<types>
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
+		<members>Lead-Prospect</members>
 		<name>Layout</name>
 	</types>
 	<types>
