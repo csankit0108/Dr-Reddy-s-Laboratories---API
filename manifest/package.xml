@@ -56,6 +56,14 @@
 		<name>MatchingRule</name>
 	</types>
 	<types>
+		<members>DRL_ContactRoleRecordCreation</members>
+		<name>Flow</name>
+	</types>
+	<types>
+		<members>Opportunity.DRL_ContactChangeValidation</members>
+		<name>ValidationRule</name>
+	</types>
+	<types>
 		<members>Admin</members>
 		<name>Profile</name>
 	</types>
