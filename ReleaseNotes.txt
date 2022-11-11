@@ -20,4 +20,5 @@
 
 
 -- POST-DEPLOYMENT STEPS --
+1. Activate the Opportunity Contact Role Creation Flow.
 
