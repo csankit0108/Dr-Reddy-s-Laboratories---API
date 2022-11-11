@@ -5,7 +5,7 @@
 * @ Author          :   Deeksha Suvarna
 * @ Usage           :   1) If Prospect exist - link it to child lead.
                         2) If Prospect does not exist - Create prospect and link it to child.
-* @ Test Class Name :   
+* @ Test Class Name :   DRL_LeadTriggerHelperTest
 *
 *   Date            |  Developer Name                |  Version    |    Changes    
 * ======================================================================================================        
@@ -129,6 +129,38 @@ public without sharing class DRL_LeadTriggerHelper {
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
+            /*
+              * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
+            */
+            list_LeadsToUpdate = [SELECT 
+                                  Id,
+                                  RecordTypeId,
+                                  DRL_Prospect__c,
+                                  DRL_Source_Campaign__c 
+                                  FROM Lead 
+                                  WHERE Id IN :list_LeadsToUpdate];
+            for (Lead objLead : list_LeadsToUpdate) {
+                if ( 
+                    objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                    objLead.DRL_Source_Campaign__c != null &&
+                    objLead.DRL_Prospect__c != null
+                ) {
+                    CampaignMember objCampaignMember = new CampaignMember();
+                    objCampaignMember.CampaignId = objLead.DRL_Source_Campaign__c;
+                    objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                    list_CampaignMembers.add(objCampaignMember);
+                }
+            }
+
+            if (!list_CampaignMembers.isEmpty) {
+                List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
+            }
+
+            if (!list_ConsolidatedDMLErrors.isEmpty) {
+                DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterInsert', list_ConsolidatedDMLErrors);
+            }
+            
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
         } catch(Exception objException) {
             DRLUtil.logException(
