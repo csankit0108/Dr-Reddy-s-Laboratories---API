@@ -10,7 +10,7 @@
 *   Date            |  Developer Name                       |  Version      |    Changes    
 * ======================================================================================================        
 *  02-11-2022       |  deeksha.suvarna@absyz.com            |  1.0          |    Initial Version   
-*  07-11-2022       |  mahalakshmi.sadhanantham@absyz.com	|  2.0          |    Process Before Trigger          
+*  07-11-2022       |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |    Process Before Trigger          
 *******************************************************************************************************/
 public without sharing class DRL_LeadTriggerHelper {
     public static Boolean blnSkipTrigger = false;
@@ -129,7 +129,7 @@ public without sharing class DRL_LeadTriggerHelper {
                 List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate,false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
-
+            	
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
         } catch(Exception objException) {
             DRLUtil.logException(
@@ -141,70 +141,139 @@ public without sharing class DRL_LeadTriggerHelper {
         }
     } 
 
-    /*
-     * DRL - 48
-     * Check if the utm Source Campaign code on incoming lead record is matching with Campaign code on Campaign records.
-     * If the match exist then update the Source Campaign field on the (child) lead record with the matched Campaign record.
-	 *
-     * DRL - 49
-     * Check if the utm Source code on incoming lead record is matching with the custom metadata UTM Source records with parameter Lable.
-     * If the match exist then the matched record Lead Source value to be updated on the Lead record Lead Source field.
-	 */
-    public static void processBeforeInsert(List<Lead> list_leads){
-        //Attributes for DRL-48
-        set<String> set_CampaignCodes = new set<String>();
-        map<String,Id> map_CampaignCodeWithCampaignID = new map<String,Id>();
-        //Attributes for DRL-49
-        set<String> set_SourceCodes = new set<String>();
-        map<String,String> map_UtmSourcelablewithLeadSource = new map<String,String>();
+    /**
+    * @ author       :  Mahalakshmi Sadhananthan
+    * @ description  :  1. This method is used to Check if the utm Source Campaign code on incoming lead record is matching with Campaign code on Campaign records.
+    *                   If the match exist then update the Source Campaign field on the (child) lead record with the matched Campaign record.
+	*                   2. Check if the utm Source code on incoming lead record is matching with the custom metadata UTM Source records with parameter Lable.
+    *                   If the match exist then the matched record Lead Source value to be updated on the Lead record Lead Source field.
+    * @ params       :  set_CampaignCodes - To fetch campaign codes from Lead records in a SET
+    *                   map_CampaignCodeWithCampaignID - Fetch campaign records which are in the set_CampaignCodes in a MAP
+    *                   set_SourceCodes - To fetch source codes from Lead records in a SET
+    *                   map_UtmSourcelablewithLeadSource - Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP
+    * @ return       :  
+    **/
+
+    public static void processBeforeInsert(List<Lead> list_leads) {
+        //Set of Campaign Codes 
+        Set<String> set_CampaignCodes = new Set<String>();
+        //Map of Campaign code with Campaign ID 
+        Map<String, Id> map_CampaignIDByCampaignCode = new Map<String, Id>();
+        //Set of Source Codes
+        Set<String> set_SourceCodes = new Set<String>();
+        //Map of UTM source lable with Lead source
+        Map<String, String> map_LeadSourceByUtmSource = new Map<String, String>();
         
         //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
-        for(Lead objLead : list_leads){
-            if(objLead.DRL_UTM_Campaign__c!=null){
-               set_CampaignCodes.add(objLead.DRL_UTM_Campaign__c);
+        for (Lead objLead : list_leads) {
+            if (String.isNotBlank(objLead.DRL_UTMCampaign__c)) {
+               set_CampaignCodes.add(objLead.DRL_UTMCampaign__c);
             }
             
-            //DRL-49 Fetch source codes from Lead records in a SET(set_SourceCodes)
-            if(objLead.DRL_UTM_Source__c!=null ){
-                set_SourceCodes.add(objLead.DRL_UTM_Source__c);
+            //Fetch source codes from Lead records in a SET(set_SourceCodes)
+            if (String.isNotBlank(objLead.DRL_UTMSource__c) ) {
+                set_SourceCodes.add(objLead.DRL_UTMSource__c);
             }
         }
         
         //Fetch campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
-        for(Campaign objCampaign : [SELECT 
+        for (Campaign objCampaign : [SELECT 
                                     Id, 
                                     Name,
                                     DRL_CampaignCode__c 
                                     FROM Campaign 
-                                    WHERE DRL_CampaignCode__c IN: set_CampaignCodes 
-                                    AND IsActive = true]){
-                                        if(!map_CampaignCodeWithCampaignID.containsKey(objCampaign.DRL_CampaignCode__c)){
-                                            map_CampaignCodeWithCampaignID.put(objCampaign.DRL_CampaignCode__c,objCampaign.Id);
+                                    WHERE DRL_CampaignCode__c IN :set_CampaignCodes 
+                                    AND IsActive = true]) {
+                                        if(!map_CampaignIDByCampaignCode.containsKey(objCampaign.DRL_CampaignCode__c)) {
+                                            map_CampaignIDByCampaignCode.put(objCampaign.DRL_CampaignCode__c, objCampaign.Id);
                                         }
                                     }
-        //DRL-49 Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
-        for(DRL_UTMSource__mdt mdtUTMsource : [SELECT
-                                               Id,
-                                               label,
-                                               LeadSource__c 
-                                               FROM DRL_UTMSource__mdt 
-                                               WHERE label IN: set_SourceCodes ]){
-                                                   if(!map_UtmSourcelablewithLeadSource.containsKey(mdtUTMsource.Label)){
-                                                       map_UtmSourcelablewithLeadSource.put(mdtUTMsource.Label,mdtUTMsource.LeadSource__c);
-
-                                                   }
-                                               }
+        
+        //Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
+        List<DRL_UTMSource__mdt> list_utmSourceMetadata = DRL_UTMSource__mdt.getAll().values();
+        
+        for (DRL_UTMSource__mdt mdtUTMsource : list_utmSourceMetadata) {
+            if (!map_LeadSourceByUtmSource.containsKey(mdtUTMsource.Label) && set_SourceCodes.contains(mdtUTMsource.Label)) {
+                map_LeadSourceByUtmSource.put(mdtUTMsource.Label, mdtUTMsource.LeadSource__c);
+            }
+        }
         
         //Assign the fetched campaign records to the Source campaign field on the Lead records
-        for(Lead objLead : list_leads){
-            if(map_CampaignCodeWithCampaignID.containsKey(objLead.DRL_UTM_Campaign__c)){
-                objLead.DRL_Source_Campaign__c = map_CampaignCodeWithCampaignID.get(objLead.DRL_UTM_Campaign__c);
+        for (Lead objLead : list_leads) {
+            if (map_CampaignIDByCampaignCode.containsKey(objLead.DRL_UTMCampaign__c)) {
+                objLead.DRL_SourceCampaign__c = map_CampaignIDByCampaignCode.get(objLead.DRL_UTMCampaign__c);
             }
             
             //DRL-49 Assign the fetched Lead source to the Lead record LeadSource field
-            if(map_UtmSourcelablewithLeadSource.containsKey(objLead.DRL_UTM_Source__c)){
-                objLead.LeadSource = map_UtmSourcelablewithLeadSource.get(objLead.DRL_UTM_Source__c);
+            if (map_LeadSourceByUtmSource.containsKey(objLead.DRL_UTMSource__c)) {
+                objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
             }
         }
-    }  
+    } 
+    
+    public static void processAfterUpdate(Set<String> set_oldProspectStatus,Set<String> set_newLeadStatus,Set<Id> set_prospectId){
+        Set<String>  set_OldParentStatus = new Set<String>();
+        Map<String,Double> map_getOldWeightage = new Map<String,Double>();
+        Map<String,Double> Map_getNewWeightage = new Map<String,Double>();
+        Double oldWeightage;
+        Double newWeightage;
+        String strnewParentStatus;
+        List<Lead>  list_updateParentLead = new List<Lead>();
+        for(Lead objparentLead : [select Id,
+                               Status 
+                               from Lead 
+                               where Id In: set_prospectId]){
+            set_OldParentStatus.add(objparentLead.Status);
+                                   
+            
+        }
+        
+        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+                                                                   Weightage__c,
+                                                                   Prospect_Status__c
+                                                                   from Prospect_Lead_Status_Mapping__mdt
+                                                                   where Lead_Status__c In:set_OldParentStatus]){
+                                                                       map_getOldWeightage.put(objprospectLeadStatus.Lead_Status__c,objprospectLeadStatus.Weightage__c);
+                                                                       oldWeightage = objprospectLeadStatus.Weightage__c;
+                                                                       System.debug('old parent status' + oldWeightage );
+                                                                   }
+                                                                 
+        
+        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+                                                                   Weightage__c,
+                                                                   Prospect_Status__c 
+                                                                   from Prospect_Lead_Status_Mapping__mdt
+                                                                   where Lead_Status__c In: set_newLeadStatus 
+                                                                   ]){
+                                                                      strnewParentStatus = objprospectLeadStatus.Prospect_Status__c;
+                                                                      newWeightage = objprospectLeadStatus.Weightage__c;
+                                                                  }
+        
+        
+        for(Lead objparentLead : [select Id,
+                               Status
+                               from Lead
+                               where Id In: set_prospectId]){
+            if(newWeightage> oldWeightage  && strnewParentStatus != objparentLead.Status)
+            {
+                
+                objparentLead.Status = strnewParentStatus;
+                list_updateParentLead.add(objparentLead);
+            }
+            if(list_updateParentLead.size() > 0){
+                DRL_LeadTriggerHelper.blnSkipTrigger = true;
+                update list_updateParentLead;
+                DRL_LeadTriggerHelper.blnSkipTrigger = false;
+            }
+        }
+    }
+        
+    
+        
+        
+        
+        
+        
+        
+        
 }
