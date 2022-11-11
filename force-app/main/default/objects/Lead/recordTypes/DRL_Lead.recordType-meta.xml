@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DRL_Lead</fullName>
+    <active>true</active>
+    <businessProcess>Lead Process</businessProcess>
+    <label>Lead</label>
+    <picklistValues>
+        <picklist>Industry</picklist>
+        <values>
+            <fullName>Generics</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Innovator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Others</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>3rd party platform</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>API Website</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Corporate Website</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facebook Post</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LinkedIn Ads</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LinkedIn Post</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Live Events</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mailer - General</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mailer - Whitepaper</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Others</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Panorama</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PharmaCompass</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scan to Salesforce</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Webinar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - Article</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - Contact Us</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - News</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - Product Page</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website - Whitepaper</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>api%40drreddys%2Ecom</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Name</picklist>
+        <values>
+            <fullName>Dr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mrs%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ms%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prof%2E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Rating</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Inactive</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>
