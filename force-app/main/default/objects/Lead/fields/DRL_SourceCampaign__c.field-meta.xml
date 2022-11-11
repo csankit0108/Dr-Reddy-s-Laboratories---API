@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>DRL_Source_Campaign__c</fullName>
+    <fullName>DRL_SourceCampaign__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>DRL -  Lookup to source campaign which brought the customer</description>
+    <description>DRL -  Lookup to source campaign which influenced the customer</description>
     <externalId>false</externalId>
     <label>Source Campaign</label>
     <referenceTo>Campaign</referenceTo>

@@ -33,10 +33,14 @@
         <name>StaticResource</name>
     </types>
     <types>
-		<members>Lead.DRL_Source_Campaign__c</members>
-		<members>Lead.DRL_UTM_Campaign__c</members>
-		<members>Lead.DRL_UTM_Source__c</members>
+		<members>Lead.DRL_SourceCampaign__c</members>
+		<members>Lead.DRL_UTMCampaign__c</members>
+		<members>Lead.DRL_UTMSource__c</members>
 		<name>CustomField</name>
+	</types>
+	<types>
+		<members>Admin</members>
+		<name>Profile</name>
 	</types>
     <version>55.0</version>
 </Package>
