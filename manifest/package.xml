@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>DRLUtil</members>
+		<members>DRL_LeadTriggerHelper</members>
+		<members>DRL_LeadTriggerHelperTest</members>
+		<members>DRL_TestUtility</members>
+		<members>LeadTriggerHandler</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>LeadTrigger</members>
+		<name>ApexTrigger</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c.ClassName__c</members>
+		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
+		<members>DRL_ExceptionLog__c.ExceptionType__c</members>
+		<members>DRL_ExceptionLog__c.MethodName__c</members>
+		<members>DRL_ExceptionLog__c.StackTrace__c</members>
+		<members>DRL_UTMSource__mdt.LeadSource__c</members>
 		<members>Lead.DRL_Prospect__c</members>
 		<name>CustomField</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c</members>
+		<members>DRL_UTMSource__mdt</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>Lead.DRL_ProspectFields</members>
+		<name>FieldSet</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
+		<name>Layout</name>
+	</types>
+	<types>
+		<members>DRL_ExceptionLog__c.All</members>
+		<name>ListView</name>
 	</types>
 	<types>
 		<members>Admin</members>

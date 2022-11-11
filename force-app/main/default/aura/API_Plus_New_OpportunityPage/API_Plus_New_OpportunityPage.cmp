@@ -1,0 +1,568 @@
+<aura:component controller="API_Plus_New_OpportunityPage" implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:isUrlAddressable,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:lightningQuickActionWithOutHeader,lightning:actionOverride" access="global" >
+    <aura:attribute name="recordTypes" type="List" default="[{'label':'API','value':'API'},{'label':'API Plus','value':'API Plus'}]"/>
+    <aura:attribute name="recordTypeName" type="String"/>
+    <aura:attribute name="stage" type="String" default="New Opportunity"/>
+    <aura:attribute name="isSelected" type="integer" default="0" />
+    <aura:attribute name="message" type="string"/>
+    <aura:attribute name="recTypeSelected" type="Integer" default="0" />
+    <aura:attribute name="isRecdType" type="Integer" default="1" />
+    <aura:attribute name="isAPI" type="Integer" default="0" />
+    <aura:attribute name="isAPIPLUS" type="Integer" default="0" />
+    <aura:attribute name="SaveNew" type="Integer" default="0" />
+    <aura:attribute name="reloadForm" type="boolean" default="true" />
+    <aura:attribute name="isAPIPlusSave" type="boolean" default="false" />
+    <aura:attribute name="recTypeID" type="String"/>
+    <aura:attribute name="recordId" type="String" />   
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:attribute name="yearList" type="List" default="[]" />
+    <aura:attribute name="tSheetDetails" type="Object"/> 
+    <aura:attribute name="apiPlusOpty" type="Opportunity"  default="{'sobjectType':'Opportunity','AccountId':'','Customer_Type__c':'','Contact__c':'','API_Plus_Territory__c':'','Remarks__c':'','Name':'','CloseDate':'','CurrencyIsoCode':''}"/>
+   <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> -->
+   
+    <!-- by SK-->
+    <aura:attribute name="isModalOpen" type="Boolean" default="true"/>
+        
+    <hr/>
+    
+    <aura:html tag="style">
+        .slds-modal__container{ 
+        height : auto; width: 80%; max-width: 300vh;
+        padding-left:200px;
+        padding-right:200px;
+        
+        
+        
+        <!-- 
+   overflow: scroll;
+        padding-left:200px;
+        padding-right:200px;-->
+        }
+        .modal-body{ 
+        height : 400vh !important; 
+        max-height: 400vh !important; 
+        <!--overflow-y: scroll;-->
+        } 
+        .slds-modal__footer{ 
+        display: inline !important; 
+        }
+        
+        .header {
+        display: inline-block; 
+        width: 100%;
+        }
+        
+    </aura:html>
+    
+    <!--<lightning:button variant="Neutral" 
+                      label="Awarded Quantity" 
+                      onclick="{!c.showSelectedproducts}" 
+                      class="slds-m-left_x-small">
+       </lightning:button>
+        <a class="slds-m-left_x-small" href="javascript:void(0)" onclick="{!c.showSelectedproducts}">
+            Awarded Quantity</a>-->
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="width:100% ! important;">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+                    
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{!c.closePopup}"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <aura:if isTrue="{!v.recTypeSelected==0}">
+                        <h2 class="slds-text-heading_medium slds-hyphenate"><b>New Opportunity</b></h2>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPI>0)}">
+                        <h2 class="slds-text-heading_medium slds-hyphenate"><b>New Opportunity: API</b></h2>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPIPLUS>0)}">
+                        <h2 class="slds-text-heading_medium slds-hyphenate"><b>New Opportunity: API Plus</b></h2>
+                    </aura:if>
+                    
+                </header>
+                <!--Modal/Popup Box Body Starts here-->
+                <!--div class="slds-scrollable" style="height: 100rem; width: 46rem" height: 9.5rem;-->
+                <!--<div class="slds-scrollable_y" style="height:100px;max-height:400px">
+                        -->
+                <body>
+                    <div class="slds-scrollable_y" style="max-height:400px;">
+                        <div class="slds-modal__header" style="color:black">
+                            
+                            <aura:if isTrue="{!v.recTypeSelected==0}">
+                                
+                                <!--
+        <div class="slds-align_absolute-center slds-text-heading_small" style="height:5rem">New Opportunity</div>
+        <div class="slds-border_bottom"></div>-->
+                                <!-- <h3 class="slds-align_absolute-left">Select Record Type</h3> -->
+                                <br/>
+                                
+                                <fieldset class="slds-form-element" >                                                                        
+                                    <div class="slds-size--4-of-6 slds-large-size--4-of-6">
+                                        <div class="slds-align--absolute-center"> <legend class="slds-form-element__legend slds-form-element__label frequired" style="padding:left:100px;align:center;">
+                                            <label class="slds-form-element__label" for="form-element-03" style="text-align:center;">
+                                              <abbr class="slds-required" title="required">* </abbr>Select a record type</label>
+                                            </legend></div>                            
+                                    </div>
+                                    
+                                    <div class="slds-form-element__control">
+                                        <span class="slds-radio" >
+                                            <input type="radio" id="radio-43" aura:id="radio1" value="API" name="API" checked="" />
+                                            <label class="slds-radio__label" for="radio-43">
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label" style="color:black;">API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br/>
+                                                <span class="slds-radio__label" style="color:black;padding-left:170px;">API Business Process</span><br/>
+                                                
+                                            </label>
+                                        </span>
+                                        <span class="slds-radio" >
+                                            <input type="radio" id="radio-44" aura:id="radio2" value="API Plus" name="API" />
+                                            <label class="slds-radio__label" for="radio-44">
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label" style="color:black;">API Plus</span><br/>
+                                                <span class="slds-radio__label" style="color:black;padding-left:200px;">API Plus Business Process</span><br/>
+                                            </label>
+                                        </span>
+                                    </div>
+                                </fieldset>
+                                <!--
+                                <div class="slds-align_absolute-center">
+                                    <lightning:radioGroup name="radioGroup"
+                                                          aura:id="OptyRecordType"
+                                                          label="Select a record type"
+                                                          options="{! v.recordTypes }"
+                                                          value="{! v.recordTypeName }"
+                                                          required="true" 
+                                                          type="radio"
+                                                          class="slds-align_absolute-center"
+                                                          style="align: Center;"/>-->
+                                    <!-- onchange="{!c.selectedRecordType}" -->
+                               <!-- </div>-->
+                                <div class="slds-align_absolute-center" style="font-size: 15px;font-family:Arial;color: red;">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    {!v.message}
+                                </div>
+                                
+                                <br/>
+                                <br/>
+                                <!--
+        <div class="slds-align_absolute-center">
+            <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            <lightning:button label="Next" onclick="{!c.handleValidity}"/>
+           
+        </div> -->
+                            </aura:if> 
+                            <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPI>0)}">
+                                <div >
+                                    
+                                    <lightning:navigation aura:id="navService"/>
+                                    <lightning:recordEditform aura:id="APIOptyCreateForm" objectApiName="Opportunity" recordTypeId="{!v.recTypeID}" 
+                                                              onload="{!c.handleOnLoad}" 
+                                                              onsuccess="{!c.handleOnSuccess}"
+                                                              onerror="{!c.handleOnError}" >
+                                        <lightning:messages/>
+                                        <aura:if isTrue="{!v.reloadForm}">
+                                        <div id="top" style="background-color:white;">
+                                            
+                                            <div class="slds-align_absolute-left" style="padding-bottom:1%;padding-left:1%;">
+                                                <h3 class="test-id__section-header-container slds-section__title slds-theme--shade" style="text-align:left;">Opportunity Information</h3>
+                                                <div class="slds-scope">
+                                                    <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                                                            <lightning:inputField fieldName="Name"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Product__c" required="true"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="Contact__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Target_Markets__c" required="true"></lightning:inputField>
+                                                            <lightning:inputField fieldName="TotalOpportunityQuantity"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="Source_type__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Reason_for_Loss__c"></lightning:inputField>
+                                                      <!--      <lightning:inputField fieldName="Launch_Stage__c"></lightning:inputField> -->
+                                                       <!--     <lightning:inputField fieldName="Comments__c"></lightning:inputField> -->
+                                                       <!--     <lightning:inputField fieldName="Opp_Name__c"></lightning:inputField> -->
+                                                            
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium" >                                
+                                                            <lightning:inputField   fieldName="AccountId" required="true"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="CloseDate" required="true"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="StageName" required="true"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Launch_Date__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Price__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Planned_Qty_at_launch__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Planned_Price_at_Launch__c"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="Planned_Year__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Reason__c"></lightning:inputField>
+                                                        <!--    <lightning:inputField   fieldName="Agent__c"></lightning:inputField> -->
+                                                        <!--    <lightning:inputField   fieldName="Fiscal__c" required="true"></lightning:inputField> --> 
+                                                        </div>                            
+                                                    </div>                        
+                                                </div>
+                                            </div>
+                                            <div class="slds-align_absolute-left" style="padding-bottom:1%;padding-left:1%;">
+                                                <h3 class="test-id__section-header-container slds-section__title slds-theme--shade" style="text-align:left;">Lockin Information</h3>
+                                                
+                                                <div class="slds-scope">
+                                                    <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                                                            <lightning:inputField fieldName="Lockin_Status__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Product_Status__c"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="CurrencyIsoCode"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Lead_Converted_From__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Planned_Quarter__c"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="Planned_Month__c"></lightning:inputField>
+                                                            <lightning:inputField disabled="true"   fieldName="OwnerId"></lightning:inputField>
+                                                            <lightning:inputField disabled="true"   fieldName="RecordTypeId" value="{!v.recTypeID}"></lightning:inputField> 
+                                                            
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium" >                                
+                                                            <lightning:inputField   fieldName="Status__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Account_Objective__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Type"></lightning:inputField> 
+                                                            <lightning:inputField   fieldName="Probability"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Opportunity_Manager__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Actual_Qty_at_Launch__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Actual_Price_At_Launch__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Actual_Year__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Actual_Quarter__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Actual_Month__c"></lightning:inputField>
+                                                         <!--   <lightning:inputField   fieldName="Remarks__c"></lightning:inputField> -->
+                                                            
+                                                        </div>                            
+                                                    </div>                        
+                                                </div>
+                                            </div>
+                                            <div class="slds-align_absolute-left" style="padding-bottom:1%;padding-left:1%;">
+                                                <h3 class="test-id__section-header-container slds-section__title slds-theme--shade" style="text-align:left;">Opportunity Progress</h3>
+                                                <div class="slds-scope">
+                                                    <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                                                            <lightning:inputField fieldName="Discussion_Date__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Sample_Ordered_Date__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Sample_Supplied_Date__c"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Development_Qty_Ordered_Date__c"></lightning:inputField> 
+                                                            <lightning:inputField fieldName="Development_Qty_Supplied_Date__c"></lightning:inputField>
+                                                            
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2 slds-p-around_medium" >                                
+                                                            <lightning:inputField   fieldName="Bio_batch_ordered_Date__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="Bio_batch_Delivered_Date__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="LOA_LOE__c"></lightning:inputField>
+                                                            <lightning:inputField   fieldName="LOA_Issued__c"></lightning:inputField>
+                                                            
+                                                        </div>                            
+                                                    </div>                        
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                            </aura:if>
+                                        <!---
+                    <div class="slds-align_absolute-center slds-p-top_small">
+                        <lightning:button variant="brand" type="submit" name="save" label="Save"  />
+                        <lightning:button variant="brand" label="Cancel" title="Brand action" onclick="{!c.cancel}" />
+                    </div>-->
+                                    </lightning:recordEditform>
+                                    
+                                    
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPIPLUS>0)}">
+                                <div class="slds-scrollable_x">
+                                    
+                                    <lightning:navigation aura:id="navServiceAPIOpty"/>
+                                    <div  id="top" style="background-color:white;">
+                                        
+                                        <div class="slds-align_absolute-left" style="padding-bottom:1%;padding-left:1%;">
+                                            <h3 class="test-id__section-header-container slds-section__title slds-theme--shade" style="text-align:left;">Customer Details</h3>
+                                            <div class="slds-scope">
+                                                <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                                                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField fieldName="AccountId" required="true"  value="{!v.apiPlusOpty.AccountId}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField fieldName="Customer_Type__c" required="true" value="{!v.apiPlusOpty.Customer_Type__c}"></lightning:inputField>                                
+                                                        </lightning:recordEditForm>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium" >                                
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField   fieldName="Contact__c" required="true" value="{!v.apiPlusOpty.Contact__c}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField   fieldName="API_Plus_Territory__c" required="true" value="{!v.apiPlusOpty.API_Plus_Territory__c}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField   fieldName="Remarks__c" required="true" value="{!v.apiPlusOpty.Remarks__c}"></lightning:inputField>                                                               
+                                                        </lightning:recordEditForm>
+                                                    </div>                            
+                                                </div>                        
+                                            </div>
+                                        </div>
+                                        <div class="slds-align_absolute-left" style="padding-bottom:1%;padding-left:1%;">
+                                            <h3 class="test-id__section-header-container slds-section__title slds-theme--shade" style="text-align:left;">Opportunity Information</h3>
+                                            <div class="slds-scope">
+                                                <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                                                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField fieldName="Name" required="true" value="{!v.apiPlusOpty.Name}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <!-- <lightning:recordEditForm objectApiName="Opportunity">    
+                                    <lightning:inputField fieldName="StageName" required="true" value="{!v.apiPlusOpty.StageName}"></lightning:inputField> 
+                                    </lightning:recordEditForm> -->
+                                                        <div class="form-group">
+                                                            <lightning:input disabled="true" name="stage" type="text" required="true" label="Stage" value="{!v.stage}" />
+                                                        </div>
+                                                        <lightning:recordEditForm objectApiName="Opportunity">    
+                                                            <lightning:inputField disabled="true" fieldName="RecordTypeId" value="{!v.recTypeID}" ></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium" >                                
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField   fieldName="CloseDate" required="true" value="{!v.apiPlusOpty.CloseDate}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <!-- <lightning:inputField   fieldName="Probability" required="true"></lightning:inputField> -->
+                                                        <lightning:recordEditForm objectApiName="Opportunity">
+                                                            <lightning:inputField   fieldName="CurrencyIsoCode" required="true" value="{!v.apiPlusOpty.CurrencyIsoCode}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                        <lightning:recordEditForm objectApiName="Opportunity">    
+                                                            <lightning:inputField disabled="true" fieldName="OwnerId" required="true" value="{!v.apiPlusOpty.OwnerId}"></lightning:inputField>
+                                                        </lightning:recordEditForm>
+                                                    </div>                            
+                                                </div>                        
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <br/>
+                                        <!-- Add products and SKU -->
+                                        <div class="slds-button-group slds-float_right" role="group" >
+                                            <button class="slds-button slds-button_neutral" onclick="{!c.addProduct}">Add Product</button>
+                                            <button class="slds-button slds-button_neutral" onclick="{!c.addYear}">Add Year</button>
+                                            <button class="slds-button slds-button_neutral" onclick="{!c.removeYear}">Remove Year</button>
+                                        </div>
+                                        <br/>
+                                        <div>
+                                        </div>
+                                        <!-- class="slds-scrollable" style=" width: 68rem" -->
+                                        <div >
+                                            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                                                <!--<table class="slds-table slds-table-bordered slds-table_cell-buffer">-->
+                                                <thead>
+                                                    <tr class="slds-text-title_caps">
+                                                        
+                                                        <th scope="col">
+                                                            <div class="slds-truncate">#</div>
+                                                        </th>
+                                                        
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Product Name" >Product Name <span style="color:red">*</span></div>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Dosage Form">Dosage Form <span style="color:red">*</span></div>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Strength">Strength <span style="color:red">*</span></div>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Type Of Deal">Type Of Deal <span style="color:red">*</span></div>
+                                                        </th> 
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Year - 1">Year 1 <span style="color:red">*</span></div>
+                                                        </th>
+                                                    <!--    <th scope="col">
+                                                            <div class="slds-truncate" title="Year - 2">Year 2 </div>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Year - 3">Year 3 </div>
+                                                        </th> -->
+                                                        <aura:iteration items="{!v.yearList}" var="year" indexVar="count">
+                                                            <th scope="col">
+                                                                <div class="slds-truncate" title="Year - 3">Year {!count+2}</div>
+                                                            </th>
+                                                        </aura:iteration>                                                                
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Action">Action</div>
+                                                        </th>                                                                                                
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody>
+                                                    <aura:iteration items="{!v.tSheetDetails}" var="ts" indexVar="index">                             
+                                                        <tr>
+                                                            <td style="width: 8px">
+                                                                {!index+1}
+                                                            </td> 
+                                                            <td>                                       
+                                                                <lightning:recordEditForm objectApiName="API_Plus_Trigger_Sheet__c">
+                                                                    <lightning:inputField  fieldName="API_Plus_Product__c" variant="label-hidden"  value="{!ts.tSheet.API_Plus_Product__c}" required="true"/>
+                                                                </lightning:recordEditForm>                                                                                                                                           
+                                                            </td>
+                                                            <td>                                        
+                                                                <lightning:input name="dosageForm" type="text" label="Dosage Form" value="{!ts.tSheet.API_Plus_Dosage_Form__c}" variant="label-hidden" required="true"/>     
+                                                            </td>
+                                                            <td>
+                                                                <lightning:input name="strength" type="text" label="Strength" value="{!ts.tSheet.API_Plus_Strengths__c}" variant="label-hidden" required="true"/>                                            
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <lightning:recordEditForm objectApiName="API_Plus_Trigger_Sheet__c">
+                                                                    <lightning:inputField  fieldName="API_Plus_Deal_Model__c" variant="label-hidden" title="{!ts.tSheet.API_Plus_Deal_Model__c}" value="{!ts.tSheet.API_Plus_Deal_Model__c}" required="true"/>
+                                                                </lightning:recordEditForm>                                        
+                                                            </td>
+                                                            <td>
+                                                                <lightning:input name="year1" type="decimal" label="Year1"  value="{!ts.commercial.API_Plus_Volume_Forecast1__c}" variant="label-hidden" required="true"/>                                        
+                                                            </td>
+                                                            <aura:if isTrue="{!v.yearList.length>0}">
+                                                            <td>
+                                                                <lightning:input name="year2" type="decimal" label="Year-2"  value="{!ts.commercial.API_Plus_Volume_Forecast2__c}" variant="label-hidden"  />                                        
+                                                            </td>
+                                                            </aura:if>    
+                                                            <aura:if isTrue="{!v.yearList.length>1}">
+                                                            <td>
+                                                                <lightning:input name="year3" type="decimal" label="Year-3"  value="{!ts.commercial.API_Plus_Volume_Forecast3__c}" variant="label-hidden" />                                        
+                                                            </td> 
+                                                            </aura:if>    
+                                                            <aura:if isTrue="{!v.yearList.length>2}">
+                                                                <td>
+                                                                    <lightning:input name="year4" type="decimal" label="Year-4" value="{!ts.commercial.API_Plus_Volume_Forecast4__c}" variant="label-hidden"/>                                            
+                                                                </td>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>3}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast5__c}"  variant="label-hidden"/>                                            
+                                                                </td> 
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>4}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast6__c}"  variant="label-hidden"/>
+                                                                </td>    
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>5}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast7__c}"  variant="label-hidden"/>
+                                                                </td>    
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>6}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast8__c}"  variant="label-hidden"/>
+                                                                </td>    
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>7}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast9__c}"  variant="label-hidden"/>
+                                                                </td>    
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.yearList.length>8}">
+                                                                <td>
+                                                                    <lightning:input name="year5" type="decimal" label="Year-5" value="{!ts.commercial.API_Plus_Volume_Forecast10__c}"  variant="label-hidden"/>
+                                                                </td>    
+                                                            </aura:if>
+                                                            
+                                                            <td>                                        
+                                                                
+                                                                <!--  <aura:if isTrue="{!ts.tSheet.Id}">
+                                                    <lightning:button  variant="neutral" label="View" class="delBtn" type="text" onclick="{!c.delete}" value="{!ts.tSheet.Id}" >
+                                                        <lightning:icon iconName="utility:delete"/>
+                                                    </lightning:button>
+                                                    <aura:set attribute="else">
+                                                        <a data-record="{!index}" onclick="{!c.removeRow}">
+                                                            <lightning:button  variant="neutral" label="View" class="delBtn" type="text" >
+                                                                <lightning:icon iconName="utility:delete"/>
+                                                            </lightning:button>
+                                                            <span class="slds-assistive-text"></span>
+                                                        </a>
+                                                    </aura:set>
+                                                </aura:if> -->
+                                                                <a data-record="{!index}" onclick="{!c.removeRow}">
+                                                                    <lightning:button  variant="neutral" label="View" class="delBtn" type="text" >
+                                                                        <lightning:icon iconName="utility:delete"/>
+                                                                    </lightning:button>
+                                                                    <span class="slds-assistive-text"></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </aura:iteration>
+                                                </tbody>
+                                            </table></div>
+                                        <!-- Add products and SKU -->
+                                        <br/>
+                                        <br/>
+                                        <!--
+                    <div class="slds-align_absolute-center slds-p-top_small">-->
+                                        <!-- onclick="{!c.APIPlusRecordCreation}" -->
+                                        <!-- <lightning:button variant="brand" type="submit" name="save" label="Save"  onclick="{!c.APIPlusRecordCreation}"/>
+                        <lightning:button variant="brand" label="Cancel" title="Brand action" onclick="{!c.cancel}" />
+                    </div>-->
+                                    </div>
+                                    
+                                </div>
+                            </aura:if>
+                            
+                        </div>
+                    </div>
+                    
+                </body>
+                <!--/div-->
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer">
+                    
+                    <aura:if isTrue="{!v.recTypeSelected==0}">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.cancel }"/>
+                        <lightning:button variant="neutral"
+                                          label="Next"
+                                          title="Next"
+                                          onclick="{! c.handleValidity }"
+                                          class="slds-button slds-button_brand"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPI>0)}">
+                        
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.cancel }"/>
+                        <lightning:button variant="neutral"
+                                          type="submit"
+                                          label="Save and New"
+                                          name="savenew"
+                                          onclick="{!c.handleOnSubmitSaveNew}"
+                                          />
+                        <lightning:button variant="neutral"
+                                          type="submit"
+                                          label="Save"
+                                          name="save"
+                                          onclick="{!c.handleOnSubmit}"
+                                          class="slds-button slds-button_brand"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.recTypeSelected>0,v.isAPIPLUS>0)}">
+                        
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.cancel }"/>
+                        
+                        <lightning:button variant="neutral"
+                                          type="submit"
+                                          label="Save"
+                                          name="save"
+                                          onclick="{!c.APIPlusRecordCreation}"
+                                          class="slds-button slds-button_brand"/>
+                        
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if > 
+    
+    <!-- upto here-->
+    
+    
+    
+    
+    
+</aura:component>
