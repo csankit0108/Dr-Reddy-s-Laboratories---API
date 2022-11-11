@@ -19,6 +19,9 @@
 		<members>DRL_ExceptionLog__c.MethodName__c</members>
 		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
+		<members>Lead.DRL_SourceCampaign__c</members>
+		<members>Lead.DRL_UTMCampaign__c</members>
+		<members>Lead.DRL_UTMSource__c</members>
 		<members>Lead.DRL_Prospect__c</members>
 		<name>CustomField</name>
 	</types>
