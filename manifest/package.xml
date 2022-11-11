@@ -39,6 +39,14 @@
 		<name>ListView</name>
 	</types>
 	<types>
+		<members>Lead.DRL_LeadProspectDuplicationRule</members>
+		<name>DuplicateRule</name>
+	</types>
+	<types>
+		<members>Lead.DRL_LeadProspectEmailMatchingRule</members>
+		<name>MatchingRule</name>
+	</types>
+	<types>
 		<members>Admin</members>
 		<name>Profile</name>
 	</types>
