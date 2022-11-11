@@ -156,10 +156,11 @@ public without sharing class DRL_LeadTriggerHelper {
                 List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
             }
-            
+
             if (!list_ConsolidatedDMLErrors.isEmpty) {
                 DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterInsert', list_ConsolidatedDMLErrors);
             }
+            
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
         } catch(Exception objException) {
             DRLUtil.logException(
