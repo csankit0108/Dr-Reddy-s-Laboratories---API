@@ -19,6 +19,7 @@
 		<members>DRL_ExceptionLog__c.MethodName__c</members>
 		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
+		<members>Lead.DRL_Email__c</members>
 		<members>Lead.DRL_SourceCampaign__c</members>
 		<members>Lead.DRL_UTMCampaign__c</members>
 		<members>Lead.DRL_UTMSource__c</members>
@@ -29,6 +30,10 @@
 		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>
 		<name>CustomObject</name>
+	</types>   
+	<types>
+		<members>Lead.DRL_Email</members>
+		<name>QuickAction</name>
 	</types>
 	<types>
 		<members>Lead.DRL_ProspectFields</members>
