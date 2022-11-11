@@ -25,6 +25,14 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>*</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
+    </types>
+    <types>
         <members>Lead.Lead Process</members>
         <members>Lead.Prospect Process</members>
         <name>BusinessProcess</name>
