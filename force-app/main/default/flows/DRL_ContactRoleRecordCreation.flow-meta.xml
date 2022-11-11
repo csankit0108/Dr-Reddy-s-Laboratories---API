@@ -4,7 +4,7 @@
     <description>When Opportunity record is created or updated with a Contact. A new Contact Role record should be created.</description>
     <environments>Default</environments>
     <interviewLabel>DRL_ContactRoleRecordCreation {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>DRL_ContactRoleRecordCreation_Flow</label>
+    <label>Opportunity Contact Role Creation Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
