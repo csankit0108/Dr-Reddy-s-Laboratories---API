@@ -64,6 +64,16 @@
 		<name>ValidationRule</name>
 	</types>
 	<types>
+		<members>Lead.Lead Process</members>
+		<members>Lead.Prospect Process</members>
+		<name>BusinessProcess</name>
+	</types>
+	<types>
+		<members>Lead.DRL_Lead</members>
+		<members>Lead.DRL_Prospect</members>
+		<name>RecordType</name>
+	</types>
+	<types>
 		<members>Admin</members>
 		<name>Profile</name>
 	</types>
