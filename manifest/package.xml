@@ -31,10 +31,10 @@
 		<members>DRL_UTMSource__mdt</members>
 		<name>CustomObject</name>
 	</types>   
-    <types>
-        <members>Lead.DRL_Email</members>
-        <name>QuickAction</name>
-    </types>
+	<types>
+		<members>Lead.DRL_Email</members>
+		<name>QuickAction</name>
+	</types>
 	<types>
 		<members>Lead.DRL_ProspectFields</members>
 		<name>FieldSet</name>
