@@ -33,15 +33,6 @@ public class DRL_LeadTriggerHelperTest {
         insert objCampaign;
 
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
-        Lead objparentLead = new DRL_TestUtility.LeadBuilder()
-            .setFirstName('Test')
-            .setLastName('User')
-            .setEmail('testuser@yopmail.com')
-            .setCompany('Absyz')
-            .setStatus('Open')
-            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Prospect'))
-            .createLead();
-           insert objparentLead; 
         
         Lead objLead = new DRL_TestUtility.LeadBuilder()
             .setFirstName('Test')
@@ -50,8 +41,6 @@ public class DRL_LeadTriggerHelperTest {
             .setCompany('Absyz')
             .setUtmCampaign('Campaign 1005')
             .setUtmSource('Test MDT 2')
-            .setProspectId(objparentLead.Id)
-            .setStatus('Open')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
         insert objLead;

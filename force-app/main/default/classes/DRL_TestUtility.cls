@@ -23,9 +23,6 @@ public class DRL_TestUtility {
         private Id idRecordTypeId;
         private String strUTMCampaign;
         private String strUTMSource;
-        private Id idProspectId;
-        private String strStatus;
-        
         
         public LeadBuilder() {
             this.strFirstName = '';
@@ -34,7 +31,6 @@ public class DRL_TestUtility {
             this.strCompany = '';
             this.strUTMCampaign = '';
             this.strUTMSource = '';
-            this.strStatus='';
             
         }
         
@@ -73,15 +69,7 @@ public class DRL_TestUtility {
             this.strUTMSource = strValue;
             return this;
         }
-        public LeadBuilder setProspectId(Id idValue) {
-            this.idProspectId = idValue;
-            return this;
-        }
-        public LeadBuilder setStatus (String strValue) {
-            this.strStatus = strValue;
-            return this;
-        }
-        
+    
         public Lead createLead() {
             Lead objLead = new Lead();
             objLead.FirstName = this.strFirstName;
@@ -91,9 +79,7 @@ public class DRL_TestUtility {
             objLead.DRL_UTMCampaign__c = this.strUTMCampaign;
             objlead.DRL_UTMSource__c = this.strUTMSource;
             objLead.RecordTypeId = this.idRecordTypeId;
-            objLead.DRL_Prospect__c=this.idProspectId;
-            objLead.Status=this.strStatus;
-
+            
             return objLead;
         }
     }
