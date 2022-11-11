@@ -5,10 +5,6 @@
 		<name>Flow</name>
 	</types>
 	<types>
-		<members>DRL_ContactRoleRecordCreation</members>
-		<name>FlowDefinition</name>
-	</types>
-	<types>
 		<members>Opportunity.DRL_ContactChangeValidation</members>
 		<name>ValidationRule</name>
 	</types>
