@@ -20,6 +20,10 @@
 		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
 		<members>Lead.DRL_Email__c</members>
+		<members>Lead.DRL_SourceCampaign__c</members>
+		<members>Lead.DRL_UTMCampaign__c</members>
+		<members>Lead.DRL_UTMSource__c</members>
+		<members>Lead.DRL_Prospect__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
@@ -42,6 +46,14 @@
 	<types>
 		<members>DRL_ExceptionLog__c.All</members>
 		<name>ListView</name>
+	</types>
+	<types>
+		<members>Lead.DRL_LeadProspectDuplicationRule</members>
+		<name>DuplicateRule</name>
+	</types>
+	<types>
+		<members>Lead.DRL_LeadProspectEmailMatchingRule</members>
+		<name>MatchingRule</name>
 	</types>
 	<types>
 		<members>Admin</members>
