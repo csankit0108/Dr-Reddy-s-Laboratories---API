@@ -5,36 +5,7 @@
 		<name>CustomField</name>
 	</types>
 	<types>
-		<members>API Marketing Head Profile</members>
-		<members>API Plus SF License - Portfolio %26%26 API %2B Team</members>
-		<members>API Plus and F2A for Reg%2FExe</members>
 		<members>Admin</members>
-		<members>ContractManager</members>
-		<members>Copy Of Standard User</members>
-		<members>Copy System Admin</members>
-		<members>Copy of Administrator</members>
-		<members>Copy of Marketing User</members>
-		<members>Custom  Marketing - All</members>
-		<members>DRL API System Administrator</members>
-		<members>DRL Health Standard User</members>
-		<members>DRL Health System Administrator</members>
-		<members>DRL System Administrator</members>
-		<members>Finance</members>
-		<members>MOM</members>
-		<members>Marketing Manager</members>
-		<members>Marketing Manager Account User</members>
-		<members>Marketing Manager User</members>
-		<members>Marketing Manager User with Account Creation Permissions</members>
-		<members>MarketingProfile</members>
-		<members>Minimum Access - Salesforce</members>
-		<members>Pardot Administrator</members>
-		<members>Read Only</members>
-		<members>Read Only - Standard User</members>
-		<members>Regional Manager Profile</members>
-		<members>SFADMIN</members>
-		<members>SR</members>
-		<members>SolutionManager</members>
-		<members>Standard</members>
 		<name>Profile</name>
 	</types>
 	<version>55.0</version>
