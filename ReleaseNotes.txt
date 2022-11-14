@@ -20,4 +20,6 @@
 
 
 -- POST-DEPLOYMENT STEPS --
+1. Activate the Opportunity Contact Role Creation Flow.
+2. Add Convert(DRL_Convert) Quick Action in Lead Layout
 
