@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_updatePotentialAtLaunchBatchTest
-* @ Purpose         :   Test class for DRL_updatePotentialAtLaunchBatch
+* @ Name            :   DRL_UpdatePotentialAtLaunchBatchTest
+* @ Purpose         :   Test class for DRL_UpdatePotentialAtLaunchBatch
 * @ Author          :   Deeksha Suvarna
 *
 *   Date            |  Developer Name               |  Version      |  Changes
@@ -11,14 +11,14 @@
 *******************************************************************************************************/
 
 @isTest
-public class DRL_updatePotentialAtLaunchBatchTest {
+public class DRL_UpdatePotentialAtLaunchBatchTest {
     public static Boolean blnThrowException = false;
     /**
     * @ author       :  Deeksha Suvarna
-    * @ description  :  This method is used to setup data for testing batch class 'DRL_updatePotentialAtLaunchBatch'
+    * @ description  :  This method is used to setup data for testing batch class 'DRL_UpdatePotentialAtLaunchBatch'
     **/
     @TestSetup
-    static void createData(){
+    static void createData() {
         Account objAccount = new DRL_TestUtility.AccountBuilder()
             .setName('Test Account')
             .createAccount();
@@ -58,9 +58,8 @@ public class DRL_updatePotentialAtLaunchBatchTest {
     **/
     @isTest
     private static void testOpportunity() {
-        
         Test.startTest();
-        DRL_updatePotentialAtLaunchBatch objOpportunityUpdate = new DRL_updatePotentialAtLaunchBatch();
+        DRL_UpdatePotentialAtLaunchBatch objOpportunityUpdate = new DRL_UpdatePotentialAtLaunchBatch();
         Database.executeBatch(objOpportunityUpdate);
         Test.stopTest();
  
@@ -79,13 +78,11 @@ public class DRL_updatePotentialAtLaunchBatchTest {
     **/
     @isTest
     private static void testExceptions() {
-        
         Test.startTest();
         blnThrowException = true;
-        DRL_updatePotentialAtLaunchBatch objOpportunityUpdate = new DRL_updatePotentialAtLaunchBatch();
+        DRL_UpdatePotentialAtLaunchBatch objOpportunityUpdate = new DRL_UpdatePotentialAtLaunchBatch();
         Database.executeBatch(objOpportunityUpdate);
         Test.stopTest();
         blnThrowException = false;
-
     }
 }
