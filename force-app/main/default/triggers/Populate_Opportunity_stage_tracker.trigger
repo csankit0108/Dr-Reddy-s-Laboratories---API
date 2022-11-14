@@ -37,6 +37,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
     {
         String accId=trigger.new[0].Ultimate_Parent_ID__c;
         system.debug('==accId=='+accId);
+        // !System.isBatch() added to the below IF by Absyz team to avoid errors while running DRL_UpdatePotentialAtLaunchBatch.
         if(accId!=null&&accId!=''&&!Test.isRunningTest() && !System.isFuture() && !System.isBatch()) AccountTeamAccessHelper.accountTeamAccess(accId);
         if(trigger.isinsert)
         {
