@@ -21,7 +21,6 @@ public class DRL_updatePotentialAtLaunchBatchTest {
     static void createData(){
         Account objAccount = new DRL_TestUtility.AccountBuilder()
             .setName('Test Account')
-            .setIsParent(true)
             .createAccount();
         insert objAccount;
 
