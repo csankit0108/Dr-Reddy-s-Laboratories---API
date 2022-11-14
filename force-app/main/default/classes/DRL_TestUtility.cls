@@ -256,7 +256,7 @@ public class DRL_TestUtility {
         private String strSourceType;
         private Decimal decPriceAtLaunch;
         private Decimal decQuantityAtLaunch;
-        private Date dateCloseDate;
+        private Date dtCloseDate;
         private Id idContactId;
         private Id idAccountId;
         private Id idProductId;
@@ -304,8 +304,8 @@ public class DRL_TestUtility {
             return this;
         }
 
-        public OpportunityBuilder setCloseDate(Date dateValue) {
-            this.dateCloseDate = dateValue;
+        public OpportunityBuilder setCloseDate(Date dtValue) {
+            this.dtCloseDate = dtValue;
             return this;
         }
 
@@ -322,7 +322,7 @@ public class DRL_TestUtility {
         public Opportunity createOpportunity() {
             Opportunity objOpportunity = new Opportunity();
             objOpportunity.Name = this.strName;
-            objOpportunity.CloseDate = this.dateCloseDate;
+            objOpportunity.CloseDate = this.dtCloseDate;
             objOpportunity.Planned_Price_at_Launch__c = this.decPriceAtLaunch;
             objOpportunity.Planned_Qty_at_launch__c = this.decQuantityAtLaunch;
             objOpportunity.Planned_Year__c = this.strLaunchYear;
