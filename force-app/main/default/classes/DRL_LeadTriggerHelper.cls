@@ -36,6 +36,8 @@ public without sharing class DRL_LeadTriggerHelper {
         List<Lead> list_ChildLeads = new List<Lead>();
         //List of Lead to be updated
         List<Lead> list_LeadsToUpdate = new List<Lead>();
+        //List of Campaign Members to be created.
+        List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
 
         for (FieldSetMember objFieldSetMember : list_LeadFieldSetMembers) {
             list_LeadObjectFields.add(objFieldSetMember.getSObjectField()); 
@@ -137,17 +139,17 @@ public without sharing class DRL_LeadTriggerHelper {
                                   Id,
                                   RecordTypeId,
                                   DRL_Prospect__c,
-                                  DRL_Source_Campaign__c 
+                                  DRL_SourceCampaign__c 
                                   FROM Lead 
                                   WHERE Id IN :list_LeadsToUpdate];
             for (Lead objLead : list_LeadsToUpdate) {
                 if ( 
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
-                    objLead.DRL_Source_Campaign__c != null &&
+                    objLead.DRL_SourceCampaign__c != null &&
                     objLead.DRL_Prospect__c != null
                 ) {
                     CampaignMember objCampaignMember = new CampaignMember();
-                    objCampaignMember.CampaignId = objLead.DRL_Source_Campaign__c;
+                    objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
                     objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
                     list_CampaignMembers.add(objCampaignMember);
                 }

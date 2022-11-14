@@ -14,6 +14,7 @@
 		<name>ApexTrigger</name>
 	</types>
 	<types>
+		<members>Campaign.DRL_CampaignCode__c</members>
 		<members>DRL_ExceptionLog__c.ClassName__c</members>
 		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
 		<members>DRL_ExceptionLog__c.ExceptionType__c</members>
@@ -34,7 +35,6 @@
 	</types>   
 	<types>
 		<members>Lead.DRL_Email</members>
-		<members>Lead.DRL_Convert</members>
 		<name>QuickAction</name>
 	</types>
 	<types>
