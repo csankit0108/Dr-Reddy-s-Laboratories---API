@@ -1,15 +1,15 @@
 trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
-    	/*
-         * Please Do not comment this code on Line.no 8. 
-		 * Commenting this leads to exceptions. 
-		 */
+    /*
+    * Please Do not comment this code on Line.no 8. 
+    * Commenting this leads to exceptions. 
+    */
     if (
         !Disable_Trigger__c.getInstance().Disable_LeadTrigger__c &&
-		!DRL_LeadTriggerHelper.blnSkipTrigger
-    )
-    {
+        !DRL_LeadTriggerHelper.blnSkipTrigger
+    ) {
         new LeadTriggerHandler().run();
     }
+
     if(trigger.isInsert && trigger.isBefore){
         for(Lead ld : trigger.new){
               if(ld.Status == 'Open'){
@@ -41,11 +41,7 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
                 ld.Converted_Date__c = System.today();
                
             }
-              
-        
-         } 
-        //DRL 48 & 49
-       // DRL_LeadTriggerHelper.populateSourceCampaign(trigger.new);
+        } 
     }
     
      if(trigger.isUpdate && trigger.isBefore){
@@ -82,7 +78,5 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
               
         
          }
-    }
-
-        
-    }
+    }   
+}

@@ -5,7 +5,7 @@
 * @ Author          :   Deeksha Suvarna
 * @ Usage           :   1) If Prospect exist - link it to child lead.
                         2) If Prospect does not exist - Create prospect and link it to child.
-* @ Test Class Name :   
+* @ Test Class Name :   DRL_LeadTriggerHelperTest
 *
 *   Date            |  Developer Name                       |  Version      |    Changes    
 * ======================================================================================================        
@@ -126,7 +126,7 @@ public without sharing class DRL_LeadTriggerHelper {
 
             if (!list_LeadsToUpdate.isEmpty()) {
                 //Link it to Child
-                List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate,false);
+                List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
             	
@@ -151,57 +151,61 @@ public without sharing class DRL_LeadTriggerHelper {
     *                   map_CampaignCodeWithCampaignID - Fetch campaign records which are in the set_CampaignCodes in a MAP
     *                   set_SourceCodes - To fetch source codes from Lead records in a SET
     *                   map_UtmSourcelablewithLeadSource - Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP
-    * @ return       :  
+    * @ return       :  N/A
     **/
 
-    public static void processBeforeInsert(List<Lead> list_leads) {
+    public static void processBeforeInsert(List<Lead> list_Leads) {
         //Set of Campaign Codes 
         Set<String> set_CampaignCodes = new Set<String>();
         //Map of Campaign code with Campaign ID 
-        Map<String, Id> map_CampaignIDByCampaignCode = new Map<String, Id>();
+        Map<String, Id> map_CampaignIdByCampaignCode = new Map<String, Id>();
         //Set of Source Codes
         Set<String> set_SourceCodes = new Set<String>();
         //Map of UTM source lable with Lead source
         Map<String, String> map_LeadSourceByUtmSource = new Map<String, String>();
         
         //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
-        for (Lead objLead : list_leads) {
+        for (Lead objLead : list_Leads) {
             if (String.isNotBlank(objLead.DRL_UTMCampaign__c)) {
                set_CampaignCodes.add(objLead.DRL_UTMCampaign__c);
             }
             
             //Fetch source codes from Lead records in a SET(set_SourceCodes)
-            if (String.isNotBlank(objLead.DRL_UTMSource__c) ) {
+            if (String.isNotBlank(objLead.DRL_UTMSource__c)) {
                 set_SourceCodes.add(objLead.DRL_UTMSource__c);
             }
         }
         
         //Fetch campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
         for (Campaign objCampaign : [SELECT 
-                                    Id, 
-                                    Name,
-                                    DRL_CampaignCode__c 
-                                    FROM Campaign 
-                                    WHERE DRL_CampaignCode__c IN :set_CampaignCodes 
-                                    AND IsActive = true]) {
-                                        if(!map_CampaignIDByCampaignCode.containsKey(objCampaign.DRL_CampaignCode__c)) {
-                                            map_CampaignIDByCampaignCode.put(objCampaign.DRL_CampaignCode__c, objCampaign.Id);
-                                        }
-                                    }
+                                     Id, 
+                                     Name,
+                                     DRL_CampaignCode__c 
+                                     FROM Campaign 
+                                     WHERE DRL_CampaignCode__c IN :set_CampaignCodes 
+                                     AND IsActive = true]
+        ) {
+            if(!map_CampaignIdByCampaignCode.containsKey(objCampaign.DRL_CampaignCode__c)) {
+                map_CampaignIdByCampaignCode.put(objCampaign.DRL_CampaignCode__c, objCampaign.Id);
+            }
+        }
         
         //Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
-        List<DRL_UTMSource__mdt> list_utmSourceMetadata = DRL_UTMSource__mdt.getAll().values();
+        List<DRL_UTMSource__mdt> list_UTMSourceMappings = DRL_UTMSource__mdt.getAll().values();
         
-        for (DRL_UTMSource__mdt mdtUTMsource : list_utmSourceMetadata) {
-            if (!map_LeadSourceByUtmSource.containsKey(mdtUTMsource.Label) && set_SourceCodes.contains(mdtUTMsource.Label)) {
-                map_LeadSourceByUtmSource.put(mdtUTMsource.Label, mdtUTMsource.LeadSource__c);
+        for (DRL_UTMSource__mdt objUTMSourceMapping : list_UTMSourceMappings) {
+            if (
+                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.Label) && 
+                set_SourceCodes.contains(objUTMSourceMapping.Label)
+            ) {
+                map_LeadSourceByUtmSource.put(objUTMSourceMapping.Label, objUTMSourceMapping.LeadSource__c);
             }
         }
         
         //Assign the fetched campaign records to the Source campaign field on the Lead records
-        for (Lead objLead : list_leads) {
-            if (map_CampaignIDByCampaignCode.containsKey(objLead.DRL_UTMCampaign__c)) {
-                objLead.DRL_SourceCampaign__c = map_CampaignIDByCampaignCode.get(objLead.DRL_UTMCampaign__c);
+        for (Lead objLead : list_Leads) {
+            if (map_CampaignIdByCampaignCode.containsKey(objLead.DRL_UTMCampaign__c)) {
+                objLead.DRL_SourceCampaign__c = map_CampaignIdByCampaignCode.get(objLead.DRL_UTMCampaign__c);
             }
             
             //DRL-49 Assign the fetched Lead source to the Lead record LeadSource field
@@ -209,6 +213,5 @@ public without sharing class DRL_LeadTriggerHelper {
                 objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
             }
         }
-    } 
-          
+    }     
 }

@@ -148,7 +148,6 @@ public class DRL_TestUtility {
             
             return objCampaign;
         }
-
     }
 
     /**
@@ -268,7 +267,6 @@ public class DRL_TestUtility {
             this.strStageName = '';
             this.strLaunchYear = '';
             this.strSourceType = '';
-
         }
         
         public OpportunityBuilder setName(String strValue) {

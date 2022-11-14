@@ -12,7 +12,16 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
     }
     
     public override void beforeInsert() {
-        DRL_LeadTriggerHelper.processBeforeInsert(this.newList);
+        try {
+            DRL_LeadTriggerHelper.processBeforeInsert(this.newList);
+        } catch(Exception objException) {
+            DRLUtil.logException(
+                'DRL_LeadTriggerHelper',
+                'beforeInsert',
+                objException,
+                true
+            );
+        }
     }
 
     public override void beforeUpdate(){
@@ -195,7 +204,4 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         
         public jsonWrapper json{ get; set; }
     }
-    
-    
-    
-    }
+}
