@@ -9,7 +9,7 @@
         <scale>2</scale>
     </formulas>
     <interviewLabel>DRL_CalculatePotentialAtLaunchOnOpportunity {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>DRL_CalculatePotentialAtLaunchOnOpportunity</label>
+    <label>Calculate Potential at Launch on Opportunity</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
