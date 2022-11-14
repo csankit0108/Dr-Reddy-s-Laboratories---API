@@ -1,12 +1,17 @@
 trigger LeadTrigger on Lead (before insert, after insert, before update, after update) {
+    /*
+    * Please Do not comment this code on Line.no 8. 
+    * Commenting this leads to exceptions. 
+    */
     if (
         !Disable_Trigger__c.getInstance().Disable_LeadTrigger__c &&
         !DRL_LeadTriggerHelper.blnSkipTrigger
     ) {
         new LeadTriggerHandler().run();
     }
+
     if(trigger.isInsert && trigger.isBefore){
-         for(Lead ld : trigger.new){
+        for(Lead ld : trigger.new){
               if(ld.Status == 'Open'){
                 ld.Open_Date__c = System.today();
                 
@@ -36,9 +41,7 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
                 ld.Converted_Date__c = System.today();
                
             }
-              
-        
-         } 
+        } 
     }
     
      if(trigger.isUpdate && trigger.isBefore){
@@ -75,6 +78,5 @@ trigger LeadTrigger on Lead (before insert, after insert, before update, after u
               
         
          }
-    }
-    
+    }   
 }
