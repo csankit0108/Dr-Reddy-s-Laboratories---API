@@ -246,5 +246,59 @@ public without sharing class DRL_LeadTriggerHelper {
                 objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
             }
         }
-    }     
+    }
+    public static void processAfterUpdate(Set<String> set_oldProspectStatus,Set<String> set_newLeadStatus,Set<Id> set_prospectId){
+        Set<String>  set_OldParentStatus = new Set<String>();
+        Map<String,Double> map_getOldWeightage = new Map<String,Double>();
+        Map<String,Double> Map_getNewWeightage = new Map<String,Double>();
+        Double dbloldWeightage;
+        Double dblnewWeightage;
+        String strnewParentStatus;
+        List<Lead>  list_updateParentLead = new List<Lead>();
+        for(Lead objparentLead : [select Id,
+                               Status 
+                               from Lead 
+                               where Id In: set_prospectId]){
+            set_OldParentStatus.add(objparentLead.Status);
+                                   
+            
+        }
+        
+        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+                                                                      Weightage__c,
+                                                                      Prospect_Status__c
+                                                                      from Prospect_Lead_Status_Mapping__mdt
+                                                                      where Lead_Status__c In:set_OldParentStatus]){
+                                                                       map_getOldWeightage.put(objprospectLeadStatus.Lead_Status__c,objprospectLeadStatus.Weightage__c);
+                                                                       dbloldWeightage = objprospectLeadStatus.Weightage__c;
+                                                                       System.debug('old parent status' + dbloldWeightage );
+                                                                   }
+                                                                 
+        
+        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+                                                                   Weightage__c,
+                                                                   Prospect_Status__c 
+                                                                   from Prospect_Lead_Status_Mapping__mdt
+                                                                   where Lead_Status__c In: set_newLeadStatus 
+                                                                   ]){
+                                                                      strnewParentStatus = objprospectLeadStatus.Prospect_Status__c;
+                                                                      dblnewWeightage = objprospectLeadStatus.Weightage__c;
+                                                                  }
+        
+        
+        for(Lead objparentLead : [select Id,
+                               Status
+                               from Lead
+                               where Id In: set_prospectId]){
+            if(dblnewWeightage> dbloldWeightage  && strnewParentStatus != objparentLead.Status)
+            {
+                
+                objparentLead.Status = strnewParentStatus;
+                list_updateParentLead.add(objparentLead);
+            }
+            if(list_updateParentLead.size() > 0){
+                update list_updateParentLead;
+            }
+        }   
+    }  
 }

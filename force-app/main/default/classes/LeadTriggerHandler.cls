@@ -42,7 +42,22 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
 
     public override void afterUpdate(){
         checkIfLeadQualifiedFor24HrsLoop();
-        checkForMailerConfigsAfterLeadConversion();  
+        checkForMailerConfigsAfterLeadConversion(); 
+        Set<String> set_oldProspectStatus = new Set<String>();
+        Set<String> set_newLeadStatus = new Set<String>();
+        Set<Id>set_prospectId = new Set<Id>();
+        for(Lead objLead : newList)
+        {
+            if(oldMap.get(objLead.Id).status != objLead.Status){
+                set_oldProspectStatus.add(oldMap.get(objLead.Id).status);
+                set_newLeadStatus.add(objLead.Status);
+                set_prospectId.add(objLead.DRL_Prospect__c);
+            }
+        }
+         DRL_LeadTriggerHelper.processAfterUpdate(set_oldProspectStatus,set_newLeadStatus,set_prospectId);  
+      
+
+
     }
         
     
