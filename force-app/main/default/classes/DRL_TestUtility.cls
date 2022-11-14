@@ -21,12 +21,17 @@ public class DRL_TestUtility {
         private String strEmail;
         private String strCompany;
         private Id idRecordTypeId;
+        private String strUTMCampaign;
+        private String strUTMSource;
         
         public LeadBuilder() {
             this.strFirstName = '';
             this.strLastName = '';
             this.strEmail = '';
             this.strCompany = '';
+            this.strUTMCampaign = '';
+            this.strUTMSource = '';
+            
         }
         
         public LeadBuilder setFirstName(String strValue) {
@@ -55,15 +60,93 @@ public class DRL_TestUtility {
             return this;
         }
         
+        public LeadBuilder setUtmCampaign(String strValue) {
+            this.strUTMCampaign = strValue;
+            return this;
+        }
+
+        public LeadBuilder setUtmSource(String strValue) {
+            this.strUTMSource = strValue;
+            return this;
+        }
+    
         public Lead createLead() {
             Lead objLead = new Lead();
             objLead.FirstName = this.strFirstName;
             objLead.LastName = this.strLastName;
             objLead.Email = this.strEmail;
             objlead.Company = this.strCompany;
+            objLead.DRL_UTMCampaign__c = this.strUTMCampaign;
+            objlead.DRL_UTMSource__c = this.strUTMSource;
             objLead.RecordTypeId = this.idRecordTypeId;
-
+            
             return objLead;
+        }
+    }
+    
+    /**
+    * @ Name     :  CampaignBuilder
+    * @ Purpose  :  To create Campaign record
+    * @ Author   :  Mahalakshmi S
+    **/
+    public class CampaignBuilder {
+        private String strCampaignName;
+        private String strAllowMassEmail;
+        private String strCurrency;
+        private String strDescription;
+        private String strCampaignCode;
+        private Boolean blnIsActive;
+
+        public CampaignBuilder() {
+            this.strCampaignName = '';
+            this.strAllowMassEmail = '';
+            this.strCurrency = '';
+            this.strDescription = '';
+            this.strCampaignCode = '';
+            this.blnIsActive = false;
+            
+        }
+        
+        public CampaignBuilder setCampaignName(String strValue) {
+            this.strCampaignName = strValue;
+            return this;
+        }
+        
+        public CampaignBuilder setAllowMassEmail(String strValue) {
+            this.strAllowMassEmail = strValue;
+            return this;
+        }
+
+        public CampaignBuilder setCurrency(String strValue) {
+            this.strCurrency = strValue;
+            return this;
+        }
+
+        public CampaignBuilder setDescription(String strValue) {
+            this.strDescription = strValue;
+            return this;
+        }
+        
+        public CampaignBuilder setCampaignCode(String strValue) {
+            this.strCampaignCode = strValue;
+            return this;
+        }
+        
+        public CampaignBuilder setIsActive(Boolean blnValue) {
+            this.blnIsActive = blnValue;
+            return this;
+        }
+
+        public Campaign createCampaign() {
+            Campaign objCampaign = new Campaign();
+            objCampaign.Name = this.strCampaignName;
+            objCampaign.Allow_Mass_Email__c = this.strAllowMassEmail;
+            objCampaign.CurrencyIsoCode = this.strCurrency;
+            objCampaign.Description = this.strDescription;
+            objCampaign.DRL_CampaignCode__c = this.strCampaignCode;
+            objCampaign.IsActive = this.blnIsActive;
+            
+            return objCampaign;
         }
     }
 
@@ -101,7 +184,7 @@ public class DRL_TestUtility {
     /**
     * @ Name     :  ContactBuilder
     * @ Purpose  :  To create Contact record
-    * @ Author   :  Deeksha
+    * @ Author   :  Ankit C
     **/
     public class ContactBuilder {
         private String strFirstName;
@@ -173,7 +256,7 @@ public class DRL_TestUtility {
         private String strSourceType;
         private Decimal decPriceAtLaunch;
         private Decimal decQuantityAtLaunch;
-        private Date dateCloseDate;
+        private Date dtCloseDate;
         private Id idContactId;
         private Id idAccountId;
         private Id idProductId;
@@ -184,7 +267,6 @@ public class DRL_TestUtility {
             this.strStageName = '';
             this.strLaunchYear = '';
             this.strSourceType = '';
-
         }
         
         public OpportunityBuilder setName(String strValue) {
@@ -222,8 +304,8 @@ public class DRL_TestUtility {
             return this;
         }
 
-        public OpportunityBuilder setCloseDate(Date dateValue) {
-            this.dateCloseDate = dateValue;
+        public OpportunityBuilder setCloseDate(Date dtValue) {
+            this.dtCloseDate = dtValue;
             return this;
         }
 
@@ -240,7 +322,7 @@ public class DRL_TestUtility {
         public Opportunity createOpportunity() {
             Opportunity objOpportunity = new Opportunity();
             objOpportunity.Name = this.strName;
-            objOpportunity.CloseDate = this.dateCloseDate;
+            objOpportunity.CloseDate = this.dtCloseDate;
             objOpportunity.Planned_Price_at_Launch__c = this.decPriceAtLaunch;
             objOpportunity.Planned_Qty_at_launch__c = this.decQuantityAtLaunch;
             objOpportunity.Planned_Year__c = this.strLaunchYear;

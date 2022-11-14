@@ -10,6 +10,19 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         this.oldList = (List<Lead>)Trigger.old;
         this.oldMap = (Map<Id, Lead>)Trigger.oldMap;
     }
+    
+    public override void beforeInsert() {
+        try {
+            DRL_LeadTriggerHelper.processBeforeInsert(this.newList);
+        } catch(Exception objException) {
+            DRLUtil.logException(
+                'DRL_LeadTriggerHelper',
+                'beforeInsert',
+                objException,
+                true
+            );
+        }
+    }
 
     public override void beforeUpdate(){
         List<Lead> leadList = new List<Lead>();
@@ -29,8 +42,10 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
 
     public override void afterUpdate(){
         checkIfLeadQualifiedFor24HrsLoop();
-        checkForMailerConfigsAfterLeadConversion();
+        checkForMailerConfigsAfterLeadConversion();  
     }
+        
+    
 
     public void checkIfLeadQualifiedFor24HrsLoop(){
         set<Id> leadIds = new Set<Id>();
@@ -189,5 +204,4 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         
         public jsonWrapper json{ get; set; }
     }
-
 }

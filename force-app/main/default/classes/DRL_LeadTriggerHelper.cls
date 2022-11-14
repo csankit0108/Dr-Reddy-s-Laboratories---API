@@ -7,9 +7,10 @@
                         2) If Prospect does not exist - Create prospect and link it to child.
 * @ Test Class Name :   DRL_LeadTriggerHelperTest
 *
-*   Date            |  Developer Name                |  Version    |    Changes    
+*   Date            |  Developer Name                       |  Version      |    Changes    
 * ======================================================================================================        
-*  02-11-2022       |  deeksha.suvarna@absyz.com     |  1.0        |    Initial Version   
+*  02-11-2022       |  deeksha.suvarna@absyz.com            |  1.0          |    Initial Version   
+*  07-11-2022       |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |    Process Before Trigger          
 *******************************************************************************************************/
 public without sharing class DRL_LeadTriggerHelper {
     public static Boolean blnSkipTrigger = false;
@@ -125,7 +126,7 @@ public without sharing class DRL_LeadTriggerHelper {
 
             if (!list_LeadsToUpdate.isEmpty()) {
                 //Link it to Child
-                List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate,false);
+                List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
@@ -152,12 +153,12 @@ public without sharing class DRL_LeadTriggerHelper {
                 }
             }
 
-            if (!list_CampaignMembers.isEmpty) {
+            if (!list_CampaignMembers.isEmpty()) {
                 List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
             }
 
-            if (!list_ConsolidatedDMLErrors.isEmpty) {
+            if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterInsert', list_ConsolidatedDMLErrors);
             }
             
@@ -171,4 +172,77 @@ public without sharing class DRL_LeadTriggerHelper {
             );
         }
     } 
+
+    /**
+    * @ author       :  Mahalakshmi Sadhananthan
+    * @ description  :  1. This method is used to Check if the utm Source Campaign code on incoming lead record is matching with Campaign code on Campaign records.
+    *                   If the match exist then update the Source Campaign field on the (child) lead record with the matched Campaign record.
+	*                   2. Check if the utm Source code on incoming lead record is matching with the custom metadata UTM Source records with parameter Lable.
+    *                   If the match exist then the matched record Lead Source value to be updated on the Lead record Lead Source field.
+    * @ params       :  set_CampaignCodes - To fetch campaign codes from Lead records in a SET
+    *                   map_CampaignCodeWithCampaignID - Fetch campaign records which are in the set_CampaignCodes in a MAP
+    *                   set_SourceCodes - To fetch source codes from Lead records in a SET
+    *                   map_UtmSourcelablewithLeadSource - Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP
+    * @ return       :  N/A
+    **/
+    public static void processBeforeInsert(List<Lead> list_Leads) {
+        //Set of Campaign Codes 
+        Set<String> set_CampaignCodes = new Set<String>();
+        //Map of Campaign code with Campaign ID 
+        Map<String, Id> map_CampaignIdByCampaignCode = new Map<String, Id>();
+        //Set of Source Codes
+        Set<String> set_SourceCodes = new Set<String>();
+        //Map of UTM source lable with Lead source
+        Map<String, String> map_LeadSourceByUtmSource = new Map<String, String>();
+        
+        //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
+        for (Lead objLead : list_Leads) {
+            if (String.isNotBlank(objLead.DRL_UTMCampaign__c)) {
+               set_CampaignCodes.add(objLead.DRL_UTMCampaign__c);
+            }
+            
+            //Fetch source codes from Lead records in a SET(set_SourceCodes)
+            if (String.isNotBlank(objLead.DRL_UTMSource__c)) {
+                set_SourceCodes.add(objLead.DRL_UTMSource__c);
+            }
+        }
+        
+        //Fetch campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
+        for (Campaign objCampaign : [SELECT 
+                                     Id, 
+                                     Name,
+                                     DRL_CampaignCode__c 
+                                     FROM Campaign 
+                                     WHERE DRL_CampaignCode__c IN :set_CampaignCodes 
+                                     AND IsActive = true]
+        ) {
+            if(!map_CampaignIdByCampaignCode.containsKey(objCampaign.DRL_CampaignCode__c)) {
+                map_CampaignIdByCampaignCode.put(objCampaign.DRL_CampaignCode__c, objCampaign.Id);
+            }
+        }
+        
+        //Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
+        List<DRL_UTMSource__mdt> list_UTMSourceMappings = DRL_UTMSource__mdt.getAll().values();
+        
+        for (DRL_UTMSource__mdt objUTMSourceMapping : list_UTMSourceMappings) {
+            if (
+                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.Label) && 
+                set_SourceCodes.contains(objUTMSourceMapping.Label)
+            ) {
+                map_LeadSourceByUtmSource.put(objUTMSourceMapping.Label, objUTMSourceMapping.LeadSource__c);
+            }
+        }
+        
+        //Assign the fetched campaign records to the Source campaign field on the Lead records
+        for (Lead objLead : list_Leads) {
+            if (map_CampaignIdByCampaignCode.containsKey(objLead.DRL_UTMCampaign__c)) {
+                objLead.DRL_SourceCampaign__c = map_CampaignIdByCampaignCode.get(objLead.DRL_UTMCampaign__c);
+            }
+            
+            //DRL-49 Assign the fetched Lead source to the Lead record LeadSource field
+            if (map_LeadSourceByUtmSource.containsKey(objLead.DRL_UTMSource__c)) {
+                objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
+            }
+        }
+    }     
 }
