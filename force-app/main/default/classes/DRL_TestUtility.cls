@@ -157,10 +157,8 @@ public class DRL_TestUtility {
     **/
     public class AccountBuilder {
         private String strName;
-        private Boolean blnIsParent;
         public AccountBuilder() {
             this.strName = '';
-            this.blnIsParent = false;
         }
         
         public AccountBuilder setName(String strValue) {
@@ -168,15 +166,9 @@ public class DRL_TestUtility {
             return this;
         }
 
-        public AccountBuilder setIsParent(Boolean blnValue) {
-            this.blnIsParent = blnValue;
-            return this;
-        }
-        
         public Account createAccount() {
             Account objAccount = new Account();
             objAccount.Name = this.strName;
-            objAccount.Is_Parent__c = this.blnIsParent;
             return objAccount;
         }
     }
