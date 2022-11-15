@@ -247,57 +247,65 @@ public without sharing class DRL_LeadTriggerHelper {
             }
         }
     }
-    public static void processAfterUpdate(Set<String> set_oldProspectStatus,Set<String> set_newLeadStatus,Set<Id> set_prospectId){
-        Set<String>  set_OldParentStatus = new Set<String>();
-        Map<String,Double> map_getOldWeightage = new Map<String,Double>();
-        Map<String,Double> Map_getNewWeightage = new Map<String,Double>();
-        Double dbloldWeightage;
-        Double dblnewWeightage;
-        String strnewParentStatus;
-        List<Lead>  list_updateParentLead = new List<Lead>();
-        for(Lead objparentLead : [select Id,
+    /*
+    * @ author       :  wafa shaikh
+    * @ description  : Updating the prosepct  record with the Status value based on the Lead records status value
+    */
+    public static void processAfterUpdate(Set<String> set_oldProspectStatuses,Set<String> set_newLeadStatuses,Set<Id> set_prospectIds){
+        //set to srore the Prospect old Status value
+        Set<String>  set_OldParentStatuses = new Set<String>();
+        // map to get the weightage of old Status value of prospect 
+        Map<String, Double> map_WeightageByOldStatus  = new Map<String, Double>();
+        // variable to store old weightage of Prospect sttus
+        Double dblOldWeightage;
+        //variable to store the new weightage for  new value of Lead Status 
+        Double dblNewWeightage;
+        //variable to store the new status value needs to be update  based on the lead status  
+        String strNewParentStatus;
+        //store the parent Record 
+        List<Lead>  list_ParentLeads  = new List<Lead>();
+        //fetch the parent record and store the Status values in set_OldParentStatuses Set
+        for(Lead objLead  : [SELECT Id,
                                Status 
-                               from Lead 
-                               where Id In: set_prospectId]){
-            set_OldParentStatus.add(objparentLead.Status);
-                                   
-            
+                               FROM Lead 
+                               WHERE Id IN: set_prospectIds]){
+            set_OldParentStatuses.add(objLead .Status);  
         }
-        
-        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+        //Fetch the records from Custom meta data to store the old weightage the prospect status
+        for(DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping  :[SELECT LeadStatus__c,
                                                                       Weightage__c,
-                                                                      Prospect_Status__c
-                                                                      from Prospect_Lead_Status_Mapping__mdt
-                                                                      where Lead_Status__c In:set_OldParentStatus]){
-                                                                       map_getOldWeightage.put(objprospectLeadStatus.Lead_Status__c,objprospectLeadStatus.Weightage__c);
-                                                                       dbloldWeightage = objprospectLeadStatus.Weightage__c;
-                                                                       System.debug('old parent status' + dbloldWeightage );
+                                                                      ProspectStatus__c
+                                                                      FROM DRL_ProspectLeadStatusMapping__mdt
+                                                                      WHERE Active__c = True AND
+                                                                      LeadStatus__c IN : set_OldParentStatuses]) {
+                                                                      map_WeightageByOldStatus .put(objProspectLeadStatusMapping .LeadStatus__c, objProspectLeadStatusMapping .Weightage__c);
+                                                                       dblOldWeightage = objProspectLeadStatusMapping .Weightage__c;
                                                                    }
                                                                  
-        
-        for(Prospect_Lead_Status_Mapping__mdt objprospectLeadStatus :[Select Lead_Status__c,
+        //fetch the records from custom metadata to store the new weightage of Lead Status and assign it to variable
+        for(DRL_ProspectLeadStatusMapping__mdt objprospectLeadStatus :[Select LeadStatus__c,
                                                                    Weightage__c,
-                                                                   Prospect_Status__c 
-                                                                   from Prospect_Lead_Status_Mapping__mdt
-                                                                   where Lead_Status__c In: set_newLeadStatus 
+                                                                   ProspectStatus__c 
+                                                                   FROM DRL_ProspectLeadStatusMapping__mdt
+                                                                   WHERE Active__c = True  AND
+                                                                   LeadStatus__c IN : set_newLeadStatuses 
                                                                    ]){
-                                                                      strnewParentStatus = objprospectLeadStatus.Prospect_Status__c;
-                                                                      dblnewWeightage = objprospectLeadStatus.Weightage__c;
+                                                                      strNewParentStatus = objprospectLeadStatus.ProspectStatus__c;
+                                                                      dblNewWeightage = objprospectLeadStatus.Weightage__c;
                                                                   }
-        
-        
-        for(Lead objparentLead : [select Id,
+       // fetch the prospect records  and assign the new status value 
+        for(Lead objLead  : [SELECT Id,
                                Status
-                               from Lead
-                               where Id In: set_prospectId]){
-            if(dblnewWeightage> dbloldWeightage  && strnewParentStatus != objparentLead.Status)
+                               FROM Lead
+                               WHERE Id IN : set_prospectIds]){
+            if(dblNewWeightage > dblOldWeightage  && strNewParentStatus != objLead .Status)
             {
                 
-                objparentLead.Status = strnewParentStatus;
-                list_updateParentLead.add(objparentLead);
+                objLead .Status = strNewParentStatus;
+                list_ParentLeads.add(objLead );
             }
-            if(list_updateParentLead.size() > 0){
-                update list_updateParentLead;
+            if(list_ParentLeads.size() > 0){
+                update list_ParentLeads;
             }
         }   
     }  
