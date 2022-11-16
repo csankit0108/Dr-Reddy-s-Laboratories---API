@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-
 	<types>
 		<members>DRLUtil</members>
 		<members>DRL_LeadTriggerHelper</members>
@@ -37,7 +36,11 @@
 		<members>DRL_UTMSource__mdt</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<name>CustomObject</name>
-	</types>   
+	</types>  
+	<types>
+		<members>DRL_ExceptionLog__c</members>
+		<name>CustomTab</name>
+	</types> 
 	<types>
 		<members>Lead.DRL_Email</members>
 		<name>QuickAction</name>
@@ -50,10 +53,6 @@
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
 		<members>Lead-Prospect</members>
 		<name>Layout</name>
-	</types>
-	<types>
-		<members>DRL_ExceptionLog__c.All</members>
-		<name>ListView</name>
 	</types>
 	<types>
 		<members>Lead.DRL_LeadProspectDuplicationRule</members>
