@@ -8,7 +8,6 @@
 * ======================================================================================================
 *   04-11-2022      |  deeksha.suvarna@absyz.com            |  1.0          |  Initial Version
 *   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |  Campaign Record Creation
-*   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |  Campaign Record Creation
 *******************************************************************************************************/
 @isTest
 public class DRL_LeadTriggerHelperTest {
@@ -19,7 +18,6 @@ public class DRL_LeadTriggerHelperTest {
     **/
     @TestSetup
     static void createData() {
-
         /**
         * @ author       :  Mahalakshmi S
         * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
@@ -35,18 +33,7 @@ public class DRL_LeadTriggerHelperTest {
 
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         
-        // Lead objLead = new DRL_TestUtility.LeadBuilder()
-        //     .setFirstName('Test')
-        //     .setLastName('User')
-        //     .setEmail('testuser@yopmail.com')
-        //     .setCompany('Absyz')
-        //     .setUtmCampaign('Campaign 1005')
-        //     .setUtmSource('Test MDT 2')
-        //     .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-        //     .createLead();
-        // insert objLead;
-
-        Lead objLead2 = new DRL_TestUtility.LeadBuilder()
+        Lead objLead = new DRL_TestUtility.LeadBuilder()
             .setFirstName('Test')
             .setLastName('User')
             .setEmail('testuser5@yopmail.com')
@@ -60,7 +47,7 @@ public class DRL_LeadTriggerHelperTest {
             .setUtmCampaign('Campaign 1005')
             .setUtmSource('Test MDT 2')
             .createLead();
-        insert objLead2;
+        insert objLead;
     }
 
     /**
@@ -143,32 +130,27 @@ public class DRL_LeadTriggerHelperTest {
         blnThrowException = false;
         Test.stopTest();
     }
+
     /**
     * @ author       :  Wafa Shaikh
-    * @ description  :  This method is used to test the Prospect Status When the  child Lead is updated 
+    * @ description  :  This method is used to test the Prospect Status When the child Lead is updated 
     **/
     @isTest
-    private static void TestProspectStatus(){
+    private static void testProspectStatus() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
  
-      Lead objLead=[Select Id,
-                      Email,
-                      Status,	
-                      DRL_Prospect__c 
-                      From Lead
-                      Where Email='testuser5@yopmail.com'  and 
-                      RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
-                       
-                   
-                     ];
-     system.debug('record fetched');
-        
-     Test.startTest();
-        
-        objLead.Status='Unqualified';
-        Update objLead;        
+        Lead objLead = [SELECT 
+                        Id,
+                        Email,
+                        Status,	
+                        DRL_Prospect__c 
+                        FROM Lead
+                        WHERE Email = 'testuser5@yopmail.com' AND 
+                        RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
+                       ];        
+        Test.startTest();
+        objLead.Status = 'Unqualified';
+        update objLead;        
         Test.stopTest();
- 
-        
     } 
 }

@@ -51,6 +51,7 @@
 	</types>
 	<types>
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt-Prospect Lead Status Mapping Layout</members>
 		<members>Lead-Prospect</members>
 		<name>Layout</name>
 	</types>

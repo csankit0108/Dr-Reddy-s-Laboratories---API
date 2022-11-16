@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Weightage__c</fullName>
+    <description>Stores the weightage of the status value</description>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Enter weightage for the status value of the Lead.</inlineHelpText>
     <label>Weightage</label>
     <precision>18</precision>
     <required>false</required>

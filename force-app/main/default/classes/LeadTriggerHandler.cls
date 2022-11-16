@@ -40,21 +40,28 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         DRL_LeadTriggerHelper.processAfterInsert(this.newList);
     }
 
-    public override void afterUpdate(){
+    public override void afterUpdate() {
         checkIfLeadQualifiedFor24HrsLoop();
         checkForMailerConfigsAfterLeadConversion(); 
-        Set<String> set_oldProspectStatuses = new Set<String>();
-        Set<String> set_newLeadStatuses = new Set<String>();
-        Set<Id>set_prospectIds = new Set<Id>();
-        for (Lead objLead : newList)
-        {
-            if(oldMap.get(objLead.Id).Status != objLead.Status){
-                set_oldProspectStatuses.add(oldMap.get(objLead.Id).status);
-                set_newLeadStatuses.add(objLead.Status);
-                set_prospectIds.add(objLead.DRL_Prospect__c);
+        List<Lead> list_Leads = new List<Lead>();
+        for (Lead objLead : newList) {
+            if (oldMap.get(objLead.Id).Status != objLead.Status) {
+                list_Leads.add(objLead);
             }
         }
-         DRL_LeadTriggerHelper.processAfterUpdate(set_oldProspectStatuses, set_newLeadStatuses, set_prospectIds);  
+
+        if (!list_Leads.isEmpty()) {
+            try {
+                DRL_LeadTriggerHelper.processAfterUpdate(list_Leads); 
+            } catch(Exception objException) {
+                DRLUtil.logException(
+                    'DRL_LeadTriggerHelper',
+                    'afterUpdate',
+                    objException,
+                    true
+                );
+            }
+        } 
     }
         
     
