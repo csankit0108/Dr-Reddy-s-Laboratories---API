@@ -14,6 +14,10 @@
 		<name>ApexTrigger</name>
 	</types>
 	<types>
+		<members>DRL_APICampaignsDistributionModel</members>
+		<name>CampaignInfluenceModel</name>
+	</types>
+	<types>
 		<members>Campaign.DRL_CampaignCode__c</members>
 		<members>DRL_ExceptionLog__c.ClassName__c</members>
 		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
