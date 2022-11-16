@@ -59,7 +59,7 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     }
     /**
     * @ author       :  Dinesh Chandra
-    * @ description  :  This method is used to test the condition - Prospect does not exist, Child lead record is created.  
+    * @ description  :  This method is used to test the condition - Insert CampaignInfluence Record.  
     **/
     @isTest
     private static void testCampaignMethod() {

@@ -17,6 +17,7 @@
 	</types>
 	<types>
 		<members>Campaign.DRL_CampaignCode__c</members>
+		<members>Campaign.DRL_ValueBioBatchOrderedOpportunities__c</members>
 		<members>DRL_ExceptionLog__c.ClassName__c</members>
 		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
 		<members>DRL_ExceptionLog__c.ExceptionType__c</members>
