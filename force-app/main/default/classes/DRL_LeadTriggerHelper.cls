@@ -209,7 +209,7 @@ public without sharing class DRL_LeadTriggerHelper {
             }
         }
         
-        //Fetch campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
+        //Fetch active campaign records which are in the set_CampaignCodes in a MAP(map_CampaignCodeWithCampaignID)
         for (Campaign objCampaign : [SELECT 
                                      Id, 
                                      Name,
@@ -223,15 +223,16 @@ public without sharing class DRL_LeadTriggerHelper {
             }
         }
         
-        //Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
+        //Fetch active Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
         List<DRL_UTMSource__mdt> list_UTMSourceMappings = DRL_UTMSource__mdt.getAll().values();
         
         for (DRL_UTMSource__mdt objUTMSourceMapping : list_UTMSourceMappings) {
             if (
-                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.Label) && 
-                set_SourceCodes.contains(objUTMSourceMapping.Label)
+                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.DeveloperName) && 
+                set_SourceCodes.contains(objUTMSourceMapping.DeveloperName) && 
+                (objUTMSourceMapping.IsActive__c)
             ) {
-                map_LeadSourceByUtmSource.put(objUTMSourceMapping.Label, objUTMSourceMapping.LeadSource__c);
+                map_LeadSourceByUtmSource.put(objUTMSourceMapping.DeveloperName, objUTMSourceMapping.LeadSource__c);
             }
         }
         
@@ -241,7 +242,7 @@ public without sharing class DRL_LeadTriggerHelper {
                 objLead.DRL_SourceCampaign__c = map_CampaignIdByCampaignCode.get(objLead.DRL_UTMCampaign__c);
             }
             
-            //DRL-49 Assign the fetched Lead source to the Lead record LeadSource field
+            //Assign the fetched Lead source to the Lead record LeadSource field
             if (map_LeadSourceByUtmSource.containsKey(objLead.DRL_UTMSource__c)) {
                 objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
             }
