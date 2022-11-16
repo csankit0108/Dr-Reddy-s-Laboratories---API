@@ -247,10 +247,7 @@
         
     },     
     handleOnSubmit : function(component, event, helper) {
-        console.log('record type value--->'+component.get("v.isRecdType"))
-        event.preventDefault(); //Prevent default submit
-        var response=component.find("APIOptyCreateForm").submit();
-        console.log('handle on submit---->');
+        helper.validateTriggerSheetListAPI(component,event);
         
     },      
     handleOnSubmitSaveNew:function(component,event,helper)

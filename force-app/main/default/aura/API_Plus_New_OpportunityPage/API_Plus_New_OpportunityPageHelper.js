@@ -576,6 +576,28 @@
             }
         });
         $A.enqueueAction(action);
+    },
+    validateTriggerSheetListAPI: function(component,event)
+    {
+        var contactId=component.get("v.contactId");
+        var isValid=true;
+        var message;
+        if (contactId=='' || contactId==undefined )
+        	{
+                isValid=false;                
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title":"Error!",
+                    "message":'Contact can not be blank',
+                    "type":"error"
+            });
+            toastEvent.fire();  
+        }
+        else {
+            event.preventDefault(); //Prevent default submit
+            var response=component.find("APIOptyCreateForm").submit();
+        }
+        return isValid;   
     }
     
 })
