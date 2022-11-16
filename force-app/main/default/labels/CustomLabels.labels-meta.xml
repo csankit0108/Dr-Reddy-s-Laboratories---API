@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CLDRL00001</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>API Campaign Influence Model Id</shortDescription>
+        <value>03V230000000NN3EAM</value>
+    </labels>
+    <labels>
+        <fullName>DRL_LeadAlreadyConverted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LeadAlreadyConvertedMessage</shortDescription>
+        <value>Lead has already Converted</value>
+    </labels>
+    <labels>
+        <fullName>DRL_LeadAlreadyConvertedMessageHeader</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LeadAlreadyConvertedMessageHeader</shortDescription>
+        <value>Lead Status</value>
+    </labels>
+    <labels>
+        <fullName>DRL_ModelIdValue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ModelID Value For DRL_CampaignInfluenceHelperTest</shortDescription>
+        <value>03V3a000000CaV9EAK</value>
+    </labels>
+    <labels>
+        <fullName>DRL_Run_automation_journey</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Run automation start values</shortDescription>
+        <value>Immediately,After 15 Days,After 30 Days,After 60 Days</value>
+    </labels>
+    <labels>
+        <fullName>DRL_productField_errorMsg</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Product field is empty</shortDescription>
+        <value>Please update the Product field and convert the Lead</value>
+    </labels>
+    <labels>
+        <fullName>G2W_Client_Id_Secret_Encode</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>G2W_Client_Id_Secret_Encode</shortDescription>
+        <value>YzJhMDNmYWYtZjQ1OS00ZGE3LWFkNjktODUyOGZhZDA3ZWQ5OjE0ekMyVE1QNk84MWo3YzloU3BoUzFEMg==</value>
+    </labels>
+    <labels>
+        <fullName>G2W_Organizer_Key</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>G2W Organizer Key</shortDescription>
+        <value>3724720293524576555</value>
+    </labels>
+    <labels>
+        <fullName>G2W_Refresh_Token</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>G2W_Refresh_Token</shortDescription>
+        <value>eyJraWQiOiJvYXV0aHYyLmxtaS5jb20uMDIxOSIsImFsZyI6IlJTNTEyIn0.eyJzYyI6InN1cHBvcnQ6IGlkZW50aXR5OiBjb2xsYWI6IGlkZW50aXR5OnNjaW0ub3JnIGlkZW50aXR5OnNjaW0ubWUiLCJzdWIiOiIzNzI0NzIwMjkzNTI0NTc2NTU1IiwiYXVkIjoiYzJhMDNmYWYtZjQ1OS00ZGE3LWFkNjktODUyOGZhZDA3ZWQ5Iiwib2duIjoicHdkIiwidHlwIjoiciIsImV4cCI6MTY0OTMzNTAyMiwiaWF0IjoxNjQ2NzQzMDIyLCJqdGkiOiJjNWFkMjU0YS0xYzYxLTRlZmMtOWE5NS0xNTY3NTA4NTBkOTMifQ.BZp0kY-qZlxAKqkbzJINe6X96jsz7ny4KGc9Emg8tef7zrbjN2bNK9tgkaYP7DtY1FPEJY2FxkadeQHh5dm88W2PR5D85Ephh_qRHeCi0a59jYysoY3badwqMzlB0yAgxwx2pBfpU5hUWHEe1dmvOjsPNqLwWmCmMy8GShjaZkovxb-X0fTiMbVQo27HFfuqnlhpcbWv3pkxxsgo5QIVntXfkxFiBMYCrA6WbXqv2BIL8CEjBcgFj2mqZHZOWkfOA9Wwij8g-z79Momiq3hBnOqzNeRBbY8dldUvjoZMnr5GaZwQ5w0GqOROAro4cb2knadjajVTc3glHy4labkYIg</value>
+    </labels>
+    <labels>
+        <fullName>Line_Items_Last_Created_Date_Days</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Line Items Last Created Date Days</shortDescription>
+        <value>180</value>
+    </labels>
+    <labels>
+        <fullName>MoM_Notification_Group</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MoM Notification Group</shortDescription>
+        <value>sreedhare@drreddys.com,</value>
+    </labels>
+    <labels>
+        <fullName>MoM_Weekly_Alert_Group</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>MoM Weekly Alert Group</shortDescription>
+        <value>abhishekthakur@drreddys.com,veeragouthamm@drreddys.com,deepaksapra@drreddys.com,azhar@drreddys.com,</value>
+    </labels>
+    <labels>
+        <fullName>North_Asia_Sub_Regions</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>North_Asia_Sub_Regions</shortDescription>
+        <value>China:Japan;Korea;</value>
+    </labels>
+    <labels>
+        <fullName>PQT_Orginazation_Wide_Email_Id</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PQT_Orginazation_Wide_Email_Id</shortDescription>
+        <value>0D23a000000CiakCAC</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_Create_Customer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED Create Customer</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/customer</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_TaskV1</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED TaskV1</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/tasksv1</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_TaskV2</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED TaskV2</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/tasksv2</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_TaskV3</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED TaskV3</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/tasksv3</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_TaskV4</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED TaskV4</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/tasksv4</value>
+    </labels>
+    <labels>
+        <fullName>XCEED_Update_Customer</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>XCEED Update Customer</shortDescription>
+        <value>https://y0143dcmdj.execute-api.ap-south-1.amazonaws.com/prod/updatecustomer</value>
+    </labels>
+</CustomLabels>

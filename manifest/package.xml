@@ -7,10 +7,12 @@
 		<members>DRL_LeadTriggerHelperTest</members>
 		<members>DRL_TestUtility</members>
 		<members>LeadTriggerHandler</members>
+		<members>DRL_CampaignInfluenceHelperTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
 		<members>LeadTrigger</members>
+		<members>campaignInfluenceAttributes</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -76,6 +78,10 @@
 		<members>Lead.DRL_Lead</members>
 		<members>Lead.DRL_Prospect</members>
 		<name>RecordType</name>
+	</types>
+	<types>
+		<members>DRL_ModelIdValue</members>
+		<name>CustomLabel</name>
 	</types>
 	<types>
 		<members>Admin</members>

@@ -149,6 +149,69 @@ public class DRL_TestUtility {
             return objCampaign;
         }
     }
+    /**
+    * @ Name     :  CampaignInfluenceModel Builder
+    * @ Purpose  :  To create CampaignInfluenceModel record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignInfluenceModelBuilder {
+        private Id idModelId;
+
+        public CampaignInfluenceModelBuilder(){
+            this.idModelId = '';
+        }
+
+        public CampaignInfluenceModelBuilder setModelId(Id idValue) {
+            this.idModelId = idValue;
+            return this;
+        }
+
+        public CampaignInfluenceModel createCampaignInfluenceModel() {
+            CampaignInfluenceModel objCampaignInfluenceModel = new CampaignInfluenceModel();
+            objCampaignInfluenceModel.Id = this.idModelId;
+            return objCampaignInfluenceModel;
+        }
+    }
+    /**
+    * @ Name     :  CampaignInfluence Builder
+    * @ Purpose  :  To create CampaignInfluence record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignInfluenceBuilder {
+        private Id idCampaignId;
+        private Id idOpportunityId;
+        private Decimal decInfluencePercentage;
+        private Id idModelId;
+
+    public CampaignInfluenceBuilder setCampaignId(Id idValue) {
+        this.idCampaignId = idValue;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setOpportunityId(Id idValue) {
+        this.idOpportunityId = idValue;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setInfluence(Decimal decInfluencePercentage) {
+        this.decInfluencePercentage = decInfluencePercentage;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setModelId(Id idValue) {
+        this.idModelId = idValue;
+        return this;
+    }
+    
+    public CampaignInfluence createCampaignInfluence() {
+        CampaignInfluence objCampaignInfluence = new CampaignInfluence();
+        objCampaignInfluence.CampaignId = this.idCampaignId;
+        objCampaignInfluence.OpportunityId = this.idOpportunityId;
+        objCampaignInfluence.Influence = this.decInfluencePercentage;
+        objCampaignInfluence.ModelId = this.idModelId;
+        return objCampaignInfluence;
+    }
+}
 
     /**
     * @ Name     :  AccountBuilder
@@ -157,8 +220,10 @@ public class DRL_TestUtility {
     **/
     public class AccountBuilder {
         private String strName;
+        private Boolean blnIsParent;
         public AccountBuilder() {
             this.strName = '';
+            this.blnIsParent = false;
         }
         
         public AccountBuilder setName(String strValue) {
@@ -166,9 +231,15 @@ public class DRL_TestUtility {
             return this;
         }
 
+        public AccountBuilder setIsParent(Boolean blnValue) {
+            this.blnIsParent = blnValue;
+            return this;
+        }
+
         public Account createAccount() {
             Account objAccount = new Account();
             objAccount.Name = this.strName;
+            objAccount.Is_Parent__c = this.blnIsParent;
             return objAccount;
         }
     }
