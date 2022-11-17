@@ -291,6 +291,10 @@ public without sharing class DRL_LeadTriggerHelper {
         }
 
         for (Lead objLead : list_Leads) {
+            if (String.isBlank(objLead.DRL_Prospect__c)) {
+                continue;
+            }
+            
             Lead objProspect = map_LeadById.containsKey(objLead.DRL_Prospect__c) 
                 ? map_LeadById.get(objLead.DRL_Prospect__c)
                 : new Lead();
