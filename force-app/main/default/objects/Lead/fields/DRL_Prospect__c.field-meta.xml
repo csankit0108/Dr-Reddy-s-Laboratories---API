@@ -6,7 +6,7 @@
     <externalId>false</externalId>
     <label>Prospect</label>
     <lookupFilter>
-        <active>true</active>
+        <active>false</active>
         <errorMessage>Value does not exist or does not match filter criteria.</errorMessage>
         <filterItems>
             <field>Lead.RecordType.DeveloperName</field>

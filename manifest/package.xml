@@ -14,71 +14,18 @@
 	</types>
 	<types>
 		<members>Campaign.DRL_CampaignCode__c</members>
-		<members>DRL_ExceptionLog__c.ClassName__c</members>
-		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
-		<members>DRL_ExceptionLog__c.ExceptionType__c</members>
-		<members>DRL_ExceptionLog__c.MethodName__c</members>
-		<members>DRL_ExceptionLog__c.StackTrace__c</members>
+		<members>DRL_UTMSource__mdt.IsActive__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
 		<members>Lead.DRL_Email__c</members>
+		<members>Lead.DRL_Prospect__c</members>
 		<members>Lead.DRL_SourceCampaign__c</members>
 		<members>Lead.DRL_UTMCampaign__c</members>
 		<members>Lead.DRL_UTMSource__c</members>
-		<members>Lead.DRL_Prospect__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
-		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>
 		<name>CustomObject</name>
-	</types>  
-	<types>
-		<members>DRL_ExceptionLog__c</members>
-		<name>CustomTab</name>
-	</types> 
-	<types>
-		<members>Lead.DRL_Email</members>
-		<name>QuickAction</name>
-	</types>
-	<types>
-		<members>Lead.DRL_ProspectFields</members>
-		<name>FieldSet</name>
-	</types>
-	<types>
-		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
-		<members>Lead-Prospect</members>
-		<name>Layout</name>
-	</types>
-	<types>
-		<members>Lead.DRL_LeadProspectDuplicationRule</members>
-		<name>DuplicateRule</name>
-	</types>
-	<types>
-		<members>Lead.DRL_LeadProspectEmailMatchingRule</members>
-		<name>MatchingRule</name>
-	</types>
-	<types>
-		<members>DRL_ContactRoleRecordCreation</members>
-		<members>DRL_CalculatePotentialAtLaunchOnOpportunity</members>
-		<name>Flow</name>
-	</types>
-	<types>
-		<members>Opportunity.DRL_ContactChangeValidation</members>
-		<name>ValidationRule</name>
-	</types>
-	<types>
-		<members>Lead.Lead Process</members>
-		<members>Lead.Prospect Process</members>
-		<name>BusinessProcess</name>
-	</types>
-	<types>
-		<members>Lead.DRL_Lead</members>
-		<members>Lead.DRL_Prospect</members>
-		<name>RecordType</name>
-	</types>
-	<types>
-		<members>Admin</members>
-		<name>Profile</name>
 	</types>
 	<version>55.0</version>
 </Package>

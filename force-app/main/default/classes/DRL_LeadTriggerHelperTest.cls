@@ -8,21 +8,22 @@
 * ======================================================================================================
 *   04-11-2022      |  deeksha.suvarna@absyz.com            |  1.0          |  Initial Version
 *   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |  Campaign Record Creation
+*   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |  Campaign Record Creation
 *******************************************************************************************************/
 @isTest
 public class DRL_LeadTriggerHelperTest {
     public static Boolean blnThrowException = false;
     /**
-    * @ author       :  Deeksha Suvarna
-    * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
-    **/
+* @ author       :  Deeksha Suvarna
+* @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
+**/
     @TestSetup
     static void createData() {
-
+        
         /**
-        * @ author       :  Mahalakshmi S
-        * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
-        **/
+* @ author       :  Mahalakshmi S
+* @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
+**/
         Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
             .setCampaignName('Test Campaign')
             .setAllowMassEmail('No')
@@ -31,52 +32,68 @@ public class DRL_LeadTriggerHelperTest {
             .setIsActive(true)
             .createCampaign();
         insert objCampaign;
-
+        
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        
+        // Lead objLead = new DRL_TestUtility.LeadBuilder()
+        //     .setFirstName('Test')
+        //     .setLastName('User')
+        //     .setEmail('testuser@yopmail.com')
+        //     .setCompany('Absyz')
+        //     .setUtmCampaign('Campaign 1005')
+        //     .setUtmSource('Test MDT 2')
+        //     .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+        //     .createLead();
+        // insert objLead;
+        
+        Lead objLead2 = new DRL_TestUtility.LeadBuilder()
+            .setFirstName('Test')
+            .setLastName('User')
+            .setEmail('testuser5@yopmail.com')
+            .setCompany('Absyz')
+            .setUtmCampaign('Campaign 1005')
+            .setUtmSource('Test MDT 2')
+            .setStatus('Open')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Prospect'))
+            .setCountry('India')
+            .setReasonForDecline('Product Issues')
+            .setUtmCampaign('Campaign 1005')
+            .setUtmSource('Test MDT 2')
+            .createLead();
+        insert objLead2;
+    }
+    
+    /**
+* @ author       :  Deeksha Suvarna
+* @ description  :  This method is used to test the condition - Prospect does not exist, Child lead record is created.  
+**/
+    @isTest
+    private static void testLeadMethod() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         
         Lead objLead = new DRL_TestUtility.LeadBuilder()
             .setFirstName('Test')
-            .setLastName('User')
-            .setEmail('testuser@yopmail.com')
+            .setLastName('Lead')
+            .setEmail('testlead@yopmail.com')
             .setCompany('Absyz')
-            .setUtmCampaign('Campaign 1005')
-            .setUtmSource('Test_Source_1')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
-        insert objLead;
-    }
-
-    /**
-    * @ author       :  Deeksha Suvarna
-    * @ description  :  This method is used to test the condition - Prospect does not exist, Child lead record is created.  
-    **/
-    @isTest
-    private static void testLeadMethod() {
-        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
-
-        Lead objLead = new DRL_TestUtility.LeadBuilder()
-                .setFirstName('Test')
-                .setLastName('Lead')
-                .setEmail('testlead@yopmail.com')
-                .setCompany('Absyz')
-                .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-                .createLead();
         Test.startTest();
         insert objLead;
         Test.stopTest();
-
+        
         List<Lead> list_leads = [SELECT 
-                                Id,
-                                Email
-                                FROM Lead
-                                WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
+                                 Id,
+                                 Email
+                                 FROM Lead
+                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
         System.assert(!list_leads.isEmpty(), 'Prospect was not created!');
     }
-
+    
     /**
-    * @ author       :  Deeksha Suvarna
-    * @ description  :  This method is used to test the condition - Prospect exist, Child lead record is created,.  
-    **/
+* @ author       :  Deeksha Suvarna
+* @ description  :  This method is used to test the condition - Prospect exist, Child lead record is created,.  
+**/
     @isTest
     private static void testLeadforExistingProspect() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
@@ -86,44 +103,72 @@ public class DRL_LeadTriggerHelperTest {
                         WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')
                         LIMIT 1];
         Lead objNewLead = new DRL_TestUtility.LeadBuilder()
-                .setFirstName('Test')
-                .setLastName('User1')
-                .setEmail('testuser@yopmail.com')
-                .setCompany('Absyz')
-                .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-                .createLead();    
+            .setFirstName('Test')
+            .setLastName('User1')
+            .setEmail('testuser5@yopmail.com')
+            .setCompany('Absyz')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+            .createLead();    
         Test.startTest();
         insert objNewLead;
         Test.stopTest();
-
+        
         List<Lead> list_leads = [SELECT 
-                                Id,
-                                Email
-                                FROM Lead
-                                WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
-                                AND DRL_Email__c = 'testuser@yopmail.com'
-                                AND DRL_Prospect__c = :objLead.Id];
+                                 Id,
+                                 Email
+                                 FROM Lead
+                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
+                                 AND DRL_Email__c = 'testuser5@yopmail.com'
+                                 AND DRL_Prospect__c = :objLead.Id];
         System.assert(!list_leads.isEmpty(), 'Lead failed to get linked to existing Prospect!');
     }
-
+    
     /**
-    * @ author       :  Deeksha Suvarna
-    * @ description  :  Test method to cover catch blocks
-    **/
+* @ author       :  Deeksha Suvarna
+* @ description  :  Test method to cover catch blocks
+**/
     @isTest
     static void testExceptions() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         Lead objLead = new DRL_TestUtility.LeadBuilder()
-                .setFirstName('Test')
-                .setLastName('User')
-                .setEmail('testuser1@yopmail.com')
-                .setCompany('Absyz')
-                .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-                .createLead();
+            .setFirstName('Test')
+            .setLastName('User')
+            .setEmail('testuser1@yopmail.com')
+            .setCompany('Absyz')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+            .createLead();
         Test.startTest();
         blnThrowException = true;
         insert objLead;
         blnThrowException = false;
         Test.stopTest();
     }
+    /**
+* @ author       :  Wafa Shaikh
+* @ description  :  This method is used to test the Prospect Status When the  child Lead is updated 
+**/
+    @isTest
+    private static void TestProspectStatus(){
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        
+        Lead objLead=[Select Id,
+                      Email,
+                      Status,	
+                      DRL_Prospect__c 
+                      From Lead
+                      Where Email='testuser5@yopmail.com'  and 
+                      RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
+                      
+                      
+                     ];
+        system.debug('record fetched');
+        
+        Test.startTest();
+        
+        objLead.Status='Unqualified';
+        Update objLead;        
+        Test.stopTest();
+        
+        
+    } 
 }
