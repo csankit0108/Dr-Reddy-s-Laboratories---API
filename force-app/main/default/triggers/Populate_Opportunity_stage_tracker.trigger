@@ -1,7 +1,8 @@
 trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after update,before update,before delete) 
 {
     ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
-    system.debug('Opportunity API Record Type ID--->'+optyRecordTypeID);    
+    system.debug('Opportunity API Record Type ID--->'+optyRecordTypeID);  
+    
     if(trigger.isbefore)
     {
         if(trigger.isupdate)
@@ -39,9 +40,9 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
         system.debug('==accId=='+accId);
         // !System.isBatch() added to the below IF by Absyz team to avoid errors while running DRL_UpdatePotentialAtLaunchBatch.
         if(accId!=null&&accId!=''&&!Test.isRunningTest() && !System.isFuture() && !System.isBatch()) AccountTeamAccessHelper.accountTeamAccess(accId);
+        
         if(trigger.isinsert)
         {
-            
             list<Opportunity_stage_tracker__c> ostList = new list<Opportunity_stage_tracker__c>();
             map<id,list<Opportunity_stage_tracker__c>> ostMap = new map<id,list<Opportunity_stage_tracker__c>>();
             set<id> oppId = new set<id>();
@@ -81,7 +82,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                         ostMap.get(i.opportunity__c).add(i);
                     }
                     else
-                    {
+                    { 
                         ostMap.put(i.opportunity__c,new list<Opportunity_stage_tracker__c>());
                         ostMap.get(i.opportunity__c).add(i);
                     }
@@ -175,7 +176,6 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     if(tempOpp.Update_MOM_Tracker__c == true)
                     {
                         
-                        
                         Opportunity_stage_tracker__c ostObj = new Opportunity_stage_tracker__c();
                         ostObj.MOM__c = tempOpp.New_notes__c;
                         ostObj.name = tempOpp.stagename;
@@ -202,6 +202,8 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     }
                 }
             }
+            //DML For ContactRole record creation
+            if(oclist.size()>0) insert oclist;
             system.debug('---**'+oppcollector);
             if(oppcollector !=null && !oppcollector.isempty()&&!Test.isRunningTest())
                 MomTrackerTriggerhandler mttobj = new MomTrackerTriggerhandler(oppcollector);     
