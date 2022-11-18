@@ -1,0 +1,19 @@
+.THIS.flex-container {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+}
+.THIS .flex-div{
+    text-align: left;
+    background-color: #f3f3f3;
+    box-shadow: 5px 5px #e6e3e3;
+    margin: 5px;
+}
+.THIS .slds-card{
+    background-color: #f3f3f3 !important;
+}
+.THIS .card{
+    background-color: #f3f3f3 !important;
+    box-shadow:var();
+}

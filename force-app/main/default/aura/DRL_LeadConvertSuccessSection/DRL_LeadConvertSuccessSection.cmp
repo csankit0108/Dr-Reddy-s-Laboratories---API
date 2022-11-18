@@ -1,0 +1,67 @@
+<!--
+* 
+* @ Name    :   DRL_LeadConvertSuccessSection
+* @ Purpose :   To Display Account,Contact and Opportunities On successfull Lead conversion
+* @ Author  :   Kishore Pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   17-11-2022      |  Kishore Pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:component>
+    <aura:attribute name="objaccount" type="Account"/>
+    <aura:attribute name="objcontact" type="Contact"/>
+    <aura:attribute name="objopportunity" type="Opportunity"/>
+    <aura:attribute name="list_Opportunities" type="List"/>
+    <aura:attribute name="list_opportunityColumns" type="List" default="[]"/>
+    
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
+    
+
+    <div class="flex-container">
+        <div class="flex-div">
+            <lightning:card variant="Narrow" class="card" iconName="standard:account" >
+                <aura:set attribute="title">
+                    <a href="{!join('','/',v.objaccount.Id)}" target="_blank">{!v.objaccount.Name}</a>
+                </aura:set>
+                <p class="slds-var-p-horizontal_small">
+                    Industry : {!v.objaccount.Industry}
+                </p>
+            </lightning:card>
+        </div>
+        <div class="flex-div">
+            <lightning:card variant="Narrow"  class="card" iconName="standard:contact" >
+                <aura:set attribute="title">
+                    <a href="{!join('','/',v.objcontact.Id)}" target="_blank">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
+                </aura:set>
+                <p class="slds-var-p-horizontal_small">
+                    <p>FirstName : {!v.objcontact.FirstName}</p>
+                    <p>LastName : {!v.objcontact.LastName}</p>
+                </p>
+            </lightning:card>
+        </div>
+        <div class="flex-div">
+            <aura:if isTrue="{!!empty(v.objopportunity)}">
+                <lightning:card  class="card" variant="Narrow" iconName="standard:opportunity" >
+                    <aura:set attribute="title">
+                        <a href="{!join('','/',v.objopportunity.Id)}" target="_blank">{!v.objopportunity.Name}</a>
+                    </aura:set>
+                    <p class="slds-var-p-horizontal_small">
+                        <p>Name : {!v.objopportunity.Name}</p>
+                        <p>Stage : {!v.objopportunity.StageName}</p>
+                    </p>
+                </lightning:card>
+            </aura:if>
+        </div>
+    </div>
+    <div class="childOpportunities">
+        <aura:if isTrue="{!!empty(v.list_Opportunities)}">
+            <lightning:datatable
+                columns="{! v.list_opportunityColumns }"
+                data="{! v.list_Opportunities }"
+                keyField="Id"/>
+        </aura:if>
+
+    </div>
+</aura:component>

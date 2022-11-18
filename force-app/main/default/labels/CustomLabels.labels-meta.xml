@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>DRL_ConvertLeadDataLoadError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConvertLeadDataLoadError</shortDescription>
+        <value>error while loading Lead Details</value>
+    </labels>
+    <labels>
+        <fullName>DRL_ConvertLeadError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConvertLeadError</shortDescription>
+        <value>error while Converting Lead.</value>
+    </labels>
+    <labels>
+        <fullName>DRL_LeadAlreadyConverted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LeadAlreadyConvertedMessage</shortDescription>
+        <value>Lead has already Converted</value>
+    </labels>
+    <labels>
+        <fullName>DRL_LeadAlreadyConvertedMessageHeader</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LeadAlreadyConvertedMessageHeader</shortDescription>
+        <value>Lead Status</value>
+    </labels>
+    <labels>
+        <fullName>DRL_accountNotRelatedToContactError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>accountNotRelatedToContactError</shortDescription>
+        <value>Existing Account should be related to existing Contact</value>
+    </labels>
+    <labels>
+        <fullName>DRL_contactWithEmailExistError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>contactWithEmailExistError</shortDescription>
+        <value>Email already exists!</value>
+    </labels>
+    <labels>
+        <fullName>DRL_convertLeadDuplicateAccountError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadDuplicateAccountError</shortDescription>
+        <value>Duplicate Account Found, Please select existing Account</value>
+    </labels>
+    <labels>
+        <fullName>DRL_convertLeadDuplicateContactError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadDuplicateContactError</shortDescription>
+        <value>Duplicate Contact Found, Please select existing contact</value>
+    </labels>
+    <labels>
+        <fullName>DRL_convertLeadRequiredFieldsError</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadRequiredFieldsError</shortDescription>
+        <value>Please fill (*) required fields</value>
+    </labels>
+    <labels>
+        <fullName>DRL_leadConvertSuccessMessage</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSuccessMessage</shortDescription>
+        <value>Leads Converted successfully</value>
+    </labels>
+    <labels>
+        <fullName>DRL_productField_errorMsg</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Product field is empty</shortDescription>
+        <value>Please update the Product field and convert the Lead</value>
+    </labels>
+</CustomLabels>

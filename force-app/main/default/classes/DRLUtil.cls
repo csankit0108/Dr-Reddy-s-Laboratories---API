@@ -322,4 +322,52 @@ else{
         
         return list_Errors;
     }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to return fieldset information in string format
+    * @ params       :  strSObjectName - Object Name
+    *                   strFieldSetName - FieldSet Name
+    * @ return       :  strFieldSet - fieldset objects in JSON string format
+    **/
+    public static String getFieldSet(String strSObjectName,String strFieldSetName) {
+        String strFieldSet = '';
+        SObjectType objToken = Schema.getGlobalDescribe().get(strSObjectName);
+        Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
+        Map<String, Schema.FieldSet> map_fieldSetNameToFieldSet = objDescribe.fieldSets.getMap();
+        if(map_fieldSetNameToFieldSet.containsKey(strFieldSetName))
+            for(Schema.FieldSetMember objField : map_fieldSetNameToFieldSet.get(strFieldSetName).getFields()) {
+                    
+                if(strFieldSet != ''){
+                    strFieldSet += ',';
+                }
+                String jsonPart = '{';
+                jsonPart += '"required":"' + (objField.getDBRequired() || objField.getRequired()) + '",';
+                jsonPart += '"type":"' + (objField.getType()) + '",';
+                jsonPart += '"label":"' + (objField.getLabel()) + '",';
+                jsonPart += '"name":"' + objField.getFieldPath() + '"';
+                jsonPart += '}';
+                strFieldSet += jsonPart;
+            }
+        return '['+strFieldSet+']';
+    }
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to get the record type name and recordtypeId of a object
+    * @ params       :  strObjectName - Object Name where the record types exist
+    * @ return       :  Returns map of record type names by their record type Ids of that particular object.
+    **/
+    public static Map<Id, String> getRecordTypeIdToNameMap(String strObjectName) {
+        Schema.DescribeSObjectResult objDescribeSObjectResult = Schema.getGlobalDescribe().get(strObjectName).getDescribe();
+        Map<String, RecordTypeInfo> map_RecordTypeInfoByName = objDescribeSObjectResult.getRecordTypeInfosByDeveloperName();
+        Map<Id, String> map_RecordTypeIdByDeveloperName = new Map<Id, String>();
+        for (RecordTypeInfo objRecordTypeInfo : map_RecordTypeInfoByName.values()) {
+                map_RecordTypeIdByDeveloperName.put(objRecordTypeInfo.getRecordTypeId(),objRecordTypeInfo.getName());         
+        }        
+        return map_RecordTypeIdByDeveloperName;
+    }
+
+
+
+
 }
