@@ -1,7 +1,6 @@
 trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after update,before update,before delete) 
 {
     ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
-    system.debug('Opportunity API Record Type ID--->'+optyRecordTypeID);  
     
     if(trigger.isbefore)
     {
@@ -202,8 +201,12 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     }
                 }
             }
-            //DML For ContactRole record creation
-            if(oclist.size()>0) insert oclist;
+            /*Added by Absyz to create OpportunityContactRole when 
+            Contact is associated to an Opportunity*/
+            if (!oclist.isEmpty()) {
+                insert oclist;
+            }
+
             system.debug('---**'+oppcollector);
             if(oppcollector !=null && !oppcollector.isempty()&&!Test.isRunningTest())
                 MomTrackerTriggerhandler mttobj = new MomTrackerTriggerhandler(oppcollector);     
