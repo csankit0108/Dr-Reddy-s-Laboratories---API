@@ -26,11 +26,16 @@
 		<members>Lead.DRL_UTMCampaign__c</members>
 		<members>Lead.DRL_UTMSource__c</members>
 		<members>Lead.DRL_Prospect__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Active__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.OpportunityStageName__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.SortOrder__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Weightage__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
 		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt</members>
 		<name>CustomObject</name>
 	</types>  
 	<types>
