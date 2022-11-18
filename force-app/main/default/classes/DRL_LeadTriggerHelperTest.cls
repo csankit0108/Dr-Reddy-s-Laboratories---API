@@ -40,7 +40,7 @@ public class DRL_LeadTriggerHelperTest {
             .setEmail('testuser@yopmail.com')
             .setCompany('Absyz')
             .setUtmCampaign('Campaign 1005')
-            .setUtmSource('Test MDT 2')
+            .setUtmSource('Test_Source_1')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
         insert objLead;
