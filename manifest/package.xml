@@ -10,6 +10,7 @@
 	</types>
 	<types>
 		<members>LeadTrigger</members>
+		<members>Populate_Opportunity_stage_tracker</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -58,7 +59,6 @@
 		<name>MatchingRule</name>
 	</types>
 	<types>
-		<members>DRL_ContactRoleRecordCreation</members>
 		<members>DRL_CalculatePotentialAtLaunchOnOpportunity</members>
 		<name>Flow</name>
 	</types>
