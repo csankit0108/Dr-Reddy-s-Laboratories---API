@@ -108,7 +108,7 @@ trigger campaignInfluenceAttributes on CampaignInfluence (after insert,after upd
         }
         
     }
-    if(trigger.isAfter && (trigger.isInsert || trigger.isUpdate)) {
-    DRL_CampaignInfluenceAttributesHelper.calculateValueOfBioBatch(trigger.new);
+    if (trigger.isAfter && (trigger.isInsert || trigger.isUpdate)) {
+        DRL_CampaignInfluenceAttributesHelper.calculateValueOfBioBatch(trigger.new);
     }
 }

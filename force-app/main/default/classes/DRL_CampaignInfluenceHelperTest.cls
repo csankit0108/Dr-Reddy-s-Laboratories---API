@@ -10,13 +10,13 @@
 *******************************************************************************************************/
 @isTest
 public with sharing class DRL_CampaignInfluenceHelperTest {
-    public static Boolean blnThrowException = false;
-    @TestSetup
-    static void createData() { 
     /**
     * @ author       :  Dinesh Chandra
     * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceAttributesHelper'
     **/
+    public static Boolean blnThrowException = false;
+    @TestSetup
+    static void createData() { 
     Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
         .setCampaignName('Test Campaign')
         .setAllowMassEmail('No')
@@ -26,37 +26,38 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     insert objCampaign;
      
     Account objAccount = new DRL_TestUtility.AccountBuilder()
-            .setName('Test Account')
-            .setIsParent(true)
-            .createAccount();
+        .setName('Test Account')
+        .setIsParent(true)
+        .createAccount();
     insert objAccount;
 
     Contact objContact = new DRL_TestUtility.ContactBuilder()
-            .setFirstName('Test')
-            .setLastName('Contact')
-            .setAccountId(objAccount.Id)
-            .createContact();
+        .setFirstName('Test')
+        .setLastName('Contact')
+        .setAccountId(objAccount.Id)
+        .createContact();
     insert objContact;
         
     Product2 objProduct = new DRL_TestUtility.ProductBuilder()
-            .setName('Test Product')
-            .createProduct();
+        .setName('Test Product')
+        .createProduct();
     insert objProduct;
 
     Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
-            .setName('Test Opportunity')
-            .setAccountId(objAccount.Id)
-            .setContactId(objContact.Id)
-            .setProductId(objProduct.Id)
-            .setStageName('Discussion')
-            .setCloseDate(System.today())
-            .setPriceAtLaunch(1000)
-            .setQuantityAtLaunch(10)
-            .setLaunchYear('2000')
-            .setSourceType('Primary Source')
-            .createOpportunity();
+        .setName('Test Opportunity')
+        .setAccountId(objAccount.Id)
+        .setContactId(objContact.Id)
+        .setProductId(objProduct.Id)
+        .setStageName('Discussion')
+        .setCloseDate(System.today())
+        .setPriceAtLaunch(1000)
+        .setQuantityAtLaunch(10)
+        .setLaunchYear('2000')
+        .setSourceType('Primary Source')
+        .createOpportunity();
     insert objOpportunity;
     }
+
     /**
     * @ author       :  Dinesh Chandra
     * @ description  :  This method is used to test the condition - Insert CampaignInfluence Record.  
@@ -65,16 +66,18 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     private static void testCampaignMethod() {
         Campaign objCampaign = [SELECT Id FROM Campaign LIMIT 1];
         Opportunity objOpportunity = [SELECT Id FROM Opportunity LIMIT 1];
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = TRUE LIMIT 1];
         CampaignInfluence objCampaignInfluence = new DRL_TestUtility.CampaignInfluenceBuilder()
             .setCampaignId(objCampaign.Id)
             .setOpportunityId(objOpportunity.Id)
             .setInfluence(40.00)
-            .setModelId(System.Label.DRL_ModelIdValue)
+            .setModelId(objCampaignInfluenceModel.Id)
             .createCampaignInfluence();
         Test.startTest();
         insert objCampaignInfluence;
         Test.stopTest();
     }
+
      /**
     * @ author       :  Dinesh Chandra
     * @ description  :  Test method to cover catch blocks
@@ -83,11 +86,12 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     static void testExceptions() {
         Campaign objCampaign = [SELECT Id FROM Campaign LIMIT 1];
         Opportunity objOpportunity = [SELECT Id FROM Opportunity LIMIT 1];
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = TRUE LIMIT 1];
         CampaignInfluence objCampaignInfluence = new DRL_TestUtility.CampaignInfluenceBuilder()
             .setCampaignId(objCampaign.Id)
             .setOpportunityId(objOpportunity.Id)
             .setInfluence(40.00)
-            .setModelId(System.Label.DRL_ModelIdValue)
+            .setModelId(objCampaignInfluenceModel.Id)
             .createCampaignInfluence();
         Test.startTest();
         blnThrowException = true;
