@@ -10,6 +10,7 @@
 	</types>
 	<types>
 		<members>LeadTrigger</members>
+		<members>Populate_Opportunity_stage_tracker</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -20,16 +21,22 @@
 		<members>DRL_ExceptionLog__c.MethodName__c</members>
 		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
+		<members>DRL_UTMSource__mdt.IsActive__c</members>
 		<members>Lead.DRL_Email__c</members>
 		<members>Lead.DRL_SourceCampaign__c</members>
 		<members>Lead.DRL_UTMCampaign__c</members>
 		<members>Lead.DRL_UTMSource__c</members>
 		<members>Lead.DRL_Prospect__c</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt.Active__c</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt.LeadStatus__c</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt.Weightage__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
 		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<name>CustomObject</name>
 	</types>  
 	<types>
@@ -46,6 +53,7 @@
 	</types>
 	<types>
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
+		<members>DRL_ProspectLeadStatusMapping__mdt-Prospect Lead Status Mapping Layout</members>
 		<members>Lead-Prospect</members>
 		<name>Layout</name>
 	</types>
@@ -58,7 +66,6 @@
 		<name>MatchingRule</name>
 	</types>
 	<types>
-		<members>DRL_ContactRoleRecordCreation</members>
 		<members>DRL_CalculatePotentialAtLaunchOnOpportunity</members>
 		<name>Flow</name>
 	</types>
@@ -79,6 +86,10 @@
 	<types>
 		<members>Admin</members>
 		<name>Profile</name>
+	</types>
+	<types>
+		<members>CLDRL00002</members>
+		<name>CustomLabel</name>
 	</types>
 	<version>55.0</version>
 </Package>
