@@ -577,21 +577,22 @@
         });
         $A.enqueueAction(action);
     },
-    contactValidation: function(component,event)
-    {
+    /**
+     * @ author      : Deeksha(Absyz)
+     * @ description : This method is used to validate if contact is filled.
+     **/
+    contactValidation: function(component, event) {
         var contactId = component.get("v.contactId");
-        if (contactId === '' || contactId === undefined )
-        	{            
-                var toastEvent = $A.get("e.force:showToast");
-                var message = $A.get("$Label.c.CLDRL00002");
-                toastEvent.setParams({
-                    "title":"Error!",
-                    "message":message,
-                    "type":"error"
+        if (contactId === '' || contactId === undefined ) {            
+            var toastEvent = $A.get("e.force:showToast");
+            var message = $A.get("$Label.c.CLDRL00002");
+            toastEvent.setParams({
+                "title":"Error!",
+                 "message":message,
+                "type":"error"
             });
             toastEvent.fire();  
-        }
-        else {
+        } else {
             event.preventDefault(); //Prevent default submit
             var response = component.find("APIOptyCreateForm").submit();
         } 
