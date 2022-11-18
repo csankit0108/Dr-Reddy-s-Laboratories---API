@@ -5,6 +5,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>API Campaign Influence Model Id</shortDescription>
-        <value>03V2h0000008SNdEAM</value>
+        <value>DRL_APICampaignsDistributionModel</value>
+    </labels>
+    <label>
+        <fullName>CLDRL00002</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CLDRL00002</shortDescription>
+        <value>Contact can not be blank</value>
     </labels>
 </CustomLabels>
