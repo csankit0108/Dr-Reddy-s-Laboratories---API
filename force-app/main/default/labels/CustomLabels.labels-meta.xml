@@ -7,4 +7,11 @@
         <shortDescription>CLDRL00002</shortDescription>
         <value>Contact can not be blank</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00001</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>API Campaign Influence Model Id</shortDescription>
+        <value>DRL_APICampaignsDistributionModel</value>
+    </labels>
 </CustomLabels>
