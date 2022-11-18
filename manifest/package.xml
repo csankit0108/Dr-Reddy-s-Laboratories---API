@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <!--<types>
+    <types>
         <members>DRLUtil</members>
         <members>DRL_ConvertLeadProspectController</members>
         <members>DRL_LeadTriggerHelper</members>
@@ -87,7 +87,7 @@
     <types>
         <members>Admin</members>
         <name>Profile</name>
-    </types>-->
+    </types>
     <types>
         <members>DRL_ConvertLeadOpportunitySection</members>
         <members>DRL_ConvertLeadProspect</members>
