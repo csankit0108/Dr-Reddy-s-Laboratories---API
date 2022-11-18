@@ -259,11 +259,13 @@ public without sharing class DRL_LeadTriggerHelper {
         //Set to store the Prospect Ids
         Set<Id> set_ProspectIds = new Set<Id>();
         //map to get the weightage of Status value  
-        Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
+        Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
+            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
         //List of Prospect records to update
         List<Lead> list_ProspectsToUpdate  = new List<Lead>();
         //list of DRL_ProspectLeadStatusMapping__mdt records
-        List<DRL_ProspectLeadStatusMapping__mdt> list_ProspectLeadStatusMappings = new List<DRL_ProspectLeadStatusMapping__mdt>();
+        List<DRL_ProspectLeadStatusMapping__mdt> list_ProspectLeadStatusMappings 
+            = new List<DRL_ProspectLeadStatusMapping__mdt>();
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
 
