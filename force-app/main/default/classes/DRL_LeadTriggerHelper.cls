@@ -247,5 +247,95 @@ public without sharing class DRL_LeadTriggerHelper {
                 objLead.LeadSource = map_LeadSourceByUtmSource.get(objLead.DRL_UTMSource__c);
             }
         }
-    }     
+    }
+
+    /*
+    * @ author       : Wafa Shaikh
+    * @ description  : Updating the prosepct record with the Status value based on the Lead records status value
+    * @ params       : list_Leads - List of Lead records
+    * @ return       : N/A
+    */
+    public static void processAfterUpdate(List<Lead> list_Leads) {
+        //Set to store the Prospect Ids
+        Set<Id> set_ProspectIds = new Set<Id>();
+        //map to get the weightage of Status value  
+        Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
+            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
+        //List of Prospect records to update
+        List<Lead> list_ProspectsToUpdate  = new List<Lead>();
+        //list of DRL_ProspectLeadStatusMapping__mdt records
+        List<DRL_ProspectLeadStatusMapping__mdt> list_ProspectLeadStatusMappings 
+            = new List<DRL_ProspectLeadStatusMapping__mdt>();
+        //List of all the Errors occurred during DML operation
+        List<String> list_ConsolidatedDMLErrors = new List<String>();
+
+        for (Lead objLead : list_Leads) {
+            if (String.isNotBlank(objLead.DRL_Prospect__c)) {
+                set_ProspectIds.add(objLead.DRL_Prospect__c);
+            }
+        }
+
+        //Map of Prospect records by Id
+        Map<Id, Lead> map_LeadById = new Map<Id, Lead>([
+            SELECT Id, Status
+            FROM Lead
+            WHERE Id IN :set_ProspectIds
+        ]);
+
+        list_ProspectLeadStatusMappings = DRL_ProspectLeadStatusMapping__mdt.getAll().values();
+        //Fetch the records from Custom metadata and form a map of metadata record by status value
+        for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : list_ProspectLeadStatusMappings) {
+            if (objProspectLeadStatusMapping.Active__c) {
+                map_StatusMappingByLeadStatus.put(
+                    objProspectLeadStatusMapping.LeadStatus__c, 
+                    objProspectLeadStatusMapping
+                );
+            }
+        }
+
+        for (Lead objLead : list_Leads) {
+            if (String.isBlank(objLead.DRL_Prospect__c)) {
+                continue;
+            }
+            
+            Lead objProspect = map_LeadById.containsKey(objLead.DRL_Prospect__c) 
+                ? map_LeadById.get(objLead.DRL_Prospect__c)
+                : new Lead();
+            //New status value of the Lead
+            String strLeadStatus = objLead.Status;
+            //Current status value of the Prospect
+            String strProspectStatus = objProspect?.Status;
+            //Weightage of the new Lead status value
+            Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strLeadStatus)
+                ? (Integer)map_StatusMappingByLeadStatus.get(strLeadStatus).Weightage__c
+                : 0;
+            //Weightage of the current status value of the Prospect
+            Integer intOldStatusWeightage = (String.isNotBlank(strProspectStatus) && map_StatusMappingByLeadStatus.containsKey(strProspectStatus))
+                ? (Integer)map_StatusMappingByLeadStatus.get(strProspectStatus).Weightage__c
+                : 0;
+            
+            /*Check if the new Lead status weightage > current status of Prospect and
+              old Lead status is not same as the new Prospect status that needs to be updated
+            */
+            if (
+                (intNewStatusWeightage > intOldStatusWeightage) &&
+                map_StatusMappingByLeadStatus.containsKey(strLeadStatus) && 
+                (strProspectStatus != map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c)
+            ) {
+                objProspect.Status = map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c;
+                list_ProspectsToUpdate.add(objProspect);
+            }
+        }
+
+        if (!list_ProspectsToUpdate.isEmpty()) {
+            DRL_LeadTriggerHelper.blnSkipTrigger = true;
+            List<Database.SaveResult> list_Results = Database.update(list_ProspectsToUpdate, false);
+            DRL_LeadTriggerHelper.blnSkipTrigger = false;
+            list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Update'));
+        }
+
+        if (!list_ConsolidatedDMLErrors.isEmpty()) {
+            DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterUpdate', list_ConsolidatedDMLErrors);
+        }   
+    }  
 }
