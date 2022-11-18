@@ -223,15 +223,16 @@ public without sharing class DRL_LeadTriggerHelper {
             }
         }
         
-        //Fetch Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
+        //Fetch active Lable and LeadSource__c from UTM Source metadata records in a MAP(map_UtmSourcelablewithLeadSource)
         List<DRL_UTMSource__mdt> list_UTMSourceMappings = DRL_UTMSource__mdt.getAll().values();
         
         for (DRL_UTMSource__mdt objUTMSourceMapping : list_UTMSourceMappings) {
             if (
-                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.Label) && 
-                set_SourceCodes.contains(objUTMSourceMapping.Label)
+                !map_LeadSourceByUtmSource.containsKey(objUTMSourceMapping.DeveloperName) && 
+                set_SourceCodes.contains(objUTMSourceMapping.DeveloperName) && 
+                (objUTMSourceMapping.IsActive__c)
             ) {
-                map_LeadSourceByUtmSource.put(objUTMSourceMapping.Label, objUTMSourceMapping.LeadSource__c);
+                map_LeadSourceByUtmSource.put(objUTMSourceMapping.DeveloperName, objUTMSourceMapping.LeadSource__c);
             }
         }
         

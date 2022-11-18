@@ -21,7 +21,7 @@
    
     <!-- by SK-->
     <aura:attribute name="isModalOpen" type="Boolean" default="true"/>
-        
+    <aura:attribute name="contactId" type="String"/>
     <hr/>
     
     <aura:html tag="style">
@@ -175,7 +175,7 @@
                                                         <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
                                                             <lightning:inputField fieldName="Name"></lightning:inputField>
                                                             <lightning:inputField fieldName="Product__c" required="true"></lightning:inputField> 
-                                                            <lightning:inputField fieldName="Contact__c" required="true"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Contact__c" required="true" value="{!v.contactId}"></lightning:inputField>
                                                             <lightning:inputField fieldName="Target_Markets__c" required="true"></lightning:inputField>
                                                             <lightning:inputField fieldName="TotalOpportunityQuantity"></lightning:inputField> 
                                                             <lightning:inputField fieldName="Source_type__c"></lightning:inputField>

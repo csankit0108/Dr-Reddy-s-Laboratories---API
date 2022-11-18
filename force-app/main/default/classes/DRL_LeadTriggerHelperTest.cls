@@ -39,13 +39,12 @@ public class DRL_LeadTriggerHelperTest {
             .setEmail('testuser5@yopmail.com')
             .setCompany('Absyz')
             .setUtmCampaign('Campaign 1005')
-            .setUtmSource('Test MDT 2')
             .setStatus('Open')
-            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Prospect'))
             .setCountry('India')
             .setReasonForDecline('Product Issues')
             .setUtmCampaign('Campaign 1005')
-            .setUtmSource('Test MDT 2')
+            .setUtmSource('Test_Source_1')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
         insert objLead;
     }

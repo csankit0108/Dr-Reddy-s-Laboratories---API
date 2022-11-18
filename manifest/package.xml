@@ -10,6 +10,7 @@
 	</types>
 	<types>
 		<members>LeadTrigger</members>
+		<members>Populate_Opportunity_stage_tracker</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -20,6 +21,7 @@
 		<members>DRL_ExceptionLog__c.MethodName__c</members>
 		<members>DRL_ExceptionLog__c.StackTrace__c</members>
 		<members>DRL_UTMSource__mdt.LeadSource__c</members>
+		<members>DRL_UTMSource__mdt.IsActive__c</members>
 		<members>Lead.DRL_Email__c</members>
 		<members>Lead.DRL_SourceCampaign__c</members>
 		<members>Lead.DRL_UTMCampaign__c</members>
@@ -64,7 +66,6 @@
 		<name>MatchingRule</name>
 	</types>
 	<types>
-		<members>DRL_ContactRoleRecordCreation</members>
 		<members>DRL_CalculatePotentialAtLaunchOnOpportunity</members>
 		<name>Flow</name>
 	</types>
@@ -85,6 +86,10 @@
 	<types>
 		<members>Admin</members>
 		<name>Profile</name>
+	</types>
+	<types>
+		<members>CLDRL00002</members>
+		<name>CustomLabel</name>
 	</types>
 	<version>55.0</version>
 </Package>
