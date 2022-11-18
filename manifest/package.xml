@@ -79,5 +79,10 @@
 		<members>Admin</members>
 		<name>Profile</name>
 	</types>
-	<version>55.0</version>
+    <types>
+        <members>DRL_ProspectRelatedChildLeads</members>
+        <members>DRL_ConvertLeadOpportunitySection</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <version>55.0</version>
 </Package>
