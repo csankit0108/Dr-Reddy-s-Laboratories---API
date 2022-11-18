@@ -577,27 +577,23 @@
         });
         $A.enqueueAction(action);
     },
-    validateTriggerSheetListAPI: function(component,event)
+    contactValidation: function(component,event)
     {
-        var contactId=component.get("v.contactId");
-        var isValid=true;
-        var message;
-        if (contactId=='' || contactId==undefined )
-        	{
-                isValid=false;                
+        var contactId = component.get("v.contactId");
+        if (contactId === '' || contactId === undefined )
+        	{            
                 var toastEvent = $A.get("e.force:showToast");
+                var message = $A.get("$Label.c.CLDRL00002");
                 toastEvent.setParams({
                     "title":"Error!",
-                    "message":'Contact can not be blank',
+                    "message":message,
                     "type":"error"
             });
             toastEvent.fire();  
         }
         else {
             event.preventDefault(); //Prevent default submit
-            var response=component.find("APIOptyCreateForm").submit();
-        }
-        return isValid;   
+            var response = component.find("APIOptyCreateForm").submit();
+        } 
     }
-    
 })

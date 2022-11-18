@@ -247,8 +247,7 @@
         
     },     
     handleOnSubmit : function(component, event, helper) {
-        helper.validateTriggerSheetListAPI(component,event);
-        
+        helper.contactValidation(component,event); 
     },      
     handleOnSubmitSaveNew:function(component,event,helper)
     {

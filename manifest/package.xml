@@ -80,5 +80,9 @@
 		<members>Admin</members>
 		<name>Profile</name>
 	</types>
+	<types>
+		<members>CLDRL00002</members>
+		<name>CustomLabel</name>
+	</types>
 	<version>55.0</version>
 </Package>
