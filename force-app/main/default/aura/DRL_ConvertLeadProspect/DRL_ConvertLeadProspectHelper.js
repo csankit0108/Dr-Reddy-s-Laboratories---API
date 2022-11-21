@@ -143,7 +143,7 @@
         var objaccountRecord = component.get('v.objaccountRecord')       
         let list_fieldArray = component.get('v.list_accountFieldSet');
         list_fieldArray.forEach(function(objaccountField){
-            if(objaccountRecord[objaccountField.required]== true && helper.isNullCheck(objaccountRecord[objaccountField.name])){
+            if(objaccountField.required== true && helper.isNullCheck(objaccountRecord[objaccountField.name])){
                 component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
                 component.set('v.blnerrorMsg',true);
                 return false;
@@ -156,7 +156,7 @@
         var objcontactRecord = component.get('v.objcontactRecord')    
         let list_fieldArray = component.get('v.list_contactFieldSet');
         list_fieldArray.forEach(function(objcontactField){
-            if(objcontactRecord[objcontactField.required]== true && helper.isNullCheck(objcontactRecord[objcontactField.name])){
+            if(objcontactField.required== true && helper.isNullCheck(objcontactRecord[objcontactField.name])){
                 component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
                 component.set('v.blnerrorMsg',true);
                 component.set('v.blnisLoading',false);
@@ -294,7 +294,17 @@
                 }
             }                    
         });
-        component.set('v.list_ChildLeadTableColumns',list_ChildLeadTableColumns);        
+        component.set('v.list_ChildLeadTableColumns',list_ChildLeadTableColumns);
+
+        // list_ProspectChildLeads.forEach(lead => {
+        //     if(lead.Product_Lookup__c){
+        //     lead.productUrl='/'+lead.Product_Lookup__c;
+        //     lead.productName=lead.Product_Lookup__r.Name;
+        // }                        
+        //                                 lead.leadUrl='/'+lead.Id;
+        //                                 lead.OwnerName=lead.Owner.Name;                        
+        //                                 });
+        
         return list_ProspectChildLeads;
     },
     convertLeadHelper:function(component,event,helper){
@@ -323,6 +333,8 @@
                     }
                     component.set('v.strerrorMsg','');
                     component.set('v.blnerrorMsg',false);
+                    component.set('v.strcloseButtonLabel','Close');
+                    component.set('v.strcloseButtonVariant','brand');                    
                     component.set('v.blnisConvertedSuccess',true);
                 }
                 else if(result.strstatus=='Duplicate Account'){

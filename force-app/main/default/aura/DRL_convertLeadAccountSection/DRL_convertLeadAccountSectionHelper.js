@@ -21,6 +21,7 @@
         list_AccountFields.forEach(function(field_account){
             let objAccountRec = {};
             objAccountRec.name= field_account.name;//gets the api name of the field
+            objAccountRec.required=field_account.required;
              if(!helper.isNullCheck(obj_Account[objAccountRec.name])){
                 objAccountRec.value=obj_Account[objAccountRec.name];
             }

@@ -82,9 +82,17 @@
                             <div class="slds-col slds-size_1-of-1">
                                 <aura:iteration items="{!v.list_accFieldsToRender}" var="field" indexVar="name">
                                     <aura:if isTrue = '{!v.bln_allowInput1}'>
-                                        <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
+                                        <aura:if isTrue = '{!field.required}'>
+                                            <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
                                                               required="{!field.required}" disabled='false'
                                                               class="slds-form-element" onchange="{!c.handleValueChange}" />
+                                            <aura:set attribute = 'else'>
+                                                <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
+                                                              disabled='false'
+                                                              class="slds-form-element" onchange="{!c.handleValueChange}" />
+                                            </aura:set>
+                                        </aura:if>
+                                        
                                         <aura:set attribute = 'else'>
                                             <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
                                                                   required="{!field.required}" disabled='true'

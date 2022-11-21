@@ -43,6 +43,9 @@
     <aura:attribute name="blnisLoading" type="Boolean" default="false" /> 
     <aura:attribute name ="objlead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
     <aura:attribute name ="list_ChildLeadTableColumns" type = "List" default="[]"/> 
+    <aura:attribute name = "strcloseButtonLabel" type = "String" default="Cancel"/>
+    <aura:attribute name = "strcloseButtonVariant" type = "String" default="neutral"/>
+    
     
     
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
@@ -110,7 +113,7 @@
                     <lightning:icon iconName="utility:warning" size="xx-small" class="customIcon" variant="error" /> 
                     <b class="errorMsg">{!v.strerrorMsg}</b>
                 </aura:if>           
-                <lightning:button name='cancelButton' label='Cancel' variant='destructive'
+                <lightning:button name='cancelButton' label='{!v.strcloseButtonLabel}' variant='{!v.strcloseButtonVariant}'
                                   onclick="{!c.cancelAction}" />
                 <aura:if isTrue="{!!v.blnisConvertedSuccess}">
                     <lightning:button name='convertButton' label="Convert" variant="brand"

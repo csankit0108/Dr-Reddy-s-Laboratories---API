@@ -34,6 +34,7 @@
         list_contactFieldSet.forEach(function(field_contact){
             let objectContactRecord = {};
             objectContactRecord.name= field_contact.name;//gets the api name of the field
+            objectContactRecord.required=field_contact.required;
             if(!helper.isNullCheck(obj_contact[objectContactRecord.name])){
                 objectContactRecord.value=obj_contact[objectContactRecord.name];
             }

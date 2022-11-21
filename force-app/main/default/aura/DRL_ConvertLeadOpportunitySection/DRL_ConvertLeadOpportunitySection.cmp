@@ -41,9 +41,17 @@
                                     </lightning:select>
                                 </aura:if>
                                 <aura:if isTrue="{!objfield.name!='RecordTypeId'}">
-                                    <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
+                                    <aura:if isTrue="{!objfield.required}">
+                                        <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
                                                 required="{!objfield.required}" disabled="{!objfield.disabled}"
                                                 class="slds-form-element" onchange="{!c.handleValueChange}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
+                                                disabled="{!objfield.disabled}"
+                                                class="slds-form-element" onchange="{!c.handleValueChange}"/>
+                                        </aura:set>
+                                    </aura:if>
+                                    
                                 </aura:if>
                                 
                             </aura:iteration>
