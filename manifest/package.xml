@@ -130,5 +130,9 @@
         <members>DRL_LeadConvertFormController.Under_Registration</members>
         <name>CustomMetadata</name>
     </types>
+    <types>
+        <members>DRL_LeadConvertCelebrationGif</members>
+        <name>StaticResource</name>
+    </types>
     <version>55.0</version>
 </Package>
