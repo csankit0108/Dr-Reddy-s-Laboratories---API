@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>CLDRL00001</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>API Campaign Influence Model Id</shortDescription>
+        <value>DRL_APICampaignsDistributionModel</value>
+    </labels>
+    <labels>
         <fullName>CLDRL00002</fullName>
         <language>en_US</language>
         <protected>false</protected>
