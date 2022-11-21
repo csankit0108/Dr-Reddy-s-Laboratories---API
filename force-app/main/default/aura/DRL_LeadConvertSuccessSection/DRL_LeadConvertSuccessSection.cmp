@@ -9,7 +9,7 @@
 *   17-11-2022      |  Kishore Pedireddy            |  1.0          |  Initial Version
 *
 -->
-<aura:component>
+<aura:component controller="DRL_ConvertLeadProspectController">
     <aura:attribute name="objaccount" type="Account"/>
     <aura:attribute name="objcontact" type="Contact"/>
     <aura:attribute name="objopportunity" type="Opportunity"/>
@@ -17,51 +17,82 @@
     <aura:attribute name="list_opportunityColumns" type="List" default="[]"/>
     
     <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
-    
-
-    <div class="flex-container">
-        <div class="flex-div">
-            <lightning:card variant="Narrow" class="card" iconName="standard:account" >
-                <aura:set attribute="title">
-                    <a href="{!join('','/',v.objaccount.Id)}" target="_blank">{!v.objaccount.Name}</a>
-                </aura:set>
-                <p class="slds-var-p-horizontal_small">
-                    Industry : {!v.objaccount.Industry}
-                </p>
-            </lightning:card>
+    <div class="successScreenContainer">
+        <div class="slds-align_absolute-center successImageContainer">
+            <span>
+                <img src="{!$Resource.DRL_LeadConvertCelebrationGif}"/>
+            </span>
         </div>
-        <div class="flex-div">
-            <lightning:card variant="Narrow"  class="card" iconName="standard:contact" >
-                <aura:set attribute="title">
-                    <a href="{!join('','/',v.objcontact.Id)}" target="_blank">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
-                </aura:set>
-                <p class="slds-var-p-horizontal_small">
-                    <p>FirstName : {!v.objcontact.FirstName}</p>
-                    <p>LastName : {!v.objcontact.LastName}</p>
-                </p>
-            </lightning:card>
+        <div class="infoWrapper">
+            <div class="infoContainer">
+                <div class="recordCard">
+                    <div class="recordHeader">
+                        ACCOUNT
+                    </div>
+                    <div class="recordBody">
+                        <span class="iconContainer">
+                            <div class="iconHolder">
+                                <lightning:icon iconName="standard:account" alternativeText="Account" title="Account" />
+                            </div>                            
+                        </span>
+                        <div class="recordUrl">
+                            <a href="{!join('','/',v.objaccount.Id)}" target="_self">{!v.objaccount.Name}</a>
+                        </div>
+                        <ul class="recordFields">
+                            <li>Industry : {!v.objaccount.Industry}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="recordCard">
+                    <div class="recordHeader">
+                        CONTACT
+                    </div>
+                    <div class="recordBody">
+                        <span class="iconContainer">
+                            <div class="iconHolder">
+                                <lightning:icon iconName="standard:contact" alternativeText="Contact" title="Contact" />
+                            </div> 
+                        </span>
+                        <div class="recordUrl">
+                            <a href="{!join('','/',v.objcontact.Id)}" target="_self">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
+                        </div>
+                        <ul class="recordFields">
+                            <li>FirstName : {!v.objcontact.FirstName}</li>
+                            <li>LastName : {!v.objcontact.LastName}</li>
+                        </ul>
+                    </div>
+                </div>
+                <aura:if isTrue="{!!empty(v.objopportunity)}">
+                    <div class="recordCard">
+                        <div class="recordHeader">
+                            OPPORTUNITY
+                        </div>
+                        <div class="recordBody">
+                            <span class="iconContainer">
+                                <div class="iconHolder">
+                                    <lightning:icon iconName="standard:opportunity" alternativeText="Opportunity" title="Opportunity" />
+                                </div> 
+                            </span>
+                            <div class="recordUrl">
+                                <a href="{!join('','/',v.objopportunity.Id)}" target="_self">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
+                            </div>
+                            <ul class="recordFields">
+                                <li>Name : {!v.objopportunity.Name}</li>
+                                <li>Stage : {!v.objopportunity.StageName}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
         </div>
-        <div class="flex-div">
-            <aura:if isTrue="{!!empty(v.objopportunity)}">
-                <lightning:card  class="card" variant="Narrow" iconName="standard:opportunity" >
-                    <aura:set attribute="title">
-                        <a href="{!join('','/',v.objopportunity.Id)}" target="_blank">{!v.objopportunity.Name}</a>
-                    </aura:set>
-                    <p class="slds-var-p-horizontal_small">
-                        <p>Name : {!v.objopportunity.Name}</p>
-                        <p>Stage : {!v.objopportunity.StageName}</p>
-                    </p>
-                </lightning:card>
+        <div class="childOpportunities">
+            <aura:if isTrue="{!!or(empty(v.list_Opportunities),empty(v.list_opportunityColumns))}">
+                <lightning:datatable
+                    hideCheckboxColumn="true"
+                    columns="{! v.list_opportunityColumns }"
+                    data="{! v.list_Opportunities }"
+                    keyField="Id"/>
             </aura:if>
         </div>
-    </div>
-    <div class="childOpportunities">
-        <aura:if isTrue="{!!empty(v.list_Opportunities)}">
-            <lightning:datatable
-                columns="{! v.list_opportunityColumns }"
-                data="{! v.list_Opportunities }"
-                keyField="Id"/>
-        </aura:if>
-
-    </div>
+    </div>   
 </aura:component>

@@ -2,7 +2,7 @@
     doInit: function (component, event, helper) {
         component.set('v.str_radioButtonVal2', '3');
         helper.configureIfParentAlreadyConverted(component, event, helper);
-        helper.renderFields(component, event, helper);        
+        helper.getContactFields(component,event,helper);      
     },
     
     handleValueChange:function(component, event, helper){
@@ -25,11 +25,16 @@
         var strRadioButton = event.getSource().get("v.value");
         component.set('v.str_radioButtonVal2', strRadioButton);
         if(strRadioButton === '3'){
+            helper.generateContact(component, event, helper);
+            helper.getContactFields(component, event, helper);
+            component.set('v.existingContact','');
             component.set('v.blnallowInput1',true);
             component.set('v.blnallowInput2',false);
             
         }
         if(strRadioButton === '4'){
+            component.set('v.obj_contact',{ 'sobjectType': 'Contact'});
+            helper.getContactFields(component, event, helper);
             component.set('v.blnallowInput1',false);
             component.set('v.blnallowInput2',true);
             

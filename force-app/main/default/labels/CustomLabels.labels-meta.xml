@@ -77,4 +77,11 @@
         <shortDescription>Product field is empty</shortDescription>
         <value>Please update the Product field and convert the Lead</value>
     </labels>
+    <labels>
+        <fullName>DRL_convertLeadHeader</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadHeader</shortDescription>
+        <value>Convert lead</value>
+    </labels>
 </CustomLabels>

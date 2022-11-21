@@ -1,6 +1,21 @@
 ({
-    renderFields: function(component,event,helper){
-        this.getContactFields(component,event,helper);
+    
+    generateContact:function(component, event, helper){
+        let objlead=component.get('v.objlead');
+        let objcontact ={}
+        if(!helper.isNullCheck(objlead.LastName)){
+            objcontact.LastName=objlead.LastName;
+        }
+        if(!helper.isNullCheck(objlead.FirstName)){
+            objcontact.FirstName=objlead.FirstName;
+        }
+        if(!helper.isNullCheck(objlead.MobilePhone)){
+            objcontact.MobilePhone=objlead.MobilePhone;
+        }
+        if(!helper.isNullCheck(objlead.Email)){
+            objcontact.Email=objlead.Email;
+        }
+        component.set('v.obj_contact',objcontact);
     },
     
     isNullCheck:function(variable){
@@ -35,27 +50,27 @@
     existingContactHelper : function (component, event, helper) {
         let str_contactId = component.get("v.str_contactId");
         var action = component.get('c.getContact');
-        action.setParams({conId:str_contactId});
+        action.setParams({'strcontactId':str_contactId});
         action.setCallback(this,function(response){
             var state = response.getState();
             if(state === 'SUCCESS'){
                 var result = response.getReturnValue();
                 component.set('v.obj_contact',result);
             }
-            if (state === 'ERROR'){
-                console.log('@@@error '+ JSON.stringify(response.getError()));
-            }
         })
          $A.enqueueAction(action);        
     },
      configureIfParentAlreadyConverted: function (component, event, helper){
         if(component.get('v.blnisParentProspectConverted')){
-            component.set('v.allowInput2',false);
-            component.set('v.allowInput1',false);
+            component.set('v.blnallowInput2',false);
+            component.set('v.blnallowInput1',false);
             component.set('v.blnRadio2Available',false);
             component.set('v.blnRadio1Available',false);
             component.set('v.isRadio1Checked',false);
-            component.set('v.isRadio2Checked',false);
+            component.set('v.isRadio2Checked',true);
+        }
+        else{
+            helper.generateContact(component, event, helper);
         }
      }
     

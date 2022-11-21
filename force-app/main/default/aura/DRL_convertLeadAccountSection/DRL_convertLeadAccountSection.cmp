@@ -9,7 +9,7 @@
 *   03-11-2022      |  Subhodeep Sarkar           |  1.0          |  Initial Version
 *
 -->
-<aura:component controller="ConvertLeadCustomUIController"
+<aura:component controller="DRL_ConvertLeadProspectController"
                 implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
                 access='global'>
     
@@ -29,25 +29,24 @@
     <aura:attribute name="blnisParentProspectConverted" type="Boolean" default="false" />
     <aura:attribute name="isRadio1Checked" type="Boolean" default = 'true'/>
     <aura:attribute name="isRadio2Checked" type="Boolean" default = 'false'/>
+    <aura:attribute name="objlead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
 
     <aura:handler name="init" value='{!this}' action='{!c.doInit}' />
     
     <!--Start-->
-    <div class="modal-body scrollable slds-modal__content slds-p-around--medium" style="background-color:#f3f2f2;">
-        <div class="cCenterPanel" style="background-color:#f3f2f2;">
-            
-            <div class="header slds-theme_alt-inverse"  style = "padding-left:20px">
-                <p class="headerLabel">Account</p>
-            </div>
-            <div class="slds-grid slds-gutters slds-size_1-of-1">                
-                <div class="container" style = "padding-left:20px">
+        <div class="accountSection slds-border_bottom">            
+            <span class="header slds-theme_alt-inverse">
+                <span class="headerLabel">Account</span>
+            </span>
+            <div class="accountFormSection">                
+                <div class="accountFormSectionContainer">
                     <lightning:input type="radio" onchange="{!c.handleRadioChange}" label="Choose Existing"
-                                     class="customRadioCls" name="options" value="{!v.str_inputR2}" checked="{!v.isRadio2Checked}" disabled="{!!v.blnRadio2Available}"/>
+                                     class="accountRadioButton" name="options" value="{!v.str_inputR2}" checked="{!v.isRadio2Checked}" disabled="{!!v.blnRadio2Available}"/>
                     <lightning:recordEditForm objectApiName="Contact">
                         <label for="nameField" class="slds-form-element__label slds-no-flex">
                             <span style="color:#c64541;">*&nbsp;</span>Account Search</label>
                         <aura:if isTrue = '{!v.bln_allowInput2}'>
-                            <lightning:inputField aura:id="nameField" fieldName="str_accountId" class="slds-box"
+                            <lightning:inputField aura:id="nameField" fieldName="AccountId" 
                                                   variant="label-hidden" disabled='false' value = '{!v.existingAccount}'
                                                   messageWhenBadInput="Please choose an existing account or create a new one."
                                                   onchange="{!c.handleLookup}" />
@@ -58,13 +57,13 @@
                                             <span class="slds-pill__icon_container">
                                                 <lightning:icon iconName="standard:account" alternativeText="Account" title="Account" />
                                             </span>
-                                            <a href="{!join('','/',v.obj_Account.Id)}" target="_blank" class="slds-pill__action" title="Full pill label verbiage mirrored here">
+                                            <a href="{!join('','/',v.obj_Account.Id)}" target="_self" class="slds-pill__action" title="Full pill label verbiage mirrored here">
                                               <span class="slds-pill__label">{!v.obj_Account.Name}</span>
                                             </a>
                                           </span>
                                     </div>
                                     <aura:set attribute = 'else'>
-                                        <lightning:inputField aura:id="nameField" fieldName="str_accountId" class="slds-box"
+                                        <lightning:inputField aura:id="nameField" fieldName="AccountId" 
                                                       variant="label-hidden" disabled='true' value = '{!v.existingAccount}'
                                                       messageWhenBadInput="Please choose an existing account or create a new one."
                                                       onchange="{!c.handleLookup}" />
@@ -74,9 +73,9 @@
                         </aura:if>                        
                     </lightning:recordEditForm>
                 </div>
-                <div class="container">
+                <div class="accountFormSectionContainer">
                     <lightning:input type="radio" onchange="{! c.handleRadioChange }" label="Create New"
-                                     class="customRadioCls" name="options" value="{!v.str_inputR1}" checked="{!v.isRadio1Checked}" disabled="{!!v.blnRadio1Available}" />
+                                     class="accountRadioButton" name="options" value="{!v.str_inputR1}" checked="{!v.isRadio1Checked}" disabled="{!!v.blnRadio1Available}" />
                     <lightning:recordEditForm aura:id="accountForm" objectApiName="Account">
                         <lightning:messages />
                         <div class="slds-form formContainer">
@@ -99,5 +98,4 @@
                 </div>
             </div>
         </div>
-    </div>
 </aura:component>

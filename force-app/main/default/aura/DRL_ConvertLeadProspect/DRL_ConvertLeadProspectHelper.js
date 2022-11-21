@@ -8,6 +8,7 @@
             if (state === 'SUCCESS') {
                 var result=response.getReturnValue();
                 var objleadRecord = result.objLead;
+                component.set('v.objlead',objleadRecord);
                 if((objleadRecord.RecordTypeId && objleadRecord.RecordType.DeveloperName==='DRL_Lead' && result.blnisParentProspectConverted==true)||
                     (objleadRecord.IsConverted == true && objleadRecord.RecordType.DeveloperName=='DRL_Prospect' &&result.listProspectChildLeads.length>0)
                 ){
@@ -36,16 +37,15 @@
                 }
                 else {                    
                     if (
-                        (objleadRecord.IsConverted == true && objleadRecord.IsConverted=='DRL_Lead')||
-                        (objleadRecord.IsConverted == true && objleadRecord.IsConverted=='DRL_Prospect' &&result.listProspectChildLeads.length==0)
-                        ){
-                        component.set("v.convertedStatus", true);                         
+                        (objleadRecord.IsConverted == true && objleadRecord.RecordType.DeveloperName=='DRL_Lead')||
+                        (objleadRecord.IsConverted == true && objleadRecord.RecordType.DeveloperName=='DRL_Prospect' &&result.listProspectChildLeads.length==0)
+                        ){                        
                         helper.openAlert('error',
                                          $A.get("$Label.c.DRL_LeadAlreadyConvertedMessageHeader"),
                                          $A.get("$Label.c.DRL_LeadAlreadyConverted"),
                                          function(){}
                                         );
-                        helper.closeQuickAction();
+                        helper.closeQuickAction(component);
                         return;
                     }             
                     if (objleadRecord.IsConverted == false)
@@ -57,6 +57,7 @@
             else{
                 helper.showMessage('Error!',$A.get("$Label.c.DRL_ConvertLeadDataLoadError"),'error','dismissible');
             }
+            component.set('v.blnisLoading',false);
         });        
         $A.enqueueAction(action);
     },
@@ -92,7 +93,7 @@
             let list_ProspectChildLeads=result.listProspectChildLeads;
             if(list_ProspectChildLeads.length>0){
                 component.set('v.blnisChildRecordsFound',true);
-                component.set('v.list_ProspectChildLeads',helper.setChildLeads(component,list_ProspectChildLeads));
+                component.set('v.list_ProspectChildLeads',helper.setChildLeads(component,list_ProspectChildLeads,result.strchildLeadTableColumns));
             }
         }
         else{
@@ -105,8 +106,13 @@
         }
         
     },
-    closeQuickAction:function(){
+    closeQuickAction:function(component){
+        $A.get('e.force:refreshView').fire();
         $A.get("e.force:closeQuickAction").fire();
+        if(component.get('v.blnrenderfrompath')){
+            var modal = component.find("modal");
+            $A.util.addClass(modal, "hideContent");
+        }
     },
     openAlert : function(strtheme,strlabel,strmessage,action){
         this.LightningAlert.open({
@@ -153,7 +159,7 @@
             if(objcontactRecord[objcontactField.required]== true && helper.isNullCheck(objcontactRecord[objcontactField.name])){
                 component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
                 component.set('v.blnerrorMsg',true);
-                component.set('v.blnisFormDataLoaded',true);
+                component.set('v.blnisLoading',false);
                 return false;
             }
         });
@@ -177,7 +183,7 @@
                         toastEvent.fire();
                         component.set('v.strerrorMsg',$A.get('$Label.c.DRL_contactWithEmailExistError'));
                         component.set('v.blnerrorMsg',true);                        
-                        component.set('v.blnisFormDataLoaded',true);
+                        component.set('v.blnisLoading',false);
                     }
                     else{
                         helper.convertLeadHelper(component,event,helper);                        
@@ -262,15 +268,33 @@
         })
         return list_mandatoryFields;
     },
-    setChildLeads:function(component,list_ProspectChildLeads){
-        list_ProspectChildLeads.forEach(lead => {
-            if(lead.Product_Lookup__c){
-            lead.productUrl='/'+lead.Product_Lookup__c;
-            lead.productName=lead.Product_Lookup__r.Name;
-        }                        
-                                        lead.leadUrl='/'+lead.Id;
-                                        lead.OwnerName=lead.Owner.Name;                        
-                                        });
+    setChildLeads:function(component,list_ProspectChildLeads,strchildLeadTableColumns){
+        let list_ChildLeadTableColumns=JSON.parse(strchildLeadTableColumns);
+        list_ChildLeadTableColumns.forEach(objColumn=>{
+            if(objColumn.type=='url'){
+                if(objColumn.typeAttributes.label.fieldName=='Name'){
+                    list_ProspectChildLeads.forEach(objlead=>{
+                        objlead.LeadUrl='/'+objlead.Id;                               
+                    });
+                }
+                else{
+                    let strfieldName=objColumn.fieldName.substring(0, objColumn.fieldName.length-3);
+                    let strObjectName='';                    
+                    if(strfieldName.match("Id$")){
+                        strObjectName=strfieldName.substring(0,strfieldName.length-2);
+                    }
+                    else{
+                        strObjectName=strfieldName.substring(0,strfieldName.length-1)+'r';
+                    }
+                    
+                    list_ProspectChildLeads.forEach(objlead=>{
+                        objlead[objColumn.fieldName]='/'+objlead[strfieldName];                               
+                        objlead[strfieldName+'Name']=objlead[strObjectName]['Name'];
+                    });
+                }
+            }                    
+        });
+        component.set('v.list_ChildLeadTableColumns',list_ChildLeadTableColumns);        
         return list_ProspectChildLeads;
     },
     convertLeadHelper:function(component,event,helper){
@@ -310,12 +334,11 @@
                 else{                    
                     helper.showMessage('Error!',$A.get('$Label.c.DRL_ConvertLeadError') ,'error','dismissible');
                 }
-                component.set('v.blnisFormDataLoaded',true);
             }
             else{
                 helper.showMessage('Error!',$A.get('$Label.c.DRL_ConvertLeadError'),'error','dismissible');
-                component.set('v.blnisFormDataLoaded',true);
             }
+            component.set('v.blnisLoading',false);
         });
         $A.enqueueAction(action);
     }

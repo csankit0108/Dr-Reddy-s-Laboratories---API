@@ -1,4 +1,34 @@
+.THIS.accountSection{
+    background-color: #f3f3f3;
+    margin-top: 10px;
+}
 .THIS .accountPill{
     width: 100%;
     background-color: #f3f3f3;
+}
+.THIS .header{
+    padding:5px;
+}
+.THIS .headerLabel{
+    font-size: 16px;
+    text-align: center;
+}
+.THIS .accountFormSection{
+    display: inline-flex;
+    width: 100%;
+    padding-bottom: 2px;
+    margin-top: 10px;
+    justify-content: center;
+}
+.THIS .accountFormSectionContainer{
+    width: 44%;
+    padding: 20px;
+}
+.THIS .accountRadioButton{
+    margin-bottom: 10px;
+}
+.THIS .formContainer{
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
 }

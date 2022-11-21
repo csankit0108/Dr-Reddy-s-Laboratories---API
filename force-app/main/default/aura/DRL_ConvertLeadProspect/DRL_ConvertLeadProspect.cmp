@@ -5,6 +5,15 @@
                 access='global'>
     
     <aura:import library="lightning:alert" property="LightningAlert" />
+    <aura:html tag="style">
+        .slds-modal__container {
+            max-width: 80rem !important;
+            width: 80% !important;
+        }
+        .slds-modal__header .slds-modal__close{
+            display:none;
+        }
+    </aura:html>
 
     <aura:attribute name="blnisProspect" type="Boolean"/>
     <aura:attribute name="blnisChildRecordsFound" type="Boolean" default="false"/>  
@@ -30,35 +39,38 @@
     <aura:attribute name = 'strcontactId' type = 'String'/>
     <aura:attribute name="blnisParentProspectConverted" type="Boolean" default="false" />
     <aura:attribute name="blnisConvertedSuccess" type="Boolean" default="false" />   
+    <aura:attribute name="blnrenderfrompath" type="Boolean" default="false" />   
+    <aura:attribute name="blnisLoading" type="Boolean" default="false" /> 
+    <aura:attribute name ="objlead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
+    <aura:attribute name ="list_ChildLeadTableColumns" type = "List" default="[]"/> 
     
     
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
     
-    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
-        <div class="slds-modal__container Container">
+    <div role="dialog" aura:id="modal" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container Container" aura:id="modalContainer">
             <div class="slds-modal__header">
-                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Convert lead</h1>
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.DRL_convertLeadHeader}</h1>
             </div>
-            <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
-                <aura:if isTrue="{!!v.blnisConvertedSuccess}">
-                    <aura:if isTrue ="{!v.blnisFormDataLoaded}">
-                        <c:DRL_convertLeadAccountSection aura:id='accountSectionCall' 
-                            radioButtonVal = "{!v.straccountRadioButton}" 
-                            accountId = '{!v.straccountId}'
-                            accountRecord = "{!v.objaccountRecord}"
-                            accountFieldSet = '{!v.list_accountFieldSet}'
-                            blnisParentProspectConverted="{!v.blnisParentProspectConverted}"/>
-                    </aura:if>
-                    <aura:if isTrue ="{!v.blnisFormDataLoaded}">
-                        <c:DRL_convertLeadContactSection aura:id='contactSectionCall'
-                            radioButtonVal2 =  "{!v.strcontactRadioButton}" 
-                            contactId  = '{!v.strcontactId}'
-                            conRecord = "{!v.objcontactRecord}"
-                            blnisParentProspectConverted="{!v.blnisParentProspectConverted}"
-                            contactFieldSet ='{!v.list_contactFieldSet}'/>
-                    </aura:if>
-                    
-                    <aura:if isTrue="{!and(v.blnisProspect,v.blnisFormDataLoaded)}">
+            <div class="slds-modal__content" id="modal-content-id-1">
+                <aura:if isTrue ="{!and(v.blnisFormDataLoaded,!v.blnisConvertedSuccess)}">
+                    <c:DRL_convertLeadAccountSection aura:id='accountSectionCall' 
+                        objlead="{!v.objlead}"
+                        str_radioButtonValue = "{!v.straccountRadioButton}" 
+                        str_accountId = '{!v.straccountId}'
+                        obj_Account = "{!v.objaccountRecord}"
+                        list_AccountFields = '{!v.list_accountFieldSet}'
+                        blnisParentProspectConverted="{!v.blnisParentProspectConverted}"/>
+
+                    <c:DRL_convertLeadContactSection aura:id='contactSectionCall'
+                        objlead="{!v.objlead}"
+                        str_radioButtonVal2 =  "{!v.strcontactRadioButton}" 
+                        str_contactId  = '{!v.strcontactId}'
+                        obj_contact = "{!v.objcontactRecord}"
+                        blnisParentProspectConverted="{!v.blnisParentProspectConverted}"
+                        list_contactFieldSet ='{!v.list_contactFieldSet}'/>
+                
+                    <aura:if isTrue="{!v.blnisProspect}">
                         <c:DRL_ProspectRelatedChildLeads 
                             list_opportunityRecordTypes="{!v.list_opportunityRecordTypes}"
                             list_ProspectChildLeads="{!v.list_ProspectChildLeads}"
@@ -68,10 +80,11 @@
                             list_opportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
                             map_stageToFieldSetMap="{!v.map_stageToFieldSetMap}"
                             list_selectedLeads="{!v.list_selectedLeads}" 
+                            list_columns="{!v.list_ChildLeadTableColumns}"
                             map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"/>
                     </aura:if>
-                    
-                    <aura:if isTrue="{!and(!v.blnisProspect,v.blnisFormDataLoaded) }">
+                
+                    <aura:if isTrue="{!!v.blnisProspect}">
                         <c:DRL_ConvertLeadOpportunitySection
                             objopportunity="{!v.objopportunity}"  
                             list_opportunityRecordTypes="{!v.list_opportunityRecordTypes}"
@@ -80,7 +93,7 @@
                             map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"/>
                     </aura:if> 
                 </aura:if>
-                <aura:if isTrue="{!!v.blnisFormDataLoaded}">
+                <aura:if isTrue="{!v.blnisLoading}">
                         <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
                 </aura:if>    
                 <aura:if isTrue="{!v.blnisConvertedSuccess}">
@@ -105,7 +118,7 @@
                 </aura:if>                
             </div>
         </div>
-    </section>
-    <!-- <div class="slds-backdrop slds-backdrop_open" role="presentation"></div> -->
+    </div>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation" aura:id="modalbackdrop"></div>
     
 </aura:component>

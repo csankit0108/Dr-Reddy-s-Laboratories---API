@@ -20,33 +20,39 @@
 
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
 
-    <div class="container">
-        <div class="header slds-theme_alt-inverse">
-            <p class="headerLabel">Opportunity</p>
-        </div>
-        <div>
-            <lightning:recordEditForm aura:id="opportunityForm"  objectApiName="Opportunity">
-                <lightning:messages />
-                <div class="slds-form formContainer">
-                    <div class="slds-col slds-size_1-of-1">
-                        <aura:iteration items="{!v.list_fieldsToRender}" var="objfield" indexVar="name">
-                            <aura:if isTrue="{!objfield.name=='RecordTypeId'}">
-                                <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objopportunity.RecordTypeId}">
-                                    <aura:iteration items="{!v.list_opportunityRecordTypes}" var="recordType">
-                                        <option value="{!recordType.key}">{!recordType.value}</option>
-                                    </aura:iteration>
-                                </lightning:select>
-                            </aura:if>
-                            <aura:if isTrue="{!objfield.name!='RecordTypeId'}">
-                                <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
-                                            required="{!objfield.required}" disabled="{!objfield.disabled}"
-                                            class="slds-form-element" onchange="{!c.handleValueChange}"/>
-                            </aura:if>
-                            
-                        </aura:iteration>
+    <div class="opportunitySection slds-border_bottom">
+        <span class="header slds-theme_alt-inverse">
+            <span class="headerLabel">Opportunity</span>
+        </span>
+        <div class="opportunityFormSection">            
+            <div class="opportunityFormSectionContainer">
+                <lightning:input type="radio" label="Create New"
+                                        class="opportunityRadioButton" name="opportunityOptions" checked="true" disabled="true"/>
+                <lightning:recordEditForm aura:id="opportunityForm"  objectApiName="Opportunity">
+                    <lightning:messages />
+                    <div class="slds-form formContainer">
+                        <div class="slds-col slds-size_1-of-1">
+                            <aura:iteration items="{!v.list_fieldsToRender}" var="objfield" indexVar="name">
+                                <aura:if isTrue="{!objfield.name=='RecordTypeId'}">
+                                    <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objopportunity.RecordTypeId}">
+                                        <aura:iteration items="{!v.list_opportunityRecordTypes}" var="recordType">
+                                            <option value="{!recordType.key}">{!recordType.value}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:if>
+                                <aura:if isTrue="{!objfield.name!='RecordTypeId'}">
+                                    <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
+                                                required="{!objfield.required}" disabled="{!objfield.disabled}"
+                                                class="slds-form-element" onchange="{!c.handleValueChange}"/>
+                                </aura:if>
+                                
+                            </aura:iteration>
+                        </div>
                     </div>
-                </div>
-            </lightning:recordEditForm>
+                </lightning:recordEditForm>
+            </div>
+            <div class="opportunityFormSectionContainer">
+            </div>
         </div>
     </div>
 </aura:component>

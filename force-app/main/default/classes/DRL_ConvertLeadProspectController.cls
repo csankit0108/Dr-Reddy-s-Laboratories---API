@@ -65,6 +65,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 );                  
             }
             objRespone.listProspectChildLeads=getChildLeads(strrecordId);
+            objRespone.strchildLeadTableColumns=getDataTableColumns('Lead','DRL_convertLeadProspectChildLeads');
         }
         objRespone.stropportunityMasterFieldSet=DRLUtil.getFieldSet('Opportunity','DRL_ConvertToLeadMaster');
         objRespone.strAccountMasterFieldSet = DRLUtil.getFieldSet('Account','LeadConvertFields');
@@ -101,6 +102,7 @@ public with sharing class DRL_ConvertLeadProspectController {
             Lead objlead = [SELECT 
                             Id,
                             Status, 
+                            IsConverted,
                             Product_Lookup__c, 
                             pi__campaign__c, 
                             Source_Campaign_Id__c,
@@ -140,20 +142,25 @@ public with sharing class DRL_ConvertLeadProspectController {
                                             FROM LeadStatus
                                             WHERE IsConverted = true
                                             limit 1]; 
-                objlead.Converted_Account__c = objaccount.Id;
-                objlead.Converted_Contact__c = objcontact.Id;
-                objlead.Status = 'Converted';
-                update objlead;
-                List<Database.LeadConvert> list_leadsToconvert=new List<Database.LeadConvert>();                    
-                Database.LeadConvert objLeadConvert=convertLeadHelper(objlead, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel);                
-                list_leadsToconvert.add(objLeadConvert);
+                List<Database.LeadConvert> list_leadsToconvert=new List<Database.LeadConvert>();   
+                if(!objlead.IsConverted){
+                    objlead.Converted_Account__c = objaccount.Id;
+                    objlead.Converted_Contact__c = objcontact.Id;
+                    objlead.Status = 'Converted';
+                    update objlead;                                     
+                    Database.LeadConvert objLeadConvert=convertLeadHelper(objlead, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel);                
+                    list_leadsToconvert.add(objLeadConvert);
+                }
                 if(list_leadOpportunities.size()>0){
                     list_leadsToconvert.addAll(convertChildLeads(objaccount.Id,objcontact.Id,list_leadOpportunities,list_leads,convertStatus.MasterLabel));                   
                 }
                 List<Database.LeadConvertResult> list_leadConvertResults = Database.convertLead(list_leadsToconvert);
                 objresponse.objaccount= objaccount;
                 objresponse.objcontact= objcontact;
-                objresponse.list_opportunities=list_leadOpportunities;
+                if(list_leadOpportunities.size()>0){
+                    objresponse.list_opportunities=Database.query('select'+getQueryFields('Opportunity','DRL_convertLeadSuccessScreenList')+'from Opportunity where Id in:list_leadOpportunities');
+                }
+                
                 objresponse.strstatus = 'Success';
             }
             else{
@@ -374,6 +381,105 @@ public with sharing class DRL_ConvertLeadProspectController {
             return false;
         }
     }
+        /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to get Datatable Columns
+    * @ params       :  strSObjectName - Object Name
+    *                   strFieldSetName - FieldSet Name
+    * @ return       :  Returns String of datatable Columns datastructure
+    **/
+    @AuraEnabled
+    public static String getDataTableColumns(String strSObjectName,String strFieldSetName) {
+        String strColumns='';
+        SObjectType objToken = Schema.getGlobalDescribe().get(strSObjectName);
+        Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
+        Map<String, Schema.FieldSet> map_fieldSetNameToFieldSet = objDescribe.fieldSets.getMap();
+        if(map_fieldSetNameToFieldSet.containsKey(strFieldSetName)){
+            for(Schema.FieldSetMember objField : map_fieldSetNameToFieldSet.get(strFieldSetName).getFields()) {
+                    
+                if(strColumns != ''){
+                    strColumns += ',';
+                }
+                String jsonPart = '{';
+                jsonPart+='"label":"'+objField.getLabel()+'",';
+
+                if(objField.getFieldPath()=='Id'){
+                    continue;
+                }
+                else if(objField.getFieldPath()=='Name'){
+                    jsonPart+='"fieldName":"'+strSObjectName+'Url",';
+                    jsonPart+='"type":"url",';
+                    jsonPart+='"typeAttributes":{';
+                    jsonPart+='"label":{';
+                    jsonPart+='"fieldName":"Name"';
+                    jsonPart+='}},';
+                    jsonPart+='"tagert":"_self"';
+                }
+                else if(String.valueOf(objField.getType())=='PICKLIST'){
+                    jsonPart+='"fieldName":"'+objField.getFieldPath()+'",';
+                    jsonPart+='"type":"Text"';
+                }
+                else if(String.valueOf(objField.getType())=='CURRENCY'){
+                    jsonPart+='"fieldName":"'+objField.getFieldPath()+'",';
+                    jsonPart+='"type":"currency",';
+                    jsonPart+='"typeAttributes":{"currencyCode":"'+UserInfo.getDefaultCurrency()+'"}';
+                }
+                else if(String.valueOf(objField.getType())=='REFERENCE'){
+                    jsonPart+='"fieldName":"'+objField.getFieldPath()+'Url",';
+                    jsonPart+='"type":"url",';
+                    jsonPart+='"typeAttributes":{';
+                    jsonPart+='"label":{';
+                    jsonPart+='"fieldName":"'+objField.getFieldPath()+'Name"';
+                    jsonPart+='}},';
+                    jsonPart+='"tagert":"_self"';
+                }
+                else{
+                    jsonPart+='"fieldName":"'+objField.getFieldPath()+'",';
+                    jsonPart+='"type":"Text"';
+                }
+                jsonPart += '}';
+                strColumns += jsonPart;
+            }
+
+        }
+        return '['+strColumns+']';               
+    }
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to get Query from fieldSet
+    * @ params       :  strSObjectName - Object Name
+    *                   strFieldSetName - FieldSet Name
+    * @ return       :  Returns String of queryfields
+    **/
+    public static String getQueryFields(String strSObjectName,String strFieldSetName) {
+        String strqueryFields=' ';
+        SObjectType objToken = Schema.getGlobalDescribe().get(strSObjectName);
+        Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
+        Map<String, Schema.FieldSet> map_fieldSetNameToFieldSet = objDescribe.fieldSets.getMap();
+        if(map_fieldSetNameToFieldSet.containsKey(strFieldSetName)){
+            for(Schema.FieldSetMember objField : map_fieldSetNameToFieldSet.get(strFieldSetName).getFields()) {
+                if(strqueryFields!=' '){
+                    strqueryFields+=',';
+                }
+                if(String.valueOf(objField.getType())=='CURRENCY'){
+                    strqueryFields+='convertCurrency('+objField.getFieldPath()+')';
+                }
+                else if(String.valueOf(objField.getType())=='REFERENCE'){
+                    if(objField.getFieldPath().endsWith('__c')){
+                        strqueryFields+=objField.getFieldPath()+','+objField.getFieldPath().left(objField.getFieldPath().length()-1)+'r.Name';
+                    }
+                    else{
+                        strqueryFields+=objField.getFieldPath()+','+objField.getFieldPath().left(objField.getFieldPath().length()-2)+'.Name';
+                    }                    
+                }
+                else{
+                    strqueryFields+=objField.getFieldPath();
+                }
+            }
+        }
+        strqueryFields+=' ';
+        return strqueryFields;
+    }
 
     public class ConvertLeadDataWrapper{
         @AuraEnabled
@@ -410,6 +516,8 @@ public with sharing class DRL_ConvertLeadProspectController {
         public Opportunity objopportunity {get;set;}
         @AuraEnabled
         public List<Opportunity> list_opportunities {get;set;}
+        @AuraEnabled
+        public String strchildLeadTableColumns{get;set;}
     } 
 
     

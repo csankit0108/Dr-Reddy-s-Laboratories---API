@@ -1,8 +1,5 @@
 ({
-    renderFields: function(component,event,helper){
-        this.getAccountFields(component,event,helper);
-    },
-
+   
     isNullCheck:function(variable){
         if(variable==''||variable==null||variable==undefined){
             return true;
@@ -11,7 +8,12 @@
             return false;
         }
     },
-
+    generateAccount:function(component, event, helper){
+        let objlead=component.get('v.objlead');
+        let objaccount ={}
+        objaccount.Name=objlead.Company;
+        component.set('v.obj_Account',objaccount);
+    },
     getAccountFields : function(component,event,helper){
         let list_accFieldsToRender=[];
         let obj_Account = component.get('v.obj_Account');
@@ -36,7 +38,7 @@
         let str_accountId = component.get('v.str_accountId');
         var action = component.get('c.getAccount');
 
-        action.setParams({straccountId:str_accountId});
+        action.setParams({'straccountId':str_accountId});
         action.setCallback(this,function(response){
             var state = response.getState();
             if(state === 'SUCCESS'){
@@ -44,10 +46,6 @@
                 var result = response.getReturnValue();
                 component.set('v.obj_Account',result);
             }
-            if (state === 'ERROR'){
-                console.log('@@@error '+ JSON.stringify(response.getError()));
-            }
-            
             
         })
          $A.enqueueAction(action);
@@ -60,6 +58,9 @@
             component.set('v.blnRadio1Available',false);
             component.set('v.isRadio1Checked',false);
             component.set('v.isRadio2Checked',false);
+        }
+        else{
+            helper.generateAccount(component, event, helper);
         }
      }
 

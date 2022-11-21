@@ -1,6 +1,26 @@
-.THIS .errorMsg{
-    font-weight:500;
-    color:#c23934;
-    padding-right:5px;
-    padding-left:7px;
+.THIS .errorMsg {
+    font-weight: 500;
+    color: #c23934;
+    padding-right: 5px;
+    padding-left: 7px;
+}
+
+.THIS .slds-modal__container.Container {
+    MAX-WIDTH: 100REM !IMPORTANT;
+    WIDTH: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+.THIS.slds-modal.slds-fade-in-open{
+    opacity: 1;
+    outline: none;
+}
+.THIS .slds-modal__content{
+    padding: 2px;
+    padding-bottom: 3px;
+    background-color: #f3f3f3;
+}
+.THIS.hideContent{
+    display: none !important;
 }
