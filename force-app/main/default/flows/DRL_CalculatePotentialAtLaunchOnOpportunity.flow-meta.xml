@@ -10,7 +10,7 @@
     </formulas>
     <interviewLabel>DRL_CalculatePotentialAtLaunchOnOpportunity {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Calculate Potential at Launch on Opportunity</label>
-    <processMetadataValues>
+    <processMetadataValues> 
         <name>BuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -48,21 +48,10 @@
         <connector>
             <targetReference>PopulatePotentialAtLaunch</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Planned_Price_at_Launch__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Planned_Qty_at_launch__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </filters>
+        <filterFormula>    
+AND( NOT(ISBLANK({!$Record.Planned_Qty_at_launch__c}) ) , 
+NOT(ISBLANK({!$Record.Planned_Price_at_Launch__c}) ), 
+{!$Record.RecordType.Name} = &quot;API&quot;)</filterFormula>
         <object>Opportunity</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>
