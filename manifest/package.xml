@@ -32,7 +32,7 @@
 		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.Weightage__c</members>
 		<name>CustomField</name>
-	</types>
+	</types> 
 	<types>
 		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>

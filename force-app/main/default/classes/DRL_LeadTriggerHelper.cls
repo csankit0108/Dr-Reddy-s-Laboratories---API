@@ -268,6 +268,11 @@ public without sharing class DRL_LeadTriggerHelper {
             = new List<DRL_ProspectLeadStatusMapping__mdt>();
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
+         //List of Lead to be updated
+       // List<Lead> list_LeadsToUpdate = new List<Lead>();
+        //List of Campaign Members to be created.
+        List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
 
         for (Lead objLead : list_Leads) {
             if (String.isNotBlank(objLead.DRL_Prospect__c)) {
@@ -337,5 +342,31 @@ public without sharing class DRL_LeadTriggerHelper {
         if (!list_ConsolidatedDMLErrors.isEmpty()) {
             DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterUpdate', list_ConsolidatedDMLErrors);
         }   
-    }  
+     
+
+            /*
+              * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
+            */
+            for (Lead objLead : list_Leads) {
+                if ( 
+                    objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                    objLead.DRL_SourceCampaign__c != null &&
+                    objLead.DRL_Prospect__c != null
+                ) {
+                    CampaignMember objCampaignMember = new CampaignMember();
+                    objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
+                    objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                    list_CampaignMembers.add(objCampaignMember);
+                }
+            }
+
+            if (!list_CampaignMembers.isEmpty()) {
+                List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
+            }
+
+            if (!list_ConsolidatedDMLErrors.isEmpty()) {
+                DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterUpdate', list_ConsolidatedDMLErrors);
+            }
+        }
 }
