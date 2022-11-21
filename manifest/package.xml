@@ -51,6 +51,7 @@
 		<name>FieldSet</name>
 	</types>
 	<types>
+		<members>DRL_CampaignInfluenceConfiguration__mdt-Campaign Influence Configuration Layout</members>
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
 		<members>Lead-Prospect</members>
 		<name>Layout</name>
