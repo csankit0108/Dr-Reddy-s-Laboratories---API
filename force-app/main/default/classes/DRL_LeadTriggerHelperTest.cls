@@ -18,7 +18,6 @@ public class DRL_LeadTriggerHelperTest {
     **/
     @TestSetup
     static void createData() {
-
         /**
         * @ author       :  Mahalakshmi S
         * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
@@ -37,10 +36,14 @@ public class DRL_LeadTriggerHelperTest {
         Lead objLead = new DRL_TestUtility.LeadBuilder()
             .setFirstName('Test')
             .setLastName('User')
-            .setEmail('testuser@yopmail.com')
+            .setEmail('testuser5@yopmail.com')
             .setCompany('Absyz')
             .setUtmCampaign('Campaign 1005')
-            .setUtmSource('Test MDT 2')
+            .setStatus('Open')
+            .setCountry('India')
+            .setReasonForDecline('Product Issues')
+            .setUtmCampaign('Campaign 1005')
+            .setUtmSource('Test_Source_1')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
         insert objLead;
@@ -101,7 +104,7 @@ public class DRL_LeadTriggerHelperTest {
                                 Email
                                 FROM Lead
                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
-                                AND DRL_Email__c = 'testuser@yopmail.com'
+                                AND DRL_Email__c = 'testuser5@yopmail.com'
                                 AND DRL_Prospect__c = :objLead.Id];
         System.assert(!list_leads.isEmpty(), 'Lead failed to get linked to existing Prospect!');
     }
@@ -126,4 +129,27 @@ public class DRL_LeadTriggerHelperTest {
         blnThrowException = false;
         Test.stopTest();
     }
+
+    /**
+    * @ author       :  Wafa Shaikh
+    * @ description  :  This method is used to test the Prospect Status When the child Lead is updated 
+    **/
+    @isTest
+    private static void testProspectStatus() {
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+ 
+        Lead objLead = [SELECT 
+                        Id,
+                        Email,
+                        Status,	
+                        DRL_Prospect__c 
+                        FROM Lead
+                        WHERE Email = 'testuser5@yopmail.com' AND 
+                        RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
+                       ];        
+        Test.startTest();
+        objLead.Status = 'Unqualified';
+        update objLead;        
+        Test.stopTest();
+    } 
 }
