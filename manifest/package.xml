@@ -88,8 +88,13 @@
 		<name>Profile</name>
 	</types>
 	<types>
+		<members>CLDRL00001</members>
 		<members>CLDRL00002</members>
 		<name>CustomLabel</name>
+	</types>
+	<types>
+		<members>DRL_APICampaignsDistributionModel</members>
+		<name>CampaignInfluenceModel</name>
 	</types>
 	<version>55.0</version>
 </Package>
