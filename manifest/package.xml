@@ -50,12 +50,12 @@
 		<name>CustomTab</name>
 	</types> 
 	</types>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.LeadGeneration</members>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.Discussion</members>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.Sample</members>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.Development</members>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.Bio batch ordered</members>
-		<members>DRL_CampaignInfluenceConfiguration__mdt.Source Campaign</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0001</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0002</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0003</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0004</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0005</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0006</members>
 		<name>CustomMetadata</name>
 	</types>
 	<types>
