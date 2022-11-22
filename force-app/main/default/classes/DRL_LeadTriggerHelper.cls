@@ -82,6 +82,10 @@ public without sharing class DRL_LeadTriggerHelper {
                         objLeadToUpdate.DRL_Prospect__c = map_ExistingLeadByEmail.get(objLead.Email).Id;
                         objLeadToUpdate.DRL_Email__c = objLead.Email;
                         objLeadToUpdate.Email = null;
+                        objLeadToUpdate.Run_Automation__c = null;
+                        objLeadToUpdate.Prospect_Customer__c = null;
+                        objLeadToUpdate.Select_Country__c = null;
+                        //Need to Run_Automation__c,Prospect_Customer__c,Select_Country__c to the fieldset
 
                         if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                             objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
@@ -198,9 +202,18 @@ public without sharing class DRL_LeadTriggerHelper {
         Set<String> set_SourceCodes = new Set<String>();
         //Map of UTM source lable with Lead source
         Map<String, String> map_LeadSourceByUtmSource = new Map<String, String>();
+        //Map of Record Type Id by Developer Name
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         
         //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
         for (Lead objLead : list_Leads) {
+            //If Lead has product info assign Lead record type, else assign Prospect record type
+            if (String.isNotBlank(objLead.Product_Lookup__c) || String.isNotBlank(objLead.Product__c)) {
+                objLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
+            } else if (objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Lead')) {
+                objLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Prospect');
+            }
+
             if (String.isNotBlank(objLead.DRL_UTMCampaign__c)) {
                set_CampaignCodes.add(objLead.DRL_UTMCampaign__c);
             }
