@@ -31,6 +31,7 @@
 		<members>DRL_CampaignInfluenceConfiguration__mdt.OpportunityStageName__c</members>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.SortOrder__c</members>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.Weightage__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.IsLeadConversion__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.Active__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.LeadStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
@@ -48,6 +49,15 @@
 		<members>DRL_ExceptionLog__c</members>
 		<name>CustomTab</name>
 	</types> 
+	</types>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.LeadGeneration</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Discussion</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Sample</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Development</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Bio batch ordered</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Source Campaign</members>
+		<name>CustomMetadata</name>
+	</types>
 	<types>
 		<members>Lead.DRL_Email</members>
 		<name>QuickAction</name>
