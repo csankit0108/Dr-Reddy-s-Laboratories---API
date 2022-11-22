@@ -5,7 +5,7 @@
 * @ Author          :   Dinesh Chandra 
 * @ Usage           :   1) Calculate Revenue Share on Campaign Object on Creation of CampaignInfluence.
                          
-* @ Test Class Name :   DRL_CampaignInfluenceHelperTest
+* @ Test Class Name :   DRL_CampaignInfluenceTriggerHelperTest
 *
 *   Date            |  Developer Name                       |  Version      |    Changes    
 * ======================================================================================================        
