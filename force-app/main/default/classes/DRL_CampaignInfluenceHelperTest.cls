@@ -28,7 +28,7 @@ public class DRL_CampaignInfluenceHelperTest {
     Account objAccount = new DRL_TestUtility.AccountBuilder()
         .setName('Test Account')
         .createAccount();
-    insert objAccount;
+    insert objAccount; 
 
     Contact objContact = new DRL_TestUtility.ContactBuilder()
         .setFirstName('Test')
