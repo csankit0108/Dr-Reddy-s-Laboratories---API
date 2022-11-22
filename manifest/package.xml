@@ -6,6 +6,8 @@
 		<members>DRL_LeadTriggerHelperTest</members>
 		<members>DRL_TestUtility</members>
 		<members>LeadTriggerHandler</members>
+		<members>DRL_UpdatePotentialAtLaunchBatch</members>
+		<members>DRL_UpdatePotentialAtLaunchBatchTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
