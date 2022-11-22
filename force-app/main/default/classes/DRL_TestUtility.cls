@@ -309,7 +309,7 @@ public class DRL_TestUtility {
     public class ProductBuilder {
         private String strName;
         
-        public ProductBuilder() {
+        public ProductBuilder() { 
             this.strName = '';
         }
         
