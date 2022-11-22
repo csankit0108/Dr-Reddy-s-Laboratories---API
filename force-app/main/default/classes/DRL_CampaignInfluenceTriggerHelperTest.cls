@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 *  
-* @ Name            :   DRL_CampaignInfluenceHelperTest
-* @ Purpose         :   Test class for DRL_CampaignInfluenceAttributesHelper
+* @ Name            :   DRL_CampaignInfluenceTriggerHelperTest
+* @ Purpose         :   Test class for DRL_CampaignInfluenceTriggerHelper
 * @ Author          :   Dinesh Chandra
 *
 *   Date            |  Developer Name                       |  Version      |  Changes
@@ -9,10 +9,10 @@
 *   15-11-2022      |  dinesh.chandra@absyz.com            |  1.0          |  Initial Version
 *******************************************************************************************************/
 @isTest
-public class DRL_CampaignInfluenceHelperTest {
+public class DRL_CampaignInfluenceTriggerHelperTest {
     /**
     * @ author       :  Dinesh Chandra
-    * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceAttributesHelper'
+    * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceTriggerHelper'
     **/
     public static Boolean blnThrowException = false;
     @TestSetup

@@ -6,6 +6,8 @@
 		<members>DRL_LeadTriggerHelperTest</members>
 		<members>DRL_TestUtility</members>
 		<members>LeadTriggerHandler</members>
+		<members>DRL_CampaignInfluenceTriggerHelper</members>
+		<members>DRL_CampaignInfluenceTriggerHelperTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -15,6 +17,7 @@
 	</types>
 	<types>
 		<members>Campaign.DRL_CampaignCode__c</members>
+		<members>Campaign.DRL_ValueBioBatchOrderedOpportunities__c</members>
 		<members>DRL_ExceptionLog__c.ClassName__c</members>
 		<members>DRL_ExceptionLog__c.ErrorMessage__c</members>
 		<members>DRL_ExceptionLog__c.ExceptionType__c</members>

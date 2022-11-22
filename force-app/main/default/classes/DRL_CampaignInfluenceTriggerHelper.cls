@@ -1,6 +1,6 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_CampaignInfluenceAttributesHelper
+* @ Name            :   DRL_CampaignInfluenceTriggerHelper
 * @ Purpose         :   Helper class for CampaignInfluenceAttributes.Trigger to handle all the operations on CampaignInfluence
 * @ Author          :   Dinesh Chandra 
 * @ Usage           :   1) Calculate Revenue Share on Campaign Object on Creation of CampaignInfluence.
@@ -11,7 +11,7 @@
 * ======================================================================================================        
 *  07-11-2022       |  dinesh.chandra@absyz.com            |  1.0          |    Initial Version            
 *******************************************************************************************************/
-public with sharing class DRL_CampaignInfluenceAttributesHelper {
+public with sharing class DRL_CampaignInfluenceTriggerHelper {
     public static void calculateValueOfBioBatch(List<CampaignInfluence> list_CampaignInfluences) {
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
@@ -28,12 +28,15 @@ public with sharing class DRL_CampaignInfluenceAttributesHelper {
 
             List<AggregateResult> list_AggregateResults = [SELECT
                                                           CampaignId,
-                                                          SUM(RevenueShare)RevenueShareSum
+                                                          SUM(RevenueShare) RevenueShareSum
                                                           FROM CampaignInfluence 
                                                           WHERE CampaignId 
                                                           IN :set_CampaignIds GROUP BY CampaignId];
             for (AggregateResult objAggregateResult : list_AggregateResults) {
-            map_ValueOfBioBatchByCampaignId.put((Id)objAggregateResult.get('CampaignId'),(Decimal)objAggregateResult.get('RevenueShareSum'));
+                map_ValueOfBioBatchByCampaignId.put(
+                    (Id)objAggregateResult.get('CampaignId'),
+                    (Decimal)objAggregateResult.get('RevenueShareSum')
+                );
             }
 
             list_Campaigns = [SELECT 
@@ -55,20 +58,22 @@ public with sharing class DRL_CampaignInfluenceAttributesHelper {
 
                 List<Database.SaveResult> list_Results = Database.update(list_Campaigns, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results,'Update'));
-                }
-
-            if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                DRLUtil.logDMLException('DRL_CampaignInfluenceAttributesHelper','calculateValueOfBioBatch',list_ConsolidatedDMLErrors);
             }
 
+            if (!list_ConsolidatedDMLErrors.isEmpty()) {
+                DRLUtil.logDMLException(
+                    'DRL_CampaignInfluenceTriggerHelper',
+                    'calculateValueOfBioBatch',
+                    list_ConsolidatedDMLErrors
+                );
+            }
         } catch(Exception objException) {
             DRLUtil.logException(
-                'DRL_CampaignInfluenceAttributesHelper',
+                'DRL_CampaignInfluenceTriggerHelper',
                 'calculateValueOfBioBatch',
                  objException,
                  true
             );
         }
-        
     } 
 }
