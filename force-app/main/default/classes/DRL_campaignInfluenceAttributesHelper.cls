@@ -12,17 +12,17 @@
 *  07-11-2022       |  dinesh.chandra@absyz.com            |  1.0          |    Initial Version            
 *******************************************************************************************************/
 public with sharing class DRL_CampaignInfluenceAttributesHelper {
-    public static void calculateValueOfBioBatch(List<CampaignInfluence> list_campaignInfluences) {
+    public static void calculateValueOfBioBatch(List<CampaignInfluence> list_CampaignInfluences) {
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
         //Map of ValueOfBioBatch by CampaignId
-        Map<Id,Decimal> map_ValueOfBioBatchByCampaignId = new Map<Id,Decimal>();
+        Map<Id, Decimal> map_ValueOfBioBatchByCampaignId = new Map<Id, Decimal>();
         //List of all Campaign 
         List<Campaign> list_Campaigns = new List<Campaign>();
         //Set of all CampaignIds
         Set<Id> set_CampaignIds = new Set<Id>();
         try {
-            for (CampaignInfluence objCampaignInfluence : list_campaignInfluences) {
+            for (CampaignInfluence objCampaignInfluence : list_CampaignInfluences) {
                 set_CampaignIds.add(objCampaignInfluence.CampaignId);
             }
 
@@ -31,18 +31,20 @@ public with sharing class DRL_CampaignInfluenceAttributesHelper {
                                                           SUM(RevenueShare)RevenueShareSum
                                                           FROM CampaignInfluence 
                                                           WHERE CampaignId 
-                                                          IN : set_CampaignIds GROUP BY CampaignId];
-            for(AggregateResult objAggregateResult : list_AggregateResults) {
-            map_ValueOfBioBatchByCampaignId.put((Id)objAggregateResult.get('CampaignId'),(decimal)objAggregateResult.get('RevenueShareSum'));
+                                                          IN :set_CampaignIds GROUP BY CampaignId];
+            for (AggregateResult objAggregateResult : list_AggregateResults) {
+            map_ValueOfBioBatchByCampaignId.put((Id)objAggregateResult.get('CampaignId'),(Decimal)objAggregateResult.get('RevenueShareSum'));
             }
 
-            list_Campaigns = [SELECT Id,
+            list_Campaigns = [SELECT 
+                             Id,
                              DRL_ValueBioBatchOrderedOpportunities__c
                              FROM Campaign  
-                             WHERE Id IN : set_CampaignIds];
-            for(Campaign objCampaign : list_Campaigns) {
-                if(map_ValueOfBioBatchByCampaignId.containsKey(objCampaign.Id)) {
-                objCampaign.DRL_ValueBioBatchOrderedOpportunities__c = map_ValueOfBioBatchByCampaignId.get(objCampaign.Id);
+                             WHERE Id IN :set_CampaignIds];
+
+            for (Campaign objCampaign : list_Campaigns) {
+                if (map_ValueOfBioBatchByCampaignId.containsKey(objCampaign.Id)) {
+                    objCampaign.DRL_ValueBioBatchOrderedOpportunities__c = map_ValueOfBioBatchByCampaignId.get(objCampaign.Id);
                 }
             }
 
@@ -51,13 +53,13 @@ public with sharing class DRL_CampaignInfluenceAttributesHelper {
                     throw new DMLException();
                 } 
 
-                List<Database.SaveResult> list_Results = Database.update(list_Campaigns,false);
+                List<Database.SaveResult> list_Results = Database.update(list_Campaigns, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results,'Update'));
                 }
 
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_CampaignInfluenceAttributesHelper','calculateValueOfBioBatch',list_ConsolidatedDMLErrors);
-                }
+            }
 
         } catch(Exception objException) {
             DRLUtil.logException(

@@ -9,7 +9,7 @@
 *   15-11-2022      |  dinesh.chandra@absyz.com            |  1.0          |  Initial Version
 *******************************************************************************************************/
 @isTest
-public with sharing class DRL_CampaignInfluenceHelperTest {
+public class DRL_CampaignInfluenceHelperTest {
     /**
     * @ author       :  Dinesh Chandra
     * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceAttributesHelper'
@@ -66,7 +66,7 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     private static void testCampaignMethod() {
         Campaign objCampaign = [SELECT Id FROM Campaign LIMIT 1];
         Opportunity objOpportunity = [SELECT Id FROM Opportunity LIMIT 1];
-        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = TRUE LIMIT 1];
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = true LIMIT 1];
         CampaignInfluence objCampaignInfluence = new DRL_TestUtility.CampaignInfluenceBuilder()
             .setCampaignId(objCampaign.Id)
             .setOpportunityId(objOpportunity.Id)
@@ -86,7 +86,7 @@ public with sharing class DRL_CampaignInfluenceHelperTest {
     static void testExceptions() {
         Campaign objCampaign = [SELECT Id FROM Campaign LIMIT 1];
         Opportunity objOpportunity = [SELECT Id FROM Opportunity LIMIT 1];
-        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = TRUE LIMIT 1];
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT Id,IsActive FROM CampaignInfluenceModel WHERE IsActive = true LIMIT 1];
         CampaignInfluence objCampaignInfluence = new DRL_TestUtility.CampaignInfluenceBuilder()
             .setCampaignId(objCampaign.Id)
             .setOpportunityId(objOpportunity.Id)
