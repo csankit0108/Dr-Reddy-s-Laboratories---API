@@ -29,6 +29,11 @@
 		<members>Lead.DRL_UTMCampaign__c</members>
 		<members>Lead.DRL_UTMSource__c</members>
 		<members>Lead.DRL_Prospect__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Active__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.OpportunityStageName__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.SortOrder__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.Weightage__c</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.IsLeadConversion__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.Active__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.LeadStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
@@ -38,6 +43,7 @@
 	<types>
 		<members>DRL_ExceptionLog__c</members>
 		<members>DRL_UTMSource__mdt</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<name>CustomObject</name>
 	</types>  
@@ -45,6 +51,15 @@
 		<members>DRL_ExceptionLog__c</members>
 		<name>CustomTab</name>
 	</types> 
+	</types>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0001</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0002</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0003</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0004</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0005</members>
+		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0006</members>
+		<name>CustomMetadata</name>
+	</types>
 	<types>
 		<members>Lead.DRL_Email</members>
 		<name>QuickAction</name>
@@ -54,6 +69,7 @@
 		<name>FieldSet</name>
 	</types>
 	<types>
+		<members>DRL_CampaignInfluenceConfiguration__mdt-Campaign Influence Configuration Layout</members>
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt-Prospect Lead Status Mapping Layout</members>
 		<members>Lead-Prospect</members>
