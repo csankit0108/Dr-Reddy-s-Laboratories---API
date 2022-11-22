@@ -15,8 +15,9 @@ public class DRL_UpdatePotentialAtLaunchBatch implements Database.Batchable<sObj
     List<Opportunity> list_OpportunitiesToUpdate = new List<Opportunity>();
     //List of all the Errors occurred during DML operation
     List<String> list_ConsolidatedDMLErrors = new List<String>();
+    Id IdRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
     public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {
-        String strOpportunityQuery = 'SELECT Id, Amount, CloseDate, Name, Planned_Price_at_Launch__c, Planned_Qty_at_launch__c, StageName FROM Opportunity';
+        String strOpportunityQuery = 'SELECT Id, Amount, CloseDate, Name, Planned_Price_at_Launch__c, Planned_Qty_at_launch__c, StageName FROM Opportunity WHERE RecordTypeId =: IdRecordTypeId';
         return Database.getQueryLocator(strOpportunityQuery);
     }
     

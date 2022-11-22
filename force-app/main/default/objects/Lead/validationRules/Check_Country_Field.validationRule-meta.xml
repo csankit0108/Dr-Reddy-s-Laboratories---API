@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Country_Field</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF (  
+       AND( 
+           OR
+           ( 
+             TEXT( Status ) == &quot;Qualified&quot; ,
+             TEXT( Status ) == &quot;Contacted&quot; , 
+             TEXT( Status ) == &quot;Converted&quot; 
+           ),
+            TEXT(Select_Country__c) == &quot;&quot;, 
+            RecordType.DeveloperName ==&apos;DRL_Prospect&apos;),
+        true,false
+)</errorConditionFormula>
+    <errorDisplayField>Select_Country__c</errorDisplayField>
+    <errorMessage>Please Enter the Country value</errorMessage>
+</ValidationRule>
