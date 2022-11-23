@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 *  
-* @ Name            :   DRL_CampaignInfluenceHelperTest
-* @ Purpose         :   Test class for DRL_CampaignInfluenceAttributesHelper
+* @ Name            :   DRL_CampaignInfluenceTriggerHelperTest
+* @ Purpose         :   Test class for DRL_CampaignInfluenceTriggerHelper
 * @ Author          :   Dinesh Chandra
 *
 *   Date            |  Developer Name                       |  Version      |  Changes
@@ -9,10 +9,10 @@
 *   15-11-2022      |  dinesh.chandra@absyz.com            |  1.0          |  Initial Version
 *******************************************************************************************************/
 @isTest
-public class DRL_CampaignInfluenceHelperTest {
+public class DRL_CampaignInfluenceTriggerHelperTest {
     /**
     * @ author       :  Dinesh Chandra
-    * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceAttributesHelper'
+    * @ description  :  This method is used to setup data for testing apex class 'DRL_CampaignInfluenceTriggerHelper'
     **/
     public static Boolean blnThrowException = false;
     @TestSetup
@@ -30,31 +30,31 @@ public class DRL_CampaignInfluenceHelperTest {
         .createAccount();
     insert objAccount; 
 
-    Contact objContact = new DRL_TestUtility.ContactBuilder()
-        .setFirstName('Test')
-        .setLastName('Contact')
-        .setAccountId(objAccount.Id)
-        .createContact();
-    insert objContact;
+        Contact objContact = new DRL_TestUtility.ContactBuilder()
+            .setFirstName('Test')
+            .setLastName('Contact')
+            .setAccountId(objAccount.Id)
+            .createContact();
+        insert objContact;
         
-    Product2 objProduct = new DRL_TestUtility.ProductBuilder()
-        .setName('Test Product')
-        .createProduct();
-    insert objProduct;
+        Product2 objProduct = new DRL_TestUtility.ProductBuilder()
+            .setName('Test Product')
+            .createProduct();
+        insert objProduct;
 
-    Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
-        .setName('Test Opportunity')
-        .setAccountId(objAccount.Id)
-        .setContactId(objContact.Id)
-        .setProductId(objProduct.Id)
-        .setStageName('Discussion')
-        .setCloseDate(System.today())
-        .setPriceAtLaunch(1000)
-        .setQuantityAtLaunch(10)
-        .setLaunchYear('2000')
-        .setSourceType('Primary Source')
-        .createOpportunity();
-    insert objOpportunity;
+        Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
+            .setName('Test Opportunity')
+            .setAccountId(objAccount.Id)
+            .setContactId(objContact.Id)
+            .setProductId(objProduct.Id)
+            .setStageName('Discussion')
+            .setCloseDate(System.today())
+            .setPriceAtLaunch(1000)
+            .setQuantityAtLaunch(10)
+            .setLaunchYear('2000')
+            .setSourceType('Primary Source')
+            .createOpportunity();
+        insert objOpportunity;
     }
 
     /**

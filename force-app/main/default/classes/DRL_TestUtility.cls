@@ -253,7 +253,7 @@ public class DRL_TestUtility {
         public AccountBuilder setName(String strValue) {
             this.strName = strValue;
             return this;
-        }
+        } 
 
         public Account createAccount() {
             Account objAccount = new Account();
