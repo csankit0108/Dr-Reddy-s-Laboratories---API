@@ -272,7 +272,7 @@ public without sharing class DRL_LeadTriggerHelper {
     * @ params       : list_Leads - List of Lead records
     * @ return       : N/A
     */
-    public static void processAfterUpdate(List<Lead> list_Leads) {
+    public static void processAfterUpdate(Map<Id, Lead> map_NewMap, Map<Id, Lead> map_OldMap) {
         //Set to store the Prospect Ids
         Set<Id> set_ProspectIds = new Set<Id>();
         //map to get the weightage of Status value  
@@ -285,11 +285,20 @@ public without sharing class DRL_LeadTriggerHelper {
             = new List<DRL_ProspectLeadStatusMapping__mdt>();
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
-         //List of Lead to be updated
-       // List<Lead> list_LeadsToUpdate = new List<Lead>();
         //List of Campaign Members to be created.
         List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        //List of Leads for which Status has changed
+        List<Lead> list_Leads = new List<Lead>();
+
+        for (Lead objLead : map_NewMap.values()) {
+            if (
+                map_OldMap.containsKey(objLead.Id) && 
+                objLead.Status != map_OldMap.get(objLead.Id).Status
+            ) {
+                list_Leads.add(objLead);
+            }
+        }
 
         for (Lead objLead : list_Leads) {
             if (String.isNotBlank(objLead.DRL_Prospect__c)) {
@@ -361,29 +370,30 @@ public without sharing class DRL_LeadTriggerHelper {
         }   
      
 
-            /*
-              * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
-            */
-            for (Lead objLead : list_Leads) {
-                if ( 
-                    objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
-                    objLead.DRL_SourceCampaign__c != null &&
-                    objLead.DRL_Prospect__c != null
-                ) {
-                    CampaignMember objCampaignMember = new CampaignMember();
-                    objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
-                    objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
-                    list_CampaignMembers.add(objCampaignMember);
-                }
-            }
-
-            if (!list_CampaignMembers.isEmpty()) {
-                List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
-                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
-            }
-
-            if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterUpdate', list_ConsolidatedDMLErrors);
+        /*
+        * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
+        */
+        for (Lead objLead : map_NewMap.values()) {
+            if ( 
+                objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                map_OldMap.get(objLead.Id).DRL_SourceCampaign__c == null && 
+                objLead.DRL_SourceCampaign__c != null &&
+                objLead.DRL_Prospect__c != null
+            ) {
+                CampaignMember objCampaignMember = new CampaignMember();
+                objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
+                objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                list_CampaignMembers.add(objCampaignMember);
             }
         }
+
+        if (!list_CampaignMembers.isEmpty()) {
+            List<Database.SaveResult> list_Results = Database.insert(list_CampaignMembers, false);
+            list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
+        }
+
+        if (!list_ConsolidatedDMLErrors.isEmpty()) {
+            DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterUpdate', list_ConsolidatedDMLErrors);
+        }
+    }
 }
