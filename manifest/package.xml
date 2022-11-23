@@ -26,12 +26,14 @@
         <members>Lead.DRL_UTMSource__c</members>
         <members>Lead.DRL_Prospect__c</members>
         <members>DRL_LeadConvertFormController__mdt.Field_Set_Api_Name__c</members>
+		<members>CMDDRL0001__mdt.list_API_Names__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>DRL_ExceptionLog__c</members>
         <members>DRL_UTMSource__mdt</members>
         <members>DRL_LeadConvertFormController__mdt</members>
+		<members>CMDDRL0001__mdt</members>
         <name>CustomObject</name>
     </types>   
     <types>
@@ -97,23 +99,26 @@
         <members>DRL_ProspectRelatedChildLeads</members>
         <members>DRL_convertLeadAccountSection</members>
         <members>DRL_convertLeadContactSection</members>
+        <members>DRL_ConvertLeadRunAutomationSection</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
-        <members>DRL_convertLeadHeader</members>
-        <members>DRL_ConvertLeadDataLoadError</members>
-        <members>DRL_ConvertLeadError</members>
-        <members>DRL_LeadAlreadyConverted</members>
-        <members>LeadAlreadyConvertedMessage</members>
-        <members>DRL_LeadAlreadyConvertedMessageHeader</members>
-        <members>DRL_accountNotRelatedToContactError</members>
-        <members>DRL_contactWithEmailExistError</members>
-        <members>DRL_convertLeadDuplicateAccountError</members>
-        <members>DRL_convertLeadDuplicateContactError</members>
-        <members>DRL_convertLeadRequiredFieldsError</members>
-        <members>DRL_leadConvertSuccessMessage</members>
-        <members>DRL_productField_errorMsg</members>
-        <members>convertLeadSuccessOpportunityColumnsLoadError</members>
+        <members>CLDRL00003</members>
+        <members>CLDRL00004</members>
+		<members>CLDRL00005</members>
+		<members>CLDRL00006</members>
+        <members>CLDRL00007</members>
+		<members>CLDRL00008</members>
+		<members>CLDRL00009</members>
+		<members>CLDRL00010</members>
+		<members>CLDRL00011</members>
+		<members>CLDRL00012</members>
+		<members>CLDRL00013</members>
+		<members>CLDRL00014</members>
+		<members>CLDRL00015</members>
+		<members>CLDRL00016</members>
+		<members>CLDRL00017</members>
+		<members>CLDRL00018</members>
         <name>CustomLabel</name>
     </types>
     <types>
@@ -128,6 +133,9 @@
         <members>DRL_LeadConvertFormController.None</members>
         <members>DRL_LeadConvertFormController.Sample</members>
         <members>DRL_LeadConvertFormController.Under_Registration</members>
+        <members>CMDDRL0001.Account</members>
+		<members>CMDDRL0001.Contact</members>
+		<members>CMDDRL0001.Opportunity</members>
         <name>CustomMetadata</name>
     </types>
     <types>

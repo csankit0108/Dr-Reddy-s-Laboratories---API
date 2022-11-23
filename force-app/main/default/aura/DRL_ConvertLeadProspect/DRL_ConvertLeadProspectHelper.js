@@ -29,7 +29,7 @@
                     toastEvent.setParams({
                         "type": "error",
                         "title": "Error !",
-                        "message": $A.get("$Label.c.DRL_productField_errorMsg")
+                        "message": $A.get("$Label.c.CLDRL00013")
                     });
                     toastEvent.fire();
                     $A.get('e.force:refreshView').fire();
@@ -41,8 +41,8 @@
                         (objleadRecord.IsConverted == true && objleadRecord.RecordType.DeveloperName=='DRL_Prospect' &&result.listProspectChildLeads.length==0)
                         ){                        
                         helper.openAlert('error',
-                                         $A.get("$Label.c.DRL_LeadAlreadyConvertedMessageHeader"),
-                                         $A.get("$Label.c.DRL_LeadAlreadyConverted"),
+                                         $A.get("$Label.c.CLDRL00011"),
+                                         $A.get("$Label.c.CLDRL00010"),
                                          function(){}
                                         );
                         helper.closeQuickAction(component);
@@ -51,11 +51,24 @@
                     if (objleadRecord.IsConverted == false)
                         component.set("v.convertedStatus", false);
                 }
+                //set Automation data
+                if((objleadRecord.RecordTypeId && objleadRecord.RecordType.DeveloperName==='DRL_Lead')){
+                    component.set("v.map_contentTotal", result.mapContentList);
+                    component.set("v.blncontentAvailable", result.contentAvailable);
+                    if (result.contentAvailable){
+                        component.set("v.list_documentCategoriesAvailable", result.catList);
+                    }                        
+                }
+                else if((objleadRecord.RecordTypeId && objleadRecord.RecordType.DeveloperName==='DRL_Prospect')){
+                    component.set("v.map_mapcontentTotal", result.map_mapContentList);
+                    component.set("v.map_blncontentAvailable", result.map_contentAvailable);
+                    component.set('v.map_listdocumentCategoriesAvailable',result.map_catList);
+                }
                 
                 component.set('v.blnisFormDataLoaded',true);  
             }
             else{
-                helper.showMessage('Error!',$A.get("$Label.c.DRL_ConvertLeadDataLoadError"),'error','dismissible');
+                helper.showMessage('Error!',$A.get("$Label.c.CLDRL00003"),'error','dismissible');
             }
             component.set('v.blnisLoading',false);
         });        
@@ -144,7 +157,7 @@
         let list_fieldArray = component.get('v.list_accountFieldSet');
         list_fieldArray.forEach(function(objaccountField){
             if(objaccountField.required== true && helper.isNullCheck(objaccountRecord[objaccountField.name])){
-                component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
+                component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00008'));
                 component.set('v.blnerrorMsg',true);
                 return false;
             }
@@ -157,7 +170,7 @@
         let list_fieldArray = component.get('v.list_contactFieldSet');
         list_fieldArray.forEach(function(objcontactField){
             if(objcontactField.required== true && helper.isNullCheck(objcontactRecord[objcontactField.name])){
-                component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
+                component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00008'));
                 component.set('v.blnerrorMsg',true);
                 component.set('v.blnisLoading',false);
                 return false;
@@ -176,12 +189,12 @@
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             "title": 'Error!',
-                            "message": $A.get('$Label.c.DRL_contactWithEmailExistError'),
+                            "message": $A.get('$Label.c.CLDRL00018'),
                             "type":'error',
                             "mode":'dismissible'
                         });
                         toastEvent.fire();
-                        component.set('v.strerrorMsg',$A.get('$Label.c.DRL_contactWithEmailExistError'));
+                        component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00018'));
                         component.set('v.blnerrorMsg',true);                        
                         component.set('v.blnisLoading',false);
                     }
@@ -205,7 +218,7 @@
         var strcontactId = component.get('v.strcontactId')
         
         if ((!helper.isNullCheck(straccountId) && !helper.isNullCheck(strcontactId)) && (objcontactRecord.AccountId != straccountId || helper.isNullCheck(objcontactRecord.AccountId))){
-            component.set('v.strerrorMsg',$A.get('$Label.c.DRL_accountNotRelatedToContactError'));
+            component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00017'));
             component.set('v.blnerrorMsg',true);
             return false;
         }
@@ -222,7 +235,7 @@
                 let list_mandatoryFields=helper.getMandatoryFields(component,objopportunity.StageName,helper);
                 for (const strfield of list_mandatoryFields) {
                     if(helper.isNullCheck(objopportunity[strfield])){
-                        component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
+                        component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00008'));
                         component.set('v.blnerrorMsg',true);
                         return false;
                     }                
@@ -235,7 +248,7 @@
             let list_mandatoryFields=helper.getMandatoryFields(component,objopportunity.StageName,helper);
             for (const strfield of list_mandatoryFields) {
                 if(helper.isNullCheck(objopportunity[strfield])){
-                    component.set('v.strerrorMsg',$A.get('$Label.c.DRL_convertLeadRequiredFieldsError'));
+                    component.set('v.strerrorMsg',$A.get('$Label.c.CLDRL00008'));
                     component.set('v.blnerrorMsg',true);
                     return false;
                 }                
@@ -294,18 +307,50 @@
                 }
             }                    
         });
-        component.set('v.list_ChildLeadTableColumns',list_ChildLeadTableColumns);
-
-        // list_ProspectChildLeads.forEach(lead => {
-        //     if(lead.Product_Lookup__c){
-        //     lead.productUrl='/'+lead.Product_Lookup__c;
-        //     lead.productName=lead.Product_Lookup__r.Name;
-        // }                        
-        //                                 lead.leadUrl='/'+lead.Id;
-        //                                 lead.OwnerName=lead.Owner.Name;                        
-        //                                 });
-        
+        component.set('v.list_ChildLeadTableColumns',list_ChildLeadTableColumns);        
         return list_ProspectChildLeads;
+    },
+    isValidRunAutomationData:function(component,event,helper){
+        let objlead=component.get('v.objlead');
+        if(objlead.RecordTypeId && objlead.RecordType.DeveloperName==='DRL_Lead'){
+            let blncontentAvailable=component.get('v.blncontentAvailable');
+            if(blncontentAvailable){
+                let strrunAfter=component.get('v.strrunAfter');
+                if(helper.isNullCheck(strrunAfter)){
+                    helper.showMessage('Error!',$A.get('$Label.c.CLDRL00015'),'error','dismissible');
+                    return false;
+                }
+                let list_finalSelectedContentCatalogs=component.get('v.list_finalSelectedContentCatalogs');
+                if(helper.isNullCheck(list_finalSelectedContentCatalogs)||list_finalSelectedContentCatalogs.length==0){
+                    helper.showMessage('Error!',$A.get('$Label.c.CLDRL00016'),'error','dismissible');
+                    return false;
+                }
+            }
+        }
+        else if(objlead.RecordTypeId && objlead.RecordType.DeveloperName==='DRL_Prospect' && component.get('v.blnisChildRecordsFound')){
+            let list_Opportunities=component.get('v.list_Opportunities');
+            if(!helper.isNullCheck(list_Opportunities)&&list_Opportunities.length>0){
+                let map_blncontentAvailable=component.get('v.map_blncontentAvailable');
+                let map_strrunAfter=component.get('v.map_strrunAfter');
+                let map_listfinalSelectedContentCatalogs=component.get('v.map_listfinalSelectedContentCatalogs');      
+                for (var i = 0; i < list_Opportunities.length; i++) {
+                    let objopportunity=list_Opportunities[i];
+                    if(map_blncontentAvailable[objopportunity.Lead_Converted_From__c]){
+                        let strrunAfter=map_strrunAfter[objopportunity.Lead_Converted_From__c];
+                        if(helper.isNullCheck(strrunAfter)){
+                            helper.showMessage('Error!',$A.get('$Label.c.CLDRL00015'),'error','dismissible');
+                            return false;
+                        }
+                        let list_finalSelectedContentCatalogs=map_listfinalSelectedContentCatalogs[objopportunity.Lead_Converted_From__c];
+                        if(helper.isNullCheck(list_finalSelectedContentCatalogs)||list_finalSelectedContentCatalogs.length==0){
+                            helper.showMessage('Error!',$A.get('$Label.c.CLDRL00016'),'error','dismissible');
+                            return false;
+                        }
+                    }
+                }              
+            }
+        }
+        return true;
     },
     convertLeadHelper:function(component,event,helper){
         var action=component.get('c.convertLead');
@@ -315,14 +360,18 @@
             'objcontact':component.get('v.objcontactRecord'),
             'objopportunity':component.get('v.objopportunity'),
             'list_leadOpportunities':component.get('v.list_Opportunities'),
-            'list_leads':component.get('v.list_selectedLeads')
+            'list_leads':component.get('v.list_selectedLeads'),
+            'list_contentCatalogs':component.get('v.list_finalSelectedContentCatalogs'),
+            'strrunAfter':component.get('v.strrunAfter'),
+            'map_listContentCatalogs':component.get('v.map_listfinalSelectedContentCatalogs'),
+            'map_strrunAfter':component.get('v.map_strrunAfter')
         });
         action.setCallback(this,function(response){
             let state=response.getState();
             if(state==='SUCCESS'){
                 let result=response.getReturnValue();
                 if(result.strstatus=='Success'){
-                    helper.showMessage('Success!',$A.get('$Label.c.DRL_leadConvertSuccessMessage'),'success','dismissible');
+                    helper.showMessage('Success!',$A.get('$Label.c.CLDRL00012'),'success','dismissible');
                     component.set('v.objaccountRecord',result.objaccount);
                     component.set('v.objcontactRecord',result.objcontact);
                     if(!helper.isNullCheck(result.objopportunity)){
@@ -331,24 +380,23 @@
                     if(!helper.isNullCheck(result.list_opportunities)){
                         component.set('v.list_Opportunities',result.list_opportunities);
                     }
+                    component.set('v.map_successFieldsToShow',result.map_successFieldsToShow);
                     component.set('v.strerrorMsg','');
-                    component.set('v.blnerrorMsg',false);
-                    component.set('v.strcloseButtonLabel','Close');
-                    component.set('v.strcloseButtonVariant','brand');                    
+                    component.set('v.blnerrorMsg',false);                  
                     component.set('v.blnisConvertedSuccess',true);
                 }
                 else if(result.strstatus=='Duplicate Account'){
-                    helper.showMessage('Error!',$A.get('$Label.c.DRL_convertLeadDuplicateAccountError'),'error','dismissible');
+                    helper.showMessage('Error!',$A.get('$Label.c.CLDRL00004'),'error','dismissible');
                 }
                 else if(result.strstatus=='Duplicate'){
-                    helper.showMessage('Error!',$A.get('$Label.c.DRL_convertLeadDuplicateContactError'),'error','dismissible');
+                    helper.showMessage('Error!',$A.get('$Label.c.CLDRL00005'),'error','dismissible');
                 }
                 else{                    
-                    helper.showMessage('Error!',$A.get('$Label.c.DRL_ConvertLeadError') ,'error','dismissible');
+                    helper.showMessage('Error!',$A.get('$Label.c.CLDRL00006') ,'error','dismissible');
                 }
             }
             else{
-                helper.showMessage('Error!',$A.get('$Label.c.DRL_ConvertLeadError'),'error','dismissible');
+                helper.showMessage('Error!',$A.get('$Label.c.CLDRL00006'),'error','dismissible');
             }
             component.set('v.blnisLoading',false);
         });

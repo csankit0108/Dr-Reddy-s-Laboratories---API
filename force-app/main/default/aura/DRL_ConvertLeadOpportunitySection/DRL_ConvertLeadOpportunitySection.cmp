@@ -11,12 +11,12 @@
 -->
 <aura:component>
 
-    <aura:attribute name="objopportunity" type="Opportunity" />
-    <aura:attribute name="list_opportunityFormFieldsToRender" type="List" default="[]"/>
-    <aura:attribute name="list_fieldsToRender" type="List" default="[]"/>
-    <aura:attribute name="map_stageToFieldSetMap" type="Map" default="{}"/>
-    <aura:attribute name="map_fieldSetTofieldsMap" type="Map" default="{}"/>
-    <aura:attribute name="list_opportunityRecordTypes" type="List" default="[]"/>
+    <aura:attribute name="objOpportunity" type="Opportunity" />
+    <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_FieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
+    <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
+    <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
 
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
 
@@ -32,22 +32,22 @@
                     <lightning:messages />
                     <div class="slds-form formContainer">
                         <div class="slds-col slds-size_1-of-1">
-                            <aura:iteration items="{!v.list_fieldsToRender}" var="objfield" indexVar="name">
-                                <aura:if isTrue="{!objfield.name=='RecordTypeId'}">
-                                    <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objopportunity.RecordTypeId}">
-                                        <aura:iteration items="{!v.list_opportunityRecordTypes}" var="recordType">
+                            <aura:iteration items="{!v.list_FieldsToRender}" var="objField" indexVar="name">
+                                <aura:if isTrue="{!objField.name == 'RecordTypeId'}">
+                                    <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objOpportunity.RecordTypeId}">
+                                        <aura:iteration items="{!v.list_OpportunityRecordTypes}" var="recordType">
                                             <option value="{!recordType.key}">{!recordType.value}</option>
                                         </aura:iteration>
                                     </lightning:select>
                                 </aura:if>
-                                <aura:if isTrue="{!objfield.name!='RecordTypeId'}">
-                                    <aura:if isTrue="{!objfield.required}">
-                                        <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
-                                                required="{!objfield.required}" disabled="{!objfield.disabled}"
+                                <aura:if isTrue="{!objField.name != 'RecordTypeId'}">
+                                    <aura:if isTrue="{!objField.required}">
+                                        <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                required="{!objField.required}" disabled="{!objField.disabled}"
                                                 class="slds-form-element" onchange="{!c.handleValueChange}"/>
                                         <aura:set attribute="else">
-                                            <lightning:inputField fieldName="{!objfield.name}" value="{!objfield.value}"
-                                                disabled="{!objfield.disabled}"
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                disabled="{!objField.disabled}"
                                                 class="slds-form-element" onchange="{!c.handleValueChange}"/>
                                         </aura:set>
                                     </aura:if>

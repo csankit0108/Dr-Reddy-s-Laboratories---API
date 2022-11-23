@@ -25,6 +25,12 @@
     <aura:attribute name="strdefaultRecordTypeId" type="String" default="" />
     <aura:attribute name="list_selectedRows" type="List" default="[]" />
 
+    <aura:attribute name="map_blncontentAvailable" type="Map" />
+    <aura:attribute name="map_mapcontentTotal" type="Map" />
+    <aura:attribute name="map_listdocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_strrunAfter" type="Map"/>
+    <aura:attribute name="map_listfinalSelectedContentCatalogs" type="Map"/>
+
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
    
@@ -45,11 +51,21 @@
                 <aura:iteration items="{!v.list_opportunities}" var="objopportunity" indexVar="Id">
                     <lightning:tab label="{!objopportunity.Name}" id="{!objopportunity.Lead_Converted_From__c}">
                         <c:DRL_ConvertLeadOpportunitySection
-                            objopportunity="{!objopportunity}"  
-                            list_opportunityRecordTypes="{!v.list_opportunityRecordTypes}"
-                            list_opportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
-                            map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"
-                            map_stageToFieldSetMap="{!v.map_stageToFieldSetMap}"/>
+                            objOpportunity="{!objopportunity}"  
+                            list_OpportunityRecordTypes="{!v.list_opportunityRecordTypes}"
+                            list_OpportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
+                            map_FieldSetToFieldsMap="{!v.map_fieldSetTofieldsMap}"
+                            map_StageToFieldSetMap="{!v.map_stageToFieldSetMap}"/>
+
+                        <c:DRL_ConvertLeadRunAutomationSection      
+                            blnIsProspect="true"   
+                            strLeadId="{!objopportunity.Lead_Converted_From__c}"                
+                            map_blncontentAvailable="{!v.map_blncontentAvailable}"
+                            map_mapcontentTotal="{!v.map_mapcontentTotal}"
+                            map_listdocumentCategoriesAvailable="{!v.map_listdocumentCategoriesAvailable}"
+                            map_strrunAfter="{!v.map_strrunAfter}"                            
+                            map_listfinalSelectedContentCatalogs="{!v.map_listfinalSelectedContentCatalogs}"/>
+
                     </lightning:tab>
                 </aura:iteration>
             </lightning:tabset>

@@ -1,6 +1,8 @@
 ({
     doInit : function(component, event, helper) {
-        helper.setTableColumns(component);
+        if(component.get('v.blnisChildRecordsFound')){
+            helper.setRunAutomationData(component);
+        }
     },
     convertSelectedLead:function(component,event,helper){
         let list_selectedLeads = event.getParam('selectedRows');
@@ -10,7 +12,7 @@
         list_selectedLeads.forEach(function(objlead){
             if(objlead.Product_Lookup__c==null||objlead.Product_Lookup__c==undefined||objlead.Product_Lookup__c==''){
                 if(blnisSelectedLeadsValid){
-                    helper.showMessage('Error!',$A.get("$Label.c.DRL_productField_errorMsg"),'error','dismissable');
+                    helper.showMessage('Error!',$A.get("$Label.c.CLDRL00013"),'error','dismissable');
                     blnisSelectedLeadsValid=false;
                 }                                
             }

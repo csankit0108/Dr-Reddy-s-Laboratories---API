@@ -43,8 +43,19 @@
     <aura:attribute name="blnisLoading" type="Boolean" default="false" /> 
     <aura:attribute name ="objlead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
     <aura:attribute name ="list_ChildLeadTableColumns" type = "List" default="[]"/> 
-    <aura:attribute name = "strcloseButtonLabel" type = "String" default="Cancel"/>
-    <aura:attribute name = "strcloseButtonVariant" type = "String" default="neutral"/>
+    <aura:attribute name="map_successFieldsToShow" type="Map" default="{}"/>   
+
+    <aura:attribute name="blncontentAvailable" type="boolean" default="false" />
+    <aura:attribute name="map_contentTotal" type="Map" />
+    <aura:attribute name="list_documentCategoriesAvailable" type="Object[]" default="[]" />
+    <aura:attribute name="strrunAfter" type="String" default="" />
+    <aura:attribute name="list_finalSelectedContentCatalogs" type="Object[]" default="[]" />
+
+    <aura:attribute name="map_blncontentAvailable" type="Map" />
+    <aura:attribute name="map_mapcontentTotal" type="Map" />
+    <aura:attribute name="map_listdocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_strrunAfter" type="Map"/>
+    <aura:attribute name="map_listfinalSelectedContentCatalogs" type="Map"/>
     
     
     
@@ -53,7 +64,7 @@
     <div role="dialog" aura:id="modal" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
         <div class="slds-modal__container Container" aura:id="modalContainer">
             <div class="slds-modal__header">
-                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.DRL_convertLeadHeader}</h1>
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.CLDRL00007}</h1>
             </div>
             <div class="slds-modal__content" id="modal-content-id-1">
                 <aura:if isTrue ="{!and(v.blnisFormDataLoaded,!v.blnisConvertedSuccess)}">
@@ -84,16 +95,30 @@
                             map_stageToFieldSetMap="{!v.map_stageToFieldSetMap}"
                             list_selectedLeads="{!v.list_selectedLeads}" 
                             list_columns="{!v.list_ChildLeadTableColumns}"
-                            map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"/>
+                            map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"
+                            map_blncontentAvailable="{!v.map_blncontentAvailable}"
+                            map_mapcontentTotal="{!v.map_mapcontentTotal}"
+                            map_listdocumentCategoriesAvailable="{!v.map_listdocumentCategoriesAvailable}"
+                            map_strrunAfter="{!v.map_strrunAfter}"
+                            map_listfinalSelectedContentCatalogs="{!v.map_listfinalSelectedContentCatalogs}"/>
                     </aura:if>
                 
                     <aura:if isTrue="{!!v.blnisProspect}">
+
                         <c:DRL_ConvertLeadOpportunitySection
-                            objopportunity="{!v.objopportunity}"  
-                            list_opportunityRecordTypes="{!v.list_opportunityRecordTypes}"
-                            list_opportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
-                            map_stageToFieldSetMap="{!v.map_stageToFieldSetMap}"
-                            map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"/>
+                            objOpportunity="{!v.objopportunity}"  
+                            list_OpportunityRecordTypes="{!v.list_opportunityRecordTypes}"
+                            list_OpportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
+                            map_StageToFieldSetMap="{!v.map_stageToFieldSetMap}"
+                            map_FieldSetToFieldsMap="{!v.map_fieldSetTofieldsMap}"/>
+
+                        <c:DRL_ConvertLeadRunAutomationSection                         
+                            blncontentAvailable="{!v.blncontentAvailable}"
+                            map_contentTotal="{!v.map_contentTotal}"
+                            list_documentCategoriesAvailable="{!v.list_documentCategoriesAvailable}"
+                            strrunAfter="{!v.strrunAfter}"                            
+                            list_finalSelectedContentCatalogs="{!v.list_finalSelectedContentCatalogs}"/>
+                            
                     </aura:if> 
                 </aura:if>
                 <aura:if isTrue="{!v.blnisLoading}">
@@ -105,6 +130,7 @@
                     objcontact="{!v.objcontactRecord}"
                     objopportunity="{!v.objopportunity}"
                     list_Opportunities="{!v.list_Opportunities}"
+                    map_successFieldsToShow="{!v.map_successFieldsToShow}"
                     />                    
                 </aura:if>                      
             </div>
@@ -112,10 +138,14 @@
                 <aura:if isTrue="{!v.blnerrorMsg}">
                     <lightning:icon iconName="utility:warning" size="xx-small" class="customIcon" variant="error" /> 
                     <b class="errorMsg">{!v.strerrorMsg}</b>
-                </aura:if>           
-                <lightning:button name='cancelButton' label='{!v.strcloseButtonLabel}' variant='{!v.strcloseButtonVariant}'
-                                  onclick="{!c.cancelAction}" />
+                </aura:if>        
+                <aura:if isTrue="{!v.blnisConvertedSuccess}">
+                    <lightning:button name='CloseButton' label='Close' variant='brand'
+                                  onclick="{!c.cancelAction}" />   
+                </aura:if>   
                 <aura:if isTrue="{!!v.blnisConvertedSuccess}">
+                    <lightning:button name='cancelButton' label='Cancel' variant='neutral'
+                                  onclick="{!c.cancelAction}" />                
                     <lightning:button name='convertButton' label="Convert" variant="brand"
                                   onclick="{!c.handleConvert}" />
                 </aura:if>                

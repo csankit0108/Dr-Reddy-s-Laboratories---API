@@ -1,57 +1,55 @@
 ({
-    generateFieldsToRender : function(component,event,helper) {    
-        let objopportunity=component.get('v.objopportunity');
-        if(helper.isNullCheck(objopportunity.StageName)){
-            this.setFieldsToRenderOnStageChange(component,'',helper);
-        }
-        else{
-            this.setFieldsToRenderOnStageChange(component,objopportunity.StageName,helper); 
+    generateFieldsToRender : function(component, event, helper) {    
+        let objOpportunity = component.get("v.objOpportunity");
+        if (helper.isNullCheck(objOpportunity.StageName)) {
+            this.setFieldsToRenderOnStageChange(component, "", helper);
+        }else{
+            this.setFieldsToRenderOnStageChange(component, objOpportunity.StageName, helper); 
         }
     },
-    isNullCheck:function(variable){
-        if(variable==''||variable==null||variable==undefined){
+    isNullCheck:function(variable) {
+        if (variable == "" || variable == null || variable == undefined) {
             return true;
-        }
-        else{
+        }else{
             return false;
         }
     },
-    setFieldsToRenderOnStageChange:function(component,strstageName,helper){
-        let list_fieldsToRender=[];
-        let listMasterFieldset=component.get('v.list_opportunityFormFieldsToRender');
-        let map_fieldSetTofieldsMap=component.get('v.map_fieldSetTofieldsMap');
-        let map_stageToFieldSetMap=component.get('v.map_stageToFieldSetMap');
-        let objopportunity=component.get('v.objopportunity');
-        if(this.isNullCheck(strstageName)){
-            strstageName='--None--';
+    setFieldsToRenderOnStageChange:function(component, strstageName, helper){
+        let list_FieldsToRender = [];
+        let listMasterFieldset = component.get("v.list_OpportunityFormFieldsToRender");
+        let map_FieldSetToFieldsMap = component.get("v.map_FieldSetToFieldsMap");
+        let map_StageToFieldSetMap = component.get("v.map_StageToFieldSetMap");
+        let objOpportunity = component.get("v.objOpportunity");
+        if (this.isNullCheck(strstageName)) {
+            strstageName = "--None--";
         }
-        let list_fieldsToDisable=helper.isNullCheck(map_stageToFieldSetMap[strstageName])
-                                ?[]
-                                :helper.isNullCheck(map_fieldSetTofieldsMap[map_stageToFieldSetMap[strstageName]])
-                                ?[]
-                                :map_fieldSetTofieldsMap[map_stageToFieldSetMap[strstageName]];
+        let list_fieldsToDisable = helper.isNullCheck(map_StageToFieldSetMap[strstageName])
+                                ? []
+                                : helper.isNullCheck(map_FieldSetToFieldsMap[map_StageToFieldSetMap[strstageName]])
+                                ? []
+                                : map_FieldSetToFieldsMap[map_StageToFieldSetMap[strstageName]];
 
 
-        listMasterFieldset.forEach(function(objField){
-            let objFieldToRender={};
-            objFieldToRender.name=objField.name;
-            let blnisDisabled=list_fieldsToDisable.some(function(objdisabledfield){
-                return objField.name==objdisabledfield.name;
+        listMasterFieldset.forEach(function(objField) {
+            let objFieldToRender = {};
+            objFieldToRender.name = objField.name;
+            let blnisDisabled = list_fieldsToDisable.some(function(objdisabledfield){
+                return objField.name == objdisabledfield.name;
             })
-            objFieldToRender.required=blnisDisabled?false:objField.required;
-            objFieldToRender.disabled=blnisDisabled;
-            if(!helper.isNullCheck(objopportunity[objFieldToRender.name]) && !blnisDisabled){
-                objFieldToRender.value=objopportunity[objFieldToRender.name];
+            objFieldToRender.required = blnisDisabled
+                                        ? false 
+                                        : objField.required;
+            objFieldToRender.disabled = blnisDisabled;
+            if (!helper.isNullCheck(objOpportunity[objFieldToRender.name]) && !blnisDisabled) {
+                objFieldToRender.value = objOpportunity[objFieldToRender.name];
+            }else{
+                objFieldToRender.value = "";
+                objOpportunity[objFieldToRender.name] = "";
             }
-            else{
-                objFieldToRender.value='';
-                objopportunity[objFieldToRender.name]='';
-            }
-
-            list_fieldsToRender.push(objFieldToRender);            
+            list_FieldsToRender.push(objFieldToRender);            
         })
-        component.set('v.objopportunity',objopportunity);
-        component.set('v.list_fieldsToRender',list_fieldsToRender);
+        component.set("v.objOpportunity", objOpportunity);
+        component.set("v.list_FieldsToRender", list_FieldsToRender);
 
     }
 })

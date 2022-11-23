@@ -15,6 +15,10 @@
     <aura:attribute name="objopportunity" type="Opportunity"/>
     <aura:attribute name="list_Opportunities" type="List"/>
     <aura:attribute name="list_opportunityColumns" type="List" default="[]"/>
+    <aura:attribute name="map_successFieldsToShow" type="Map" default="{}"/>   
+    <aura:attribute name="list_AccountFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_ContactFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_OpportunityFieldsToRender" type="List" default="[]"/>
     
     <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
     <div class="successScreenContainer">
@@ -39,7 +43,9 @@
                             <a href="{!join('','/',v.objaccount.Id)}" target="_self">{!v.objaccount.Name}</a>
                         </div>
                         <ul class="recordFields">
-                            <li>Industry : {!v.objaccount.Industry}</li>
+                            <aura:iteration items="{!v.list_AccountFieldsToRender}" var="objfield" indexVar="Id">
+                                <li>{!objfield.label} : {!objfield.value}</li>
+                            </aura:iteration>                            
                         </ul>
                     </div>
                 </div>
@@ -54,11 +60,12 @@
                             </div> 
                         </span>
                         <div class="recordUrl">
-                            <a href="{!join('','/',v.objcontact.Id)}" target="_self">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
+                            <a href="{!join('','/',v.objcontact.Id)}" target="_self">{!v.objcontact.Name}</a>
                         </div>
                         <ul class="recordFields">
-                            <li>FirstName : {!v.objcontact.FirstName}</li>
-                            <li>LastName : {!v.objcontact.LastName}</li>
+                            <aura:iteration items="{!v.list_ContactFieldsToRender}" var="objfield" indexVar="Id">
+                                <li>{!objfield.label} : {!objfield.value}</li>
+                            </aura:iteration>
                         </ul>
                     </div>
                 </div>
@@ -74,11 +81,12 @@
                                 </div> 
                             </span>
                             <div class="recordUrl">
-                                <a href="{!join('','/',v.objopportunity.Id)}" target="_self">{!join('',v.objcontact.LastName,v.objcontact.FirstName)}</a>
+                                <a href="{!join('','/',v.objopportunity.Id)}" target="_self">{!v.objcontact.Name}</a>
                             </div>
                             <ul class="recordFields">
-                                <li>Name : {!v.objopportunity.Name}</li>
-                                <li>Stage : {!v.objopportunity.StageName}</li>
+                                <aura:iteration items="{!v.list_OpportunityFieldsToRender}" var="objfield" indexVar="Id">
+                                    <li>{!objfield.label} : {!objfield.value}</li>
+                                </aura:iteration>
                             </ul>
                         </div>
                     </div>

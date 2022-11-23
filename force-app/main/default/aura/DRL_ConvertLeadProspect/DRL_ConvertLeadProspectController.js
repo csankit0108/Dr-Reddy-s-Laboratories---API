@@ -42,6 +42,10 @@
             component.set('v.blnisLoading',false);
             return false;
         }   
+        if(!helper.isValidRunAutomationData(component,event,helper)){
+            component.set('v.blnisLoading',false);
+            return false;
+        }
         helper.isValidContact(component,event,helper)
 
     } 

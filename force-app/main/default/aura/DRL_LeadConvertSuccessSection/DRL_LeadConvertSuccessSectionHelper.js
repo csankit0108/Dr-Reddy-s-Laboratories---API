@@ -36,10 +36,58 @@
                 component.set('v.list_opportunityColumns',list_Columns);
             }
             else{
-                helper.showMessage('Error!',$A.get('$Label.c.DRL_convertLeadSuccessOpportunityColumnsLoadError'),'error','dismissable');
+                helper.showMessage('Error!',$A.get('$Label.c.CLDRL00009'),'error','dismissable');
             }
         });
         $A.enqueueAction(action);
+    },
+    setFieldsToRender:function(component,helper){
+        let map_successFieldsToShow=component.get('v.map_successFieldsToShow');
+        for (const strobjectName in map_successFieldsToShow) {
+                const map_fieldApiNametoLabel = map_successFieldsToShow[strobjectName];
+                let objRecord={};
+                if(strobjectName=='Account'){
+                    objRecord=component.get('v.objaccount');
+                }
+                else if(strobjectName=='Contact'){
+                    objRecord=component.get('v.objcontact');
+                }
+                else if(strobjectName=='Opportunity'){
+                    objRecord=component.get('v.objopportunity');
+                    if(helper.isNullCheck(objRecord)){
+                        continue;
+                    }
+                }
+                let list_fieldsTorender=[];
+                
+                for (const strfieldApiName in map_fieldApiNametoLabel) {
+                    let objfieldLabelandValue={};
+                    if(!helper.isNullCheck(objRecord[strfieldApiName])){
+                        objfieldLabelandValue.label=map_fieldApiNametoLabel[strfieldApiName];
+                        objfieldLabelandValue.value=objRecord[strfieldApiName];
+                        list_fieldsTorender.push(objfieldLabelandValue);   
+                    }                                        
+                }
+                if(strobjectName=='Account'){
+                    component.set('v.list_AccountFieldsToRender',list_fieldsTorender);
+                }
+                else if(strobjectName=='Contact'){
+                    component.set('v.list_ContactFieldsToRender',list_fieldsTorender);
+                }
+                else if(strobjectName=='Opportunity'){
+                    component.set('v.list_OpportunityFieldsToRender',list_fieldsTorender);
+                }
+                
+        }
+
+    },
+    isNullCheck :function(variable){
+        if(variable==''||variable==null||variable==undefined){
+            return true;
+        }
+        else{
+            return false;
+        }
     },
     showMessage : function(strtitle,strmessage,strtype,strmode){
         var objtoastEvent = $A.get("e.force:showToast");

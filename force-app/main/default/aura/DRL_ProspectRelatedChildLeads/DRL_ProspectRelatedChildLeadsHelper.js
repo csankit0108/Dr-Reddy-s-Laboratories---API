@@ -1,45 +1,14 @@
 ({
-    setTableColumns : function(component){
-        const list_columns = [
-            {
-                label: 'Product',
-                fieldName: 'productUrl',
-                type: 'url',
-                typeAttributes: {
-                    label: {
-                        fieldName: 'productName'
-                    },
-                    target:'_blank'
-                }
-            },
-            {
-                label: 'Name',
-                fieldName: 'leadUrl',
-                type: 'url',
-                typeAttributes: {
-                    label: {
-                        fieldName: 'Name'
-                    },
-                    target:'_blank'
-                }
-            },
-            {
-                label: 'Company',
-                fieldName: 'Company',
-                type: 'Text'
-            },
-            {
-                label: 'Lead Status',
-                fieldName: 'Status',
-                type: 'Text'
-            },
-            {
-                label: 'Owner',
-                fieldName: 'OwnerName',
-                type: 'Text'
-            }
-        ];
-        component.set('v.list_columns',list_columns);
+    setRunAutomationData : function(component){
+        let map_strrunAfter={};
+        let map_listfinalSelectedContentCatalogs={};
+        let list_ProspectChildLeads=component.get('v.list_ProspectChildLeads');
+        list_ProspectChildLeads.forEach(function(objlead){
+            map_strrunAfter[objlead.Id]='';
+            map_listfinalSelectedContentCatalogs[objlead.Id]=[];
+        });
+        component.set('v.map_strrunAfter',map_strrunAfter);
+        component.set('v.map_listfinalSelectedContentCatalogs',map_listfinalSelectedContentCatalogs);
     },
     generateOpportunities : function(component,list_selectedLeads){
         let map_selectedLeads={};
