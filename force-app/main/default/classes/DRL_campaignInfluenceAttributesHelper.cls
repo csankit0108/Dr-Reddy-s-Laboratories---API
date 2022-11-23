@@ -26,7 +26,7 @@ public with sharing class DRL_CampaignInfluenceAttributesHelper {
                 set_CampaignIds.add(objCampaignInfluence.CampaignId);
             }
 
-            List<AggregateResult> list_AggregateResults = [SELECT
+            List<AggregateResult> list_AggregateResults = [SELECT 
                                                           CampaignId,
                                                           SUM(RevenueShare)RevenueShareSum
                                                           FROM CampaignInfluence 
