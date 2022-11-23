@@ -9,7 +9,7 @@
 *   04-07-2022      |  deeksha.suvarna@absyz.com      |  1.0          |  Initial Version
 *
 ***********************************************************************************************************************/@isTest
-public class DRL_TestUtility {
+public class DRL_TestUtility { 
     /**
     * @ Name     :  LeadBuilder
     * @ Purpose  :  To create Lead record

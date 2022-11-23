@@ -21,7 +21,7 @@ public class DRL_CampaignInfluenceHelperTest {
         .setCampaignName('Test Campaign')
         .setAllowMassEmail('No')
         .setDescription('Test Campaign Description')
-        .setIsActive(true) 
+        .setIsActive(true)  
         .createCampaign();
     insert objCampaign;
      
