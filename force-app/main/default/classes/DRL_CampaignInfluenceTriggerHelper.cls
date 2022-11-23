@@ -52,7 +52,7 @@ public with sharing class DRL_CampaignInfluenceTriggerHelper {
             }
 
             if (!list_Campaigns.isEmpty()) {
-                if (Test.isRunningTest() && DRL_CampaignInfluenceHelperTest.blnThrowException) {
+                if (Test.isRunningTest() && DRL_CampaignInfluenceTriggerHelperTest.blnThrowException) {
                     throw new DMLException();
                 } 
 
