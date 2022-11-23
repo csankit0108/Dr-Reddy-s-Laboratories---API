@@ -19,7 +19,7 @@ public class DRL_CampaignInfluenceHelperTest {
     static void createData() { 
     Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
         .setCampaignName('Test Campaign')
-        .setAllowMassEmail('No') 
+        .setAllowMassEmail('No')  
         .setDescription('Test Campaign Description')
         .setIsActive(true)  
         .createCampaign();
