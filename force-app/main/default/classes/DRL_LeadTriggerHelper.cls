@@ -85,7 +85,6 @@ public without sharing class DRL_LeadTriggerHelper {
                         objLeadToUpdate.Run_Automation__c = null;
                         objLeadToUpdate.Prospect_Customer__c = null;
                         objLeadToUpdate.Select_Country__c = null;
-                        //Need to Run_Automation__c,Prospect_Customer__c,Select_Country__c to the fieldset
 
                         if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                             objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
