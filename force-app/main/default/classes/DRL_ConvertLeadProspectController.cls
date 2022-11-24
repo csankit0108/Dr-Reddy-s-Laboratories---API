@@ -560,7 +560,7 @@ public with sharing class DRL_ConvertLeadProspectController {
     **/
     public static Map<String,Map<String,String>> getResultFieldInformation() {
         Map<String,Map<String,String>> map_successFieldsToShow=new Map<String,Map<String,String>>();
-        for(CMDDRL0001__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM CMDDRL0001__mdt]){
+        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
             Map<String,String> map_fieldApitoLabel=new Map<String,String>();
             Schema.DescribeSObjectResult objdescribeSobjectsResult = Schema.getGlobalDescribe().get(objfieldsToshow.Label).getDescribe();
             Map<String, Schema.SObjectField> map_allFieldsInformation=objdescribeSobjectsResult.fields.getMap();
@@ -580,7 +580,7 @@ public with sharing class DRL_ConvertLeadProspectController {
     **/
     public static ConvertLeadDataWrapper getResultRecords(ConvertLeadDataWrapper objresponse) {
         
-        for(CMDDRL0001__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM CMDDRL0001__mdt]){
+        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
             String strId='';
             if(objfieldsToshow.Label=='Account'){
                 strId=objresponse.objaccount.Id;

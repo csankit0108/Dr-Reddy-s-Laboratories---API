@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>This custom metadata contains the List of API names needed to be displayed in the Convert component success screen</description>
-    <label>CMDDRL0001</label>
-    <pluralLabel>CMDDRL0001</pluralLabel>
+    <label>Convert Lead Success Configuration</label>
+    <pluralLabel>Convert Lead Success Screen Configurations</pluralLabel>
     <visibility>Public</visibility>
 </CustomObject>

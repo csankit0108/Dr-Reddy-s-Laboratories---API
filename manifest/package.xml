@@ -44,7 +44,7 @@
 		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.Weightage__c</members>
 		<members>DRL_LeadConvertFormController__mdt.Field_Set_Api_Name__c</members>
-		<members>CMDDRL0001__mdt.list_API_Names__c</members>
+		<members>DRL_ConvertLeadSuccessConfiguration__mdt.list_API_Names__c</members>
 		<name>CustomField</name>
 	</types> 
 	<types>
@@ -53,7 +53,7 @@
 		<members>DRL_CampaignInfluenceConfiguration__mdt</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<members>DRL_LeadConvertFormController__mdt</members>
-		<members>CMDDRL0001__mdt</members>
+		<members>DRL_ConvertLeadSuccessConfiguration__mdt</members>
 		<name>CustomObject</name>
 	</types>  
 	<types>
@@ -67,20 +67,20 @@
 		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0004</members>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0005</members>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0006</members>
-		<members>DRL_LeadConvertFormController.ANDA_Dossier_Approval</members>
-		<members>DRL_LeadConvertFormController.Bio_batch_delivered</members>
-		<members>DRL_LeadConvertFormController.Bio_batch_ordered</members>
-		<members>DRL_LeadConvertFormController.Commercial</members>
-		<members>DRL_LeadConvertFormController.Development</members>
-		<members>DRL_LeadConvertFormController.Discussion</members>
-		<members>DRL_LeadConvertFormController.LOA_LOE</members>
-		<members>DRL_LeadConvertFormController.Lead_Generation</members>
-		<members>DRL_LeadConvertFormController.None</members>
-		<members>DRL_LeadConvertFormController.Sample</members>
-		<members>DRL_LeadConvertFormController.Under_Registration</members>
-		<members>CMDDRL0001.Account</members>
-		<members>CMDDRL0001.Contact</members>
-		<members>CMDDRL0001.Opportunity</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0001</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0002</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0003</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0004</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0005</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0006</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0007</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0008</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0009</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0010</members>
+		<members>DRL_LeadConvertFormController.CMDDRL0011</members>
+		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0001</members>
+		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0002</members>
+		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0003</members>
 		<name>CustomMetadata</name>
 	</types>
 	<types>
@@ -105,6 +105,8 @@
 		<members>DRL_ExceptionLog__c-Exception Log Layout</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt-Prospect Lead Status Mapping Layout</members>
 		<members>Lead-Prospect</members>
+		<members>DRL_ConvertLeadSuccessConfiguration__mdt-Convert Lead Success Configuration Layout</members>
+		<members>DRL_LeadConvertFormController__mdt-LeadConvertFormController Layout</members>
 		<name>Layout</name>
 	</types>
 	<types>
