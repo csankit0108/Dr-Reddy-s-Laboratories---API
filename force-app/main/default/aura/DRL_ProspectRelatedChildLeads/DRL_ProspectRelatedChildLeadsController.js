@@ -1,35 +1,37 @@
 ({
     doInit : function(component, event, helper) {
-        if(component.get('v.blnisChildRecordsFound')){
+        if (component.get("v.blnIsChildRecordsFound")) {
             helper.setRunAutomationData(component);
         }
     },
-    convertSelectedLead:function(component,event,helper){
-        let list_selectedLeads = event.getParam('selectedRows');
-        let list_filteredSelectedLeads=[];
-        let blnisSelectedLeadsValid=true;
-        let list_selectLeadIds=[]
-        list_selectedLeads.forEach(function(objlead){
-            if(objlead.Product_Lookup__c==null||objlead.Product_Lookup__c==undefined||objlead.Product_Lookup__c==''){
-                if(blnisSelectedLeadsValid){
-                    helper.showMessage('Error!',$A.get("$Label.c.CLDRL00013"),'error','dismissable');
-                    blnisSelectedLeadsValid=false;
+    convertSelectedLead:function(component, event, helper){
+        let list_SelectedLeads = event.getParam("selectedRows");
+        let list_FilteredSelectedLeads = [];
+        let blnIsSelectedLeadsValid = true;
+        let list_SelectLeadIds = [];
+        list_SelectedLeads.forEach(function(objLead){
+            if (
+                objLead.Product_Lookup__c == null||
+                objLead.Product_Lookup__c == undefined||
+                objLead.Product_Lookup__c == ""
+                ) {
+                if (blnIsSelectedLeadsValid) {
+                    helper.showMessage("Error!", $A.get("$Label.c.CLDRL00013"), "error", "dismissable");
+                    blnIsSelectedLeadsValid = false;
                 }                                
-            }
-            else{
-                list_selectLeadIds.push(objlead.Id);
-                list_filteredSelectedLeads.push(objlead);
+            }else{
+                list_SelectLeadIds.push(objLead.Id);
+                list_FilteredSelectedLeads.push(objLead);
             }
         });
-        if(!blnisSelectedLeadsValid){
-            component.set('v.list_selectedRows',list_selectLeadIds);
+        if (!blnIsSelectedLeadsValid) {
+            component.set("v.list_SelectedRows", list_SelectLeadIds);
         }
-        if(list_selectedLeads.length>0){
-            helper.generateOpportunities(component,list_filteredSelectedLeads);
-        }
-        else{
-            component.set('v.list_opportunities',[]);
+        if (list_SelectedLeads.length>0) {
+            helper.generateOpportunities(component, list_FilteredSelectedLeads);
+        }else{
+            component.set("v.list_Opportunities", []);
         }    
-        component.set('v.list_selectedLeads',list_filteredSelectedLeads);   
+        component.set("v.list_SelectedLeads", list_FilteredSelectedLeads);   
     }
 })

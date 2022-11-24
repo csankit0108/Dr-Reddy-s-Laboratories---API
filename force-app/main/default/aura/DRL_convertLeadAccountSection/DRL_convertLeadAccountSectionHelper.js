@@ -1,66 +1,60 @@
 ({
    
     isNullCheck:function(variable){
-        if(variable==''||variable==null||variable==undefined){
+        if (variable == '' || variable == null || variable == undefined) {
             return true;
-        }
-        else{
+        }else{
             return false;
         }
     },
     generateAccount:function(component, event, helper){
-        let objlead=component.get('v.objlead');
-        let objaccount ={}
-        objaccount.Name=objlead.Company;
-        component.set('v.obj_Account',objaccount);
+        let objLead = component.get('v.objLead');
+        let objAccount = {};
+        objAccount.Name = objLead.Company;
+        component.set('v.objAccount',objAccount);
     },
-    getAccountFields : function(component,event,helper){
-        let list_accFieldsToRender=[];
-        let obj_Account = component.get('v.obj_Account');
+    getAccountFields : function(component, event, helper){
+        let list_AccountFieldsToRender = [];
+        let objAccount = component.get('v.objAccount');
         let list_AccountFields = component.get('v.list_AccountFields');
-        list_AccountFields.forEach(function(field_account){
-            let objAccountRec = {};
-            objAccountRec.name= field_account.name;//gets the api name of the field
-            objAccountRec.required=field_account.required;
-             if(!helper.isNullCheck(obj_Account[objAccountRec.name])){
-                objAccountRec.value=obj_Account[objAccountRec.name];
+        list_AccountFields.forEach(function(objAccountField){
+            let objAccountFieldWithValue = {};
+            objAccountFieldWithValue.name = objAccountField.name;//gets the api name of the field
+            objAccountFieldWithValue.required = objAccountField.required;
+             if (!helper.isNullCheck(objAccount[objAccountFieldWithValue.name])) {
+                objAccountFieldWithValue.value = objAccount[objAccountFieldWithValue.name];
+            }else{
+                objAccountFieldWithValue.value = '';
+                objAccount[objAccountFieldWithValue.name] = '';
             }
-             else{
-                objAccountRec.value='';
-                obj_Account[objAccountRec.name]='';
-            }
-            list_accFieldsToRender.push(objAccountRec);
+            list_AccountFieldsToRender.push(objAccountFieldWithValue);
         })
-        component.set('v.obj_Account',obj_Account);
-        component.set('v.list_accFieldsToRender',list_accFieldsToRender);
+        component.set('v.objAccount', objAccount);
+        component.set('v.list_AccountFieldsToRender', list_AccountFieldsToRender);
         
     },
     existingAccountHelper: function (component, event, helper) {
-        let str_accountId = component.get('v.str_accountId');
+        let strAccountId = component.get('v.strAccountId');
         var action = component.get('c.getAccount');
-
-        action.setParams({'straccountId':str_accountId});
+        action.setParams({'straccountId':strAccountId});
         action.setCallback(this,function(response){
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                
+            if(state === 'SUCCESS'){                
                 var result = response.getReturnValue();
-                component.set('v.obj_Account',result);
-            }
-            
+                component.set('v.objAccount', result);
+            }            
         })
          $A.enqueueAction(action);
      },
      configureIfParentAlreadyConverted: function (component, event, helper){
-        if(component.get('v.blnisParentProspectConverted')){
-            component.set('v.bln_allowInput2',false);
-            component.set('v.bln_allowInput1',false);
-            component.set('v.blnRadio2Available',false);
-            component.set('v.blnRadio1Available',false);
-            component.set('v.isRadio1Checked',false);
-            component.set('v.isRadio2Checked',false);
-        }
-        else{
+        if (component.get('v.blnIsParentProspectConverted')) {
+            component.set('v.blnAllowAccountSelection', false);
+            component.set('v.blnAllowAccountCreation', false);
+            component.set('v.blnIsAccountSelectionAvailable', false);
+            component.set('v.blnIsAccountCreationAvailable', false);
+            component.set('v.blnIsAccountCreationSelected', false);
+            component.set('v.blnIsAccountSelectionSelected', false);
+        }else{
             helper.generateAccount(component, event, helper);
         }
      }

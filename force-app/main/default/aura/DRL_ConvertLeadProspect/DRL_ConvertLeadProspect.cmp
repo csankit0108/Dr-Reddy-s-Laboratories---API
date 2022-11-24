@@ -15,47 +15,47 @@
         }
     </aura:html>
 
-    <aura:attribute name="blnisProspect" type="Boolean"/>
-    <aura:attribute name="blnisChildRecordsFound" type="Boolean" default="false"/>  
+    <aura:attribute name="blnIsProspect" type="Boolean"/>
+    <aura:attribute name="blnIsChildRecordsFound" type="Boolean" default="false"/>  
     <aura:attribute name="list_ProspectChildLeads" type="List" default="[]"/>
-    <aura:attribute name="list_selectedLeads" type="List" default="[]"/>
+    <aura:attribute name="list_SelectedLeads" type="List" default="[]"/>
     <aura:attribute name="list_Opportunities" type="List" default="[]"/>
-    <aura:attribute name="list_opportunityFormFieldsToRender" type="List" default="[]"/>
-    <aura:attribute name="blnisFormDataLoaded" type="Boolean" default="false"/>
-    <aura:attribute name="objopportunity" type="Opportunity" />
-    <aura:attribute name="list_opportunityRecordTypes" type="List" default="[]"/>
-    <aura:attribute name="strdefaultRecordTypeId" type="String" default="" />
-    <aura:attribute name="map_stageToFieldSetMap" type="Map" default="{}"/>
-    <aura:attribute name="map_fieldSetTofieldsMap" type="Map" default="{}"/>
-    <aura:attribute name="blnerrorMsg" type="Boolean" default="false"/>
-    <aura:attribute name="strerrorMsg" type="String" default=""/>
-    <aura:attribute name= "straccountRadioButton" type="String"/>
-    <aura:attribute name= "strcontactRadioButton" type="String"/>
-    <aura:attribute name = "straccountId" type = "String"/>
-    <aura:attribute name = 'list_accountFieldSet' type = 'List' default="[]"/>
-    <aura:attribute name = 'list_contactFieldSet' type = 'List' default="[]"/>
-    <aura:attribute name ="objaccountRecord" type = "Account" default="{ 'sobjectType': 'Account'}"/> 
-    <aura:attribute name="objcontactRecord" type="Contact" default="{ 'sobjectType': 'Contact'}"/>
-    <aura:attribute name = 'strcontactId' type = 'String'/>
-    <aura:attribute name="blnisParentProspectConverted" type="Boolean" default="false" />
-    <aura:attribute name="blnisConvertedSuccess" type="Boolean" default="false" />   
+    <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="blnIsFormDataLoaded" type="Boolean" default="false"/>
+    <aura:attribute name="objOpportunity" type="Opportunity" />
+    <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
+    <aura:attribute name="strDefaultRecordTypeId" type="String" default="" />
+    <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
+    <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
+    <aura:attribute name="blnShowErrorMessage" type="Boolean" default="false"/>
+    <aura:attribute name="strErrorMessage" type="String" default=""/>
+    <aura:attribute name= "strAccountRadioButtonSelected" type="String"/>
+    <aura:attribute name= "strContactRadioButtonSelected" type="String"/>
+    <aura:attribute name = "strAccountId" type = "String"/>
+    <aura:attribute name = 'list_AccountFieldSet' type = 'List' default="[]"/>
+    <aura:attribute name = 'list_ContactFieldSet' type = 'List' default="[]"/>
+    <aura:attribute name ="objAccount" type = "Account" default="{ 'sobjectType': 'Account'}"/> 
+    <aura:attribute name="objContact" type="Contact" default="{ 'sobjectType': 'Contact'}"/>
+    <aura:attribute name = 'strContactId' type = 'String'/>
+    <aura:attribute name="blnIsParentProspectConverted" type="Boolean" default="false" />
+    <aura:attribute name="blnIsConvertedSuccess" type="Boolean" default="false" />   
     <aura:attribute name="blnrenderfrompath" type="Boolean" default="false" />   
-    <aura:attribute name="blnisLoading" type="Boolean" default="false" /> 
-    <aura:attribute name ="objlead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
+    <aura:attribute name="blnIsLoading" type="Boolean" default="false" /> 
+    <aura:attribute name ="objLead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
     <aura:attribute name ="list_ChildLeadTableColumns" type = "List" default="[]"/> 
-    <aura:attribute name="map_successFieldsToShow" type="Map" default="{}"/>   
+    <aura:attribute name="map_SuccessFieldsToShow" type="Map" default="{}"/>   
 
-    <aura:attribute name="blncontentAvailable" type="boolean" default="false" />
-    <aura:attribute name="map_contentTotal" type="Map" />
-    <aura:attribute name="list_documentCategoriesAvailable" type="Object[]" default="[]" />
-    <aura:attribute name="strrunAfter" type="String" default="" />
-    <aura:attribute name="list_finalSelectedContentCatalogs" type="Object[]" default="[]" />
+    <aura:attribute name="blnContentAvailable" type="boolean" default="false" />
+    <aura:attribute name="map_ContentTotal" type="Map" />
+    <aura:attribute name="list_DocumentCategoriesAvailable" type="Object[]" default="[]" />
+    <aura:attribute name="strRunAfter" type="String" default="" />
+    <aura:attribute name="list_FinalSelectedContentCatalogs" type="Object[]" default="[]" />
 
-    <aura:attribute name="map_blncontentAvailable" type="Map" />
-    <aura:attribute name="map_mapcontentTotal" type="Map" />
-    <aura:attribute name="map_listdocumentCategoriesAvailable" type="Map"/>
-    <aura:attribute name="map_strrunAfter" type="Map"/>
-    <aura:attribute name="map_listfinalSelectedContentCatalogs" type="Map"/>
+    <aura:attribute name="map_BlnContentAvailable" type="Map" />
+    <aura:attribute name="map_MapContentTotal" type="Map" />
+    <aura:attribute name="map_ListDocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_StrRunAfter" type="Map"/>
+    <aura:attribute name="map_ListFinalSelectedContentCatalogs" type="Map"/>
     
     
     
@@ -67,83 +67,83 @@
                 <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.CLDRL00007}</h1>
             </div>
             <div class="slds-modal__content" id="modal-content-id-1">
-                <aura:if isTrue ="{!and(v.blnisFormDataLoaded,!v.blnisConvertedSuccess)}">
+                <aura:if isTrue ="{!and(v.blnIsFormDataLoaded,!v.blnIsConvertedSuccess)}">
                     <c:DRL_convertLeadAccountSection aura:id='accountSectionCall' 
-                        objlead="{!v.objlead}"
-                        str_radioButtonValue = "{!v.straccountRadioButton}" 
-                        str_accountId = '{!v.straccountId}'
-                        obj_Account = "{!v.objaccountRecord}"
-                        list_AccountFields = '{!v.list_accountFieldSet}'
-                        blnisParentProspectConverted="{!v.blnisParentProspectConverted}"/>
+                        objLead="{!v.objLead}"
+                        strRadioButtonSelected = "{!v.strAccountRadioButtonSelected}" 
+                        strAccountId = '{!v.strAccountId}'
+                        objAccount = "{!v.objAccount}"
+                        list_AccountFields = '{!v.list_AccountFieldSet}'
+                        blnIsParentProspectConverted="{!v.blnIsParentProspectConverted}"/>
 
                     <c:DRL_convertLeadContactSection aura:id='contactSectionCall'
-                        objlead="{!v.objlead}"
-                        str_radioButtonVal2 =  "{!v.strcontactRadioButton}" 
-                        str_contactId  = '{!v.strcontactId}'
-                        obj_contact = "{!v.objcontactRecord}"
-                        blnisParentProspectConverted="{!v.blnisParentProspectConverted}"
-                        list_contactFieldSet ='{!v.list_contactFieldSet}'/>
+                        objLead="{!v.objLead}"
+                        strRadioButtonSelected =  "{!v.strContactRadioButtonSelected}" 
+                        strContactId  = '{!v.strContactId}'
+                        objContact = "{!v.objContact}"
+                        blnIsParentProspectConverted="{!v.blnIsParentProspectConverted}"
+                        list_ContactFieldSet ='{!v.list_ContactFieldSet}'/>
                 
-                    <aura:if isTrue="{!v.blnisProspect}">
+                    <aura:if isTrue="{!v.blnIsProspect}">
                         <c:DRL_ProspectRelatedChildLeads 
-                            list_opportunityRecordTypes="{!v.list_opportunityRecordTypes}"
+                            list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
                             list_ProspectChildLeads="{!v.list_ProspectChildLeads}"
-                            strdefaultRecordTypeId="{!v.strdefaultRecordTypeId}"
-                            blnisChildRecordsFound="{!v.blnisChildRecordsFound}" 
-                            list_opportunities="{!v.list_Opportunities}"
-                            list_opportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
-                            map_stageToFieldSetMap="{!v.map_stageToFieldSetMap}"
-                            list_selectedLeads="{!v.list_selectedLeads}" 
-                            list_columns="{!v.list_ChildLeadTableColumns}"
-                            map_fieldSetTofieldsMap="{!v.map_fieldSetTofieldsMap}"
-                            map_blncontentAvailable="{!v.map_blncontentAvailable}"
-                            map_mapcontentTotal="{!v.map_mapcontentTotal}"
-                            map_listdocumentCategoriesAvailable="{!v.map_listdocumentCategoriesAvailable}"
-                            map_strrunAfter="{!v.map_strrunAfter}"
-                            map_listfinalSelectedContentCatalogs="{!v.map_listfinalSelectedContentCatalogs}"/>
+                            strDefaultRecordTypeId="{!v.strDefaultRecordTypeId}"
+                            blnIsChildRecordsFound="{!v.blnIsChildRecordsFound}" 
+                            list_Opportunities="{!v.list_Opportunities}"
+                            list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
+                            map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"
+                            list_SelectedLeads="{!v.list_SelectedLeads}" 
+                            list_Columns="{!v.list_ChildLeadTableColumns}"
+                            map_FieldSetToFieldsMap="{!v.map_FieldSetToFieldsMap}"
+                            map_BlnContentAvailable="{!v.map_BlnContentAvailable}"
+                            map_MapContentTotal="{!v.map_MapContentTotal}"
+                            map_ListDocumentCategoriesAvailable="{!v.map_ListDocumentCategoriesAvailable}"
+                            map_StrRunAfter="{!v.map_StrRunAfter}"
+                            map_ListFinalSelectedContentCatalogs="{!v.map_ListFinalSelectedContentCatalogs}"/>
                     </aura:if>
                 
-                    <aura:if isTrue="{!!v.blnisProspect}">
+                    <aura:if isTrue="{!!v.blnIsProspect}">
 
                         <c:DRL_ConvertLeadOpportunitySection
-                            objOpportunity="{!v.objopportunity}"  
-                            list_OpportunityRecordTypes="{!v.list_opportunityRecordTypes}"
-                            list_OpportunityFormFieldsToRender="{!v.list_opportunityFormFieldsToRender}"
-                            map_StageToFieldSetMap="{!v.map_stageToFieldSetMap}"
-                            map_FieldSetToFieldsMap="{!v.map_fieldSetTofieldsMap}"/>
+                            objOpportunity="{!v.objOpportunity}"  
+                            list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
+                            list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
+                            map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"
+                            map_FieldSetToFieldsMap="{!v.map_FieldSetToFieldsMap}"/>
 
                         <c:DRL_ConvertLeadRunAutomationSection                         
-                            blncontentAvailable="{!v.blncontentAvailable}"
-                            map_contentTotal="{!v.map_contentTotal}"
-                            list_documentCategoriesAvailable="{!v.list_documentCategoriesAvailable}"
-                            strrunAfter="{!v.strrunAfter}"                            
-                            list_finalSelectedContentCatalogs="{!v.list_finalSelectedContentCatalogs}"/>
+                            blnContentAvailable="{!v.blnContentAvailable}"
+                            map_ContentTotal="{!v.map_ContentTotal}"
+                            list_DocumentCategoriesAvailable="{!v.list_DocumentCategoriesAvailable}"
+                            strRunAfter="{!v.strRunAfter}"                            
+                            list_FinalSelectedContentCatalogs="{!v.list_FinalSelectedContentCatalogs}"/>
                             
                     </aura:if> 
                 </aura:if>
-                <aura:if isTrue="{!v.blnisLoading}">
+                <aura:if isTrue="{!v.blnIsLoading}">
                         <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
                 </aura:if>    
-                <aura:if isTrue="{!v.blnisConvertedSuccess}">
+                <aura:if isTrue="{!v.blnIsConvertedSuccess}">
                     <c:DRL_LeadConvertSuccessSection 
-                    objaccount="{!v.objaccountRecord}"
-                    objcontact="{!v.objcontactRecord}"
-                    objopportunity="{!v.objopportunity}"
+                    objAccount="{!v.objAccount}"
+                    objContact="{!v.objContact}"
+                    objOpportunity="{!v.objOpportunity}"
                     list_Opportunities="{!v.list_Opportunities}"
-                    map_successFieldsToShow="{!v.map_successFieldsToShow}"
+                    map_SuccessFieldsToShow="{!v.map_SuccessFieldsToShow}"
                     />                    
                 </aura:if>                      
             </div>
             <div class="slds-modal__footer">
-                <aura:if isTrue="{!v.blnerrorMsg}">
+                <aura:if isTrue="{!v.blnShowErrorMessage}">
                     <lightning:icon iconName="utility:warning" size="xx-small" class="customIcon" variant="error" /> 
-                    <b class="errorMsg">{!v.strerrorMsg}</b>
+                    <b class="errorMsg">{!v.strErrorMessage}</b>
                 </aura:if>        
-                <aura:if isTrue="{!v.blnisConvertedSuccess}">
+                <aura:if isTrue="{!v.blnIsConvertedSuccess}">
                     <lightning:button name='CloseButton' label='Close' variant='brand'
                                   onclick="{!c.cancelAction}" />   
                 </aura:if>   
-                <aura:if isTrue="{!!v.blnisConvertedSuccess}">
+                <aura:if isTrue="{!!v.blnIsConvertedSuccess}">
                     <lightning:button name='cancelButton' label='Cancel' variant='neutral'
                                   onclick="{!c.cancelAction}" />                
                     <lightning:button name='convertButton' label="Convert" variant="brand"

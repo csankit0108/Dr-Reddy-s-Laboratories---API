@@ -11,24 +11,24 @@
 -->
 <aura:component controller="DRL_ConvertLeadProspectController"
                 implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
-                access='global'>
+                access="global">
     
-    <aura:attribute name="str_radioButtonVal2" type="String"/>
-    <aura:attribute name="obj_contact" type="Contact" default="{ 'sobjectType': 'Contact'}" />
-    <aura:attribute name="str_buttonValue3" type="String" default="3" />
-    <aura:attribute name="str_buttonValue4" type="String" default="4" />
-    <aura:attribute name = "str_contactId" type = "String"/>
-    <aura:attribute name = "existingContact" type = "String"/>
-    <aura:attribute name = 'list_contactFieldSet' type = 'List' default="[]"/>
-    <aura:attribute name = 'list_conFieldsToRender' type = 'List'/>
-    <aura:attribute name = 'blnallowInput1' type = 'Boolean' default = 'true'/>
-    <aura:attribute name = 'blnallowInput2' type = 'Boolean' default = 'false'/> 
-    <aura:attribute name="blnisParentProspectConverted" type="Boolean" default="false" />  
-    <aura:attribute name="blnRadio2Available" type="Boolean" default = 'true'/>
-    <aura:attribute name="blnRadio1Available" type="Boolean" default = 'true'/> 
-    <aura:attribute name="isRadio1Checked" type="Boolean" default = 'true'/>
-    <aura:attribute name="isRadio2Checked" type="Boolean" default = 'false'/>
-    <aura:attribute name="objlead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
+    <aura:attribute name="strRadioButtonSelected" type="String"/>
+    <aura:attribute name="objContact" type="Contact" default="{ 'sobjectType': 'Contact'}" />
+    <aura:attribute name="strCreateContactButtonValue" type="String" default="3" />
+    <aura:attribute name="strSelectContactButtonValue" type="String" default="4" />
+    <aura:attribute name= "strContactId" type = "String"/>
+    <aura:attribute name= "strExistingContact" type = "String"/>
+    <aura:attribute name= "list_ContactFieldSet" type = "List" default="[]"/>
+    <aura:attribute name= "list_ContactFieldsToRender" type = "List"/>
+    <aura:attribute name= "blnAllowContactCreation" type = "Boolean" default = "true"/>
+    <aura:attribute name= "blnAllowContactSelection" type = "Boolean" default = "false"/> 
+    <aura:attribute name="blnIsParentProspectConverted" type="Boolean" default="false" />  
+    <aura:attribute name="blnIsContactSelectionAvailable" type="Boolean" default = "true"/>
+    <aura:attribute name="blnIsContactCreationAvailable" type="Boolean" default = "true"/> 
+    <aura:attribute name="blnIsContactCreationSelected" type="Boolean" default = "true"/>
+    <aura:attribute name="blnIsContactSelectionSelected" type="Boolean" default = "false"/>
+    <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
     
     <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
     
@@ -40,31 +40,31 @@
             
             <div class="contactFormSection">
                 <div  class="contactFormSectionContainer" >
-                    <lightning:input type="radio" onchange='{!c.handleRadioChange}' label="Choose Existing"
-                                     class="contactRadioButton" name="options1" value="{!v.str_buttonValue4}" checked="{!v.isRadio2Checked}" disabled="{!!v.blnRadio2Available}"/>
+                    <lightning:input type="radio" onchange="{!c.handleRadioChange}" label="Choose Existing"
+                                     class="contactRadioButton" name="options1" value="{!v.strSelectContactButtonValue}" checked="{!v.blnIsContactSelectionSelected}" disabled="{!!v.blnIsContactSelectionAvailable}"/>
                     <lightning:recordEditForm objectApiName="Contact">
                         <label for="nameField" class="slds-form-element__label slds-no-flex">
                             <span style="color:#c64541;">*&nbsp;</span>Contact Search</label>
-                        <aura:if isTrue = '{!v.blnallowInput2}'>
+                        <aura:if isTrue = "{!v.blnAllowContactSelection}">
                         <lightning:inputField aura:id="nameField" fieldName="ReportsToId"  
-                                              variant="label-hidden" disabled = 'false' value = '{!v.existingContact}'
+                                              variant="label-hidden" disabled = "false" value = "{!v.strExistingContact}"
                                               messageWhenBadInput="Please choose an existing contact or create a new one."
                                               onchange="{!c.handleLookup}" />
-                            <aura:set attribute = 'else'>
-                                <aura:if isTrue="{!v.blnisParentProspectConverted}">
+                            <aura:set attribute = "else">
+                                <aura:if isTrue="{!v.blnIsParentProspectConverted}">
                                     <div class="container" style = "padding-left:20px">
                                         <span class="slds-pill slds-pill_link contactPill">
                                             <span class="slds-pill__icon_container">
                                                 <lightning:icon iconName="standard:contact" alternativeText="Contact" title="Contact" />
                                             </span>
-                                            <a href="{!join('','/',v.obj_contact.Id)}" target="_self" class="slds-pill__action" title="Full pill label verbiage mirrored here">
-                                              <span class="slds-pill__label">{!v.obj_contact.Name}</span>
+                                            <a href="{!join('','/',v.objContact.Id)}" target="_self" class="slds-pill__action" title="Full pill label verbiage mirrored here">
+                                              <span class="slds-pill__label">{!v.objContact.Name}</span>
                                             </a>
                                         </span>
                                     </div>
-                                    <aura:set attribute = 'else'>
+                                    <aura:set attribute = "else">
                                         <lightning:inputField aura:id="nameField" fieldName="ReportsToId"  
-                                                    variant="label-hidden" disabled = 'true' value = '{!v.existingContact}'
+                                                    variant="label-hidden" disabled = "true" value = "{!v.strExistingContact}"
                                                     messageWhenBadInput="Please choose an existing contact or create a new one."
                                                     onchange="{!c.handleLookup}" />
                                     </aura:set>
@@ -76,25 +76,25 @@
                 </div>
                 <div  class="contactFormSectionContainer">
                     <lightning:input type="radio" onchange="{! c.handleRadioChange }" label="Create New"
-                                     class="contactRadioButton" name="options1" value="{!v.str_buttonValue3}" checked="{!v.isRadio1Checked}" disabled="{!!v.blnRadio1Available}" />
+                                     class="contactRadioButton" name="options1" value="{!v.strCreateContactButtonValue}" checked="{!v.blnIsContactCreationSelected}" disabled="{!!v.blnIsContactCreationAvailable}" />
                     <lightning:recordEditForm aura:id="contactForm" objectApiName="Contact">
                         <lightning:messages />
                         <div class="slds-form formContainer">
                             <div class="slds-col slds-size_1-of-1">
-                                <aura:iteration items="{!v.list_conFieldsToRender}" var="field" indexVar="name">
-                                    <aura:if isTrue = '{!v.blnallowInput1}'>
-                                        <aura:if isTrue="{!field.required}">
-                                            <lightning:inputField fieldName="{!field.name}" value="{!field.value}"
-                                                               disabled= "false" class="slds-form-element" required="{!field.required}"
+                                <aura:iteration items="{!v.list_ContactFieldsToRender}" var="objField" indexVar="name">
+                                    <aura:if isTrue = "{!v.blnAllowContactCreation}">
+                                        <aura:if isTrue="{!objField.required}">
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                               disabled= "false" class="slds-form-element" required="{!objField.required}"
                                                               onchange="{!c.handleValueChange}" />
                                             <aura:set attribute="else">
-                                                <lightning:inputField fieldName="{!field.name}" value="{!field.value}"
+                                                <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
                                                                disabled= "false" class="slds-form-element"
                                                               onchange="{!c.handleValueChange}" />
                                             </aura:set>
                                         </aura:if>                                        
                                         <aura:set attribute="else">
-                                             <lightning:inputField fieldName="{!field.name}" value="{!field.value}"
+                                             <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
                                                                disabled= "true" class="slds-form-element"
                                                               onchange="{!c.handleValueChange}" />                                            
                                         </aura:set>

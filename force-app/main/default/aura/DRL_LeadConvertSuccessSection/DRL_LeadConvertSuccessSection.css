@@ -1,27 +1,8 @@
-.THIS.flex-container {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    justify-content: center;
-}
-.THIS .flex-div{
-    text-align: left;
-    background-color: #f3f3f3;
-    box-shadow: 5px 5px #e6e3e3;
-    margin: 5px;
-}
-.THIS .slds-card{
-    background-color: #f3f3f3 !important;
-}
-.THIS .card{
-    background-color: #f3f3f3 !important;
-    box-shadow:var();
-}
 .THIS.successScreenContainer{
     background-color: #f3f2f2;    
 }
 .THIS .successImageContainer{
-    width: 208px;
+    width: 13rem;
     margin-top: 2.5%;
     margin-bottom: 2.5%;
 }
@@ -62,7 +43,7 @@
     background-color: white;
     border-color: rgb(221, 219, 218);
     border-style: solid;
-    border-width: 1px;
+    border-width: 0.063rem;
     border-radius: 0.25rem;
     min-height: 11rem;
 }

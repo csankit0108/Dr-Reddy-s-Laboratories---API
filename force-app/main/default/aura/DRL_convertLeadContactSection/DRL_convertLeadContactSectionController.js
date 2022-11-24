@@ -1,45 +1,40 @@
 ({	
     doInit: function (component, event, helper) {
-        component.set('v.str_radioButtonVal2', '3');
+        component.set("v.strRadioButtonSelected", "3");
         helper.configureIfParentAlreadyConverted(component, event, helper);
-        helper.getContactFields(component,event,helper);      
+        helper.getContactFields(component, event, helper);      
     },
     
-    handleValueChange:function(component, event, helper){
-        
-        let value = event.getParam('value');
-        let field = event.getSource().get("v.fieldName");
-        
-        let obj_Contact = component.get('v.obj_contact');
-        obj_Contact[field] = value;
+    handleValueChange:function(component, event, helper){        
+        let value = event.getParam("value");
+        let field = event.getSource().get("v.fieldName");        
+        let objContact = component.get("v.objContact");
+        objContact[field] = value;
     },
-
     
     handleLookup: function(component, event, helper){
-        var str_contactId = event.getParam('value')[0];
-        component.set('v.str_contactId',str_contactId);
+        var strContactId = event.getParam("value")[0];
+        component.set("v.strContactId", strContactId);
         helper.existingContactHelper(component, event, helper);
     },
     
     handleRadioChange: function(component, event, helper){
         var strRadioButton = event.getSource().get("v.value");
-        component.set('v.str_radioButtonVal2', strRadioButton);
-        if(strRadioButton === '3'){
+        component.set("v.strRadioButtonSelected", strRadioButton);
+        if (strRadioButton === "3") {
             helper.generateContact(component, event, helper);
             helper.getContactFields(component, event, helper);
-            component.set('v.existingContact','');
-            component.set('v.blnallowInput1',true);
-            component.set('v.blnallowInput2',false);
+            component.set("v.strExistingContact", "");
+            component.set("v.blnAllowContactCreation", true);
+            component.set("v.blnAllowContactSelection", false);
             
         }
-        if(strRadioButton === '4'){
-            component.set('v.obj_contact',{ 'sobjectType': 'Contact'});
+        if (strRadioButton === "4") {
+            component.set("v.objContact",{ "sobjectType": "Contact"});
             helper.getContactFields(component, event, helper);
-            component.set('v.blnallowInput1',false);
-            component.set('v.blnallowInput2',true);
-            
-        }
-        
+            component.set("v.blnAllowContactCreation", false);
+            component.set("v.blnAllowContactSelection", true);            
+        }        
     },
     
     

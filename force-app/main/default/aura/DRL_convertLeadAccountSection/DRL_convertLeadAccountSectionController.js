@@ -1,6 +1,6 @@
 ({
     doInit: function (component, event, helper) {
-        component.set('v.str_radioButtonValue', '1');
+        component.set('v.strRadioButtonSelected', '1');
         helper.configureIfParentAlreadyConverted(component, event, helper);
         helper.getAccountFields(component, event, helper);        
     },
@@ -9,13 +9,13 @@
     handleValueChange: function (component, event, helper) {
         let value = event.getParam('value');
         let field = event.getSource().get("v.fieldName");
-        let obj_Account = component.get('v.obj_Account');
-        obj_Account[field] = value;
+        let objAccount = component.get('v.objAccount');
+        objAccount[field] = value;
     },
     
     handleLookup: function(component, event, helper){
         var strAccountId = event.getParam('value')[0];
-        component.set('v.str_accountId',strAccountId);
+        component.set('v.strAccountId',strAccountId);
         helper.existingAccountHelper(component, event, helper);
         
     },
@@ -23,19 +23,19 @@
     handleRadioChange:function(component, event, helper){
     
         var radioBtn = event.getSource().get("v.value");
-        component.set('v.str_radioButtonValue',radioBtn);
+        component.set('v.strRadioButtonSelected',radioBtn);
             if(radioBtn === '1'){
                 helper.generateAccount(component, event, helper);
                 helper.getAccountFields(component, event, helper);
-                component.set('v.existingAccount','');
-                component.set('v.bln_allowInput1',true);
-                component.set('v.bln_allowInput2',false);
+                component.set('v.strExistingAccount','');
+                component.set('v.blnAllowAccountCreation',true);
+                component.set('v.blnAllowAccountSelection',false);
             }
             if(radioBtn === '2'){
-                component.set('v.obj_Account',{ 'sobjectType': 'Account'});
+                component.set('v.objAccount',{ 'sobjectType': 'Account'});
                 helper.getAccountFields(component, event, helper);
-                component.set('v.bln_allowInput1',false);
-                component.set('v.bln_allowInput2',true);                
+                component.set('v.blnAllowAccountCreation',false);
+                component.set('v.blnAllowAccountSelection',true);                
             }
         },
         

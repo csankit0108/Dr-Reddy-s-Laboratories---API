@@ -10,12 +10,12 @@
 *
 -->
 <aura:component controller="DRL_ConvertLeadProspectController">
-    <aura:attribute name="objaccount" type="Account"/>
-    <aura:attribute name="objcontact" type="Contact"/>
-    <aura:attribute name="objopportunity" type="Opportunity"/>
+    <aura:attribute name="objAccount" type="Account"/>
+    <aura:attribute name="objContact" type="Contact"/>
+    <aura:attribute name="objOpportunity" type="Opportunity"/>
     <aura:attribute name="list_Opportunities" type="List"/>
-    <aura:attribute name="list_opportunityColumns" type="List" default="[]"/>
-    <aura:attribute name="map_successFieldsToShow" type="Map" default="{}"/>   
+    <aura:attribute name="list_OpportunityColumns" type="List" default="[]"/>
+    <aura:attribute name="map_SuccessFieldsToShow" type="Map" default="{}"/>   
     <aura:attribute name="list_AccountFieldsToRender" type="List" default="[]"/>
     <aura:attribute name="list_ContactFieldsToRender" type="List" default="[]"/>
     <aura:attribute name="list_OpportunityFieldsToRender" type="List" default="[]"/>
@@ -40,11 +40,11 @@
                             </div>                            
                         </span>
                         <div class="recordUrl">
-                            <a href="{!join('','/',v.objaccount.Id)}" target="_self">{!v.objaccount.Name}</a>
+                            <a href="{!join('','/',v.objAccount.Id)}" target="_self">{!v.objAccount.Name}</a>
                         </div>
                         <ul class="recordFields">
-                            <aura:iteration items="{!v.list_AccountFieldsToRender}" var="objfield" indexVar="Id">
-                                <li>{!objfield.label} : {!objfield.value}</li>
+                            <aura:iteration items="{!v.list_AccountFieldsToRender}" var="objField" indexVar="Id">
+                                <li>{!objField.label} : {!objField.value}</li>
                             </aura:iteration>                            
                         </ul>
                     </div>
@@ -60,16 +60,16 @@
                             </div> 
                         </span>
                         <div class="recordUrl">
-                            <a href="{!join('','/',v.objcontact.Id)}" target="_self">{!v.objcontact.Name}</a>
+                            <a href="{!join('','/',v.objContact.Id)}" target="_self">{!v.objContact.Name}</a>
                         </div>
                         <ul class="recordFields">
-                            <aura:iteration items="{!v.list_ContactFieldsToRender}" var="objfield" indexVar="Id">
-                                <li>{!objfield.label} : {!objfield.value}</li>
+                            <aura:iteration items="{!v.list_ContactFieldsToRender}" var="objField" indexVar="Id">
+                                <li>{!objField.label} : {!objField.value}</li>
                             </aura:iteration>
                         </ul>
                     </div>
                 </div>
-                <aura:if isTrue="{!!empty(v.objopportunity)}">
+                <aura:if isTrue="{!!empty(v.objOpportunity)}">
                     <div class="recordCard">
                         <div class="recordHeader">
                             OPPORTUNITY
@@ -81,11 +81,11 @@
                                 </div> 
                             </span>
                             <div class="recordUrl">
-                                <a href="{!join('','/',v.objopportunity.Id)}" target="_self">{!v.objcontact.Name}</a>
+                                <a href="{!join('','/',v.objOpportunity.Id)}" target="_self">{!v.objOpportunity.Name}</a>
                             </div>
                             <ul class="recordFields">
-                                <aura:iteration items="{!v.list_OpportunityFieldsToRender}" var="objfield" indexVar="Id">
-                                    <li>{!objfield.label} : {!objfield.value}</li>
+                                <aura:iteration items="{!v.list_OpportunityFieldsToRender}" var="objField" indexVar="Id">
+                                    <li>{!objField.label} : {!objField.value}</li>
                                 </aura:iteration>
                             </ul>
                         </div>
@@ -94,10 +94,10 @@
             </div>
         </div>
         <div class="childOpportunities">
-            <aura:if isTrue="{!!or(empty(v.list_Opportunities),empty(v.list_opportunityColumns))}">
+            <aura:if isTrue="{!!or(empty(v.list_Opportunities),empty(v.list_OpportunityColumns))}">
                 <lightning:datatable
                     hideCheckboxColumn="true"
-                    columns="{! v.list_opportunityColumns }"
+                    columns="{! v.list_OpportunityColumns }"
                     data="{! v.list_Opportunities }"
                     keyField="Id"/>
             </aura:if>

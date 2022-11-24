@@ -1,34 +1,32 @@
 ({
-    setRunautomationData : function(component,event,helper) {
-        let strLeadId=component.get('v.strLeadId');
-        let blncontentAvailable=false;
-        let map_blncontentAvailable=component.get('v.map_blncontentAvailable');
-        let map_mapcontentTotal=component.get('v.map_mapcontentTotal');
-        let map_listdocumentCategoriesAvailable=component.get('v.map_listdocumentCategoriesAvailable');
-        let map_strrunAfter=component.get('v.map_strrunAfter');
-        let map_listfinalSelectedContentCatalogs=component.get('v.map_listfinalSelectedContentCatalogs');
+    setRunautomationData : function(component, event, helper) {
+        let strLeadId = component.get('v.strLeadId');
+        let blnContentAvailable = false;
+        let map_BlnContentAvailable = component.get('v.map_BlnContentAvailable');
+        let map_MapContentTotal = component.get('v.map_MapContentTotal');
+        let map_ListDocumentCategoriesAvailable = component.get('v.map_ListDocumentCategoriesAvailable');
+        let map_StrRunAfter = component.get('v.map_StrRunAfter');
+        let map_ListFinalSelectedContentCatalogs = component.get('v.map_ListFinalSelectedContentCatalogs');
         
-        if(!helper.isNullCheck(map_blncontentAvailable)&&!helper.isNullCheck(map_blncontentAvailable[strLeadId])){
-            blncontentAvailable=map_blncontentAvailable[strLeadId];
-            component.set('v.blncontentAvailable',blncontentAvailable);
-            if(blncontentAvailable){
-                component.set('v.map_contentTotal',map_mapcontentTotal[strLeadId]);
-                component.set('v.list_documentCategoriesAvailable',map_listdocumentCategoriesAvailable[strLeadId]);
-                component.set('v.strrunAfter',map_strrunAfter[strLeadId]);
-                component.set('v.list_finalSelectedContentCatalogs',map_listfinalSelectedContentCatalogs[strLeadId]);
+        if (!helper.isNullCheck(map_BlnContentAvailable) && !helper.isNullCheck(map_BlnContentAvailable[strLeadId])) {
+            blnContentAvailable = map_BlnContentAvailable[strLeadId];
+            component.set('v.blnContentAvailable', blnContentAvailable);
+            if (blnContentAvailable) {
+                component.set('v.map_ContentTotal', map_MapContentTotal[strLeadId]);
+                component.set('v.list_DocumentCategoriesAvailable', map_ListDocumentCategoriesAvailable[strLeadId]);
+                component.set('v.strRunAfter', map_StrRunAfter[strLeadId]);
+                component.set('v.list_FinalSelectedContentCatalogs', map_ListFinalSelectedContentCatalogs[strLeadId]);
             }
-        }
-        else{
-            component.set('v.blncontentAvailable',blncontentAvailable);
+        }else{
+            component.set('v.blnContentAvailable', blnContentAvailable);
         }
         
 
     },
     isNullCheck:function(variable){
-        if(variable==null||variable==undefined||variable==''){
+        if (variable==null || variable==undefined || variable==''){
             return true;
-        }
-        else{
+        }else{
             return false;
         }
     }

@@ -1,8 +1,8 @@
 .THIS .errorMsg {
     font-weight: 500;
     color: #c23934;
-    padding-right: 5px;
-    padding-left: 7px;
+    padding-right: 0.313rem;
+    padding-left: 0.438rem;
 }
 
 .THIS .slds-modal__container.Container {
@@ -17,8 +17,8 @@
     outline: none;
 }
 .THIS .slds-modal__content{
-    padding: 2px;
-    padding-bottom: 3px;
+    padding: 0.125rem;
+    padding-bottom: 0.188rem;
     background-color: #f3f3f3;
 }
 .THIS.hideContent{

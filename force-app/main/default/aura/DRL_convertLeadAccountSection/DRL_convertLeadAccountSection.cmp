@@ -11,27 +11,27 @@
 -->
 <aura:component controller="DRL_ConvertLeadProspectController"
                 implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
-                access='global'>
+                access="global">
     
     
-    <aura:attribute name="obj_Account" type="Account" default="{ 'sobjectType': 'Account'}" />
-    <aura:attribute name="str_radioButtonValue" type="String"/>
-    <aura:attribute name="str_accountId" type="String" />
-    <aura:attribute name="existingAccount" type="String" default = ''/>
-    <aura:attribute name='list_AccountFields' type='List' default="[]" />
-    <aura:attribute name='list_accFieldsToRender' type='List' />
-    <aura:attribute name="blnRadio2Available" type="Boolean" default = 'true'/>
-    <aura:attribute name="blnRadio1Available" type="Boolean" default = 'true'/>
-    <aura:attribute name = 'str_inputR1' type = 'String' default = '1'/>
-    <aura:attribute name = 'str_inputR2' type = 'String' default = '2'/>
-    <aura:attribute name = 'bln_allowInput1' type = 'Boolean' default = 'true'/>
-    <aura:attribute name = 'bln_allowInput2' type = 'Boolean' default = 'false'/>
-    <aura:attribute name="blnisParentProspectConverted" type="Boolean" default="false" />
-    <aura:attribute name="isRadio1Checked" type="Boolean" default = 'true'/>
-    <aura:attribute name="isRadio2Checked" type="Boolean" default = 'false'/>
-    <aura:attribute name="objlead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
+    <aura:attribute name="objAccount" type="Account" default="{ 'sobjectType': 'Account'}" />
+    <aura:attribute name="strRadioButtonSelected" type="String"/>
+    <aura:attribute name="strAccountId" type="String" />
+    <aura:attribute name="strExistingAccount" type="String" default = ""/>
+    <aura:attribute name="list_AccountFields" type="List" default="[]" />
+    <aura:attribute name="list_AccountFieldsToRender" type="List" />
+    <aura:attribute name="blnIsAccountSelectionAvailable" type="Boolean" default = "true"/>
+    <aura:attribute name="blnIsAccountCreationAvailable" type="Boolean" default = "true"/>
+    <aura:attribute name = "strCreateAccountButtonValue" type = "String" default = "1"/>
+    <aura:attribute name = "strSelectAccountButtonValue" type = "String" default = "2"/>
+    <aura:attribute name = "blnAllowAccountCreation" type = "Boolean" default = "true"/>
+    <aura:attribute name = "blnAllowAccountSelection" type = "Boolean" default = "false"/>
+    <aura:attribute name="blnIsParentProspectConverted" type="Boolean" default="false" />
+    <aura:attribute name="blnIsAccountCreationSelected" type="Boolean" default = "true"/>
+    <aura:attribute name="blnIsAccountSelectionSelected" type="Boolean" default = "false"/>
+    <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
 
-    <aura:handler name="init" value='{!this}' action='{!c.doInit}' />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
     <!--Start-->
         <div class="accountSection slds-border_bottom">            
@@ -41,30 +41,30 @@
             <div class="accountFormSection">                
                 <div class="accountFormSectionContainer">
                     <lightning:input type="radio" onchange="{!c.handleRadioChange}" label="Choose Existing"
-                                     class="accountRadioButton" name="options" value="{!v.str_inputR2}" checked="{!v.isRadio2Checked}" disabled="{!!v.blnRadio2Available}"/>
+                                     class="accountRadioButton" name="options" value="{!v.strSelectAccountButtonValue}" checked="{!v.blnIsAccountSelectionSelected}" disabled="{!!v.blnIsAccountSelectionAvailable}"/>
                     <lightning:recordEditForm objectApiName="Contact">
                         <label for="nameField" class="slds-form-element__label slds-no-flex">
                             <span style="color:#c64541;">*&nbsp;</span>Account Search</label>
-                        <aura:if isTrue = '{!v.bln_allowInput2}'>
+                        <aura:if isTrue = "{!v.blnAllowAccountSelection}">
                             <lightning:inputField aura:id="nameField" fieldName="AccountId" 
-                                                  variant="label-hidden" disabled='false' value = '{!v.existingAccount}'
+                                                  variant="label-hidden" disabled="false" value = "{!v.strExistingAccount}"
                                                   messageWhenBadInput="Please choose an existing account or create a new one."
                                                   onchange="{!c.handleLookup}" />
-                            <aura:set attribute = 'else'>
-                                <aura:if isTrue="{!v.blnisParentProspectConverted}">
+                            <aura:set attribute = "else">
+                                <aura:if isTrue="{!v.blnIsParentProspectConverted}">
                                     <div class="container" style = "padding-left:20px">
                                         <span class="slds-pill slds-pill_link accountPill">
                                             <span class="slds-pill__icon_container">
                                                 <lightning:icon iconName="standard:account" alternativeText="Account" title="Account" />
                                             </span>
-                                            <a href="{!join('','/',v.obj_Account.Id)}" target="_self" class="slds-pill__action" title="Full pill label verbiage mirrored here">
-                                              <span class="slds-pill__label">{!v.obj_Account.Name}</span>
+                                            <a href="{!join('','/',v.objAccount.Id)}" target="_self" class="slds-pill__action" title="Full pill label verbiage mirrored here">
+                                              <span class="slds-pill__label">{!v.objAccount.Name}</span>
                                             </a>
                                           </span>
                                     </div>
-                                    <aura:set attribute = 'else'>
+                                    <aura:set attribute = "else">
                                         <lightning:inputField aura:id="nameField" fieldName="AccountId" 
-                                                      variant="label-hidden" disabled='true' value = '{!v.existingAccount}'
+                                                      variant="label-hidden" disabled="true" value = "{!v.strExistingAccount}"
                                                       messageWhenBadInput="Please choose an existing account or create a new one."
                                                       onchange="{!c.handleLookup}" />
                                     </aura:set>
@@ -75,27 +75,27 @@
                 </div>
                 <div class="accountFormSectionContainer">
                     <lightning:input type="radio" onchange="{! c.handleRadioChange }" label="Create New"
-                                     class="accountRadioButton" name="options" value="{!v.str_inputR1}" checked="{!v.isRadio1Checked}" disabled="{!!v.blnRadio1Available}" />
+                                     class="accountRadioButton" name="options" value="{!v.strCreateAccountButtonValue}" checked="{!v.blnIsAccountCreationSelected}" disabled="{!!v.blnIsAccountCreationAvailable}" />
                     <lightning:recordEditForm aura:id="accountForm" objectApiName="Account">
                         <lightning:messages />
                         <div class="slds-form formContainer">
                             <div class="slds-col slds-size_1-of-1">
-                                <aura:iteration items="{!v.list_accFieldsToRender}" var="field" indexVar="name">
-                                    <aura:if isTrue = '{!v.bln_allowInput1}'>
-                                        <aura:if isTrue = '{!field.required}'>
-                                            <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
-                                                              required="{!field.required}" disabled='false'
+                                <aura:iteration items="{!v.list_AccountFieldsToRender}" var="objField" indexVar="name">
+                                    <aura:if isTrue = "{!v.blnAllowAccountCreation}">
+                                        <aura:if isTrue = "{!objField.required}">
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}" aura:id ="{!objField.name}"
+                                                              required="{!objField.required}" disabled="false"
                                                               class="slds-form-element" onchange="{!c.handleValueChange}" />
-                                            <aura:set attribute = 'else'>
-                                                <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
-                                                              disabled='false'
+                                            <aura:set attribute = "else">
+                                                <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}" aura:id ="{!objField.name}"
+                                                              disabled="false"
                                                               class="slds-form-element" onchange="{!c.handleValueChange}" />
                                             </aura:set>
                                         </aura:if>
                                         
-                                        <aura:set attribute = 'else'>
-                                            <lightning:inputField fieldName="{!field.name}" value="{!field.value}" aura:id ="{!field.name}"
-                                                                  required="{!field.required}" disabled='true'
+                                        <aura:set attribute = "else">
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}" aura:id ="{!objField.name}"
+                                                                  required="{!objField.required}" disabled="true"
                                                                   class="slds-form-element" onchange="{!c.handleValueChange}" />
                                         </aura:set>
                                     </aura:if>

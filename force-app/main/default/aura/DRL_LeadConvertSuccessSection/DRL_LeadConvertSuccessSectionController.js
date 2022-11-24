@@ -7,6 +7,6 @@
             ){
             helper.getColumns(component);
         }
-        helper.setFieldsToRender(component,helper);
+        helper.setFieldsToRender(component, helper);
     }
 })

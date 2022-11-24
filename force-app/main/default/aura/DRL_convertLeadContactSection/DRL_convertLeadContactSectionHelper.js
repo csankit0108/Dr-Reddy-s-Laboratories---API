@@ -1,80 +1,76 @@
 ({
     
     generateContact:function(component, event, helper){
-        let objlead=component.get('v.objlead');
-        let objcontact ={}
-        if(!helper.isNullCheck(objlead.LastName)){
-            objcontact.LastName=objlead.LastName;
+        let objLead = component.get("v.objLead");
+        let objContact = {};
+        if (!helper.isNullCheck(objLead.LastName)) {
+            objContact.LastName = objLead.LastName;
         }
-        if(!helper.isNullCheck(objlead.FirstName)){
-            objcontact.FirstName=objlead.FirstName;
+        if (!helper.isNullCheck(objLead.FirstName)) {
+            objContact.FirstName = objLead.FirstName;
         }
-        if(!helper.isNullCheck(objlead.MobilePhone)){
-            objcontact.MobilePhone=objlead.MobilePhone;
+        if (!helper.isNullCheck(objLead.MobilePhone)) {
+            objContact.MobilePhone = objLead.MobilePhone;
         }
-        if(!helper.isNullCheck(objlead.Email)){
-            objcontact.Email=objlead.Email;
+        if (!helper.isNullCheck(objLead.Email)) {
+            objContact.Email = objLead.Email;
         }
-        component.set('v.obj_contact',objcontact);
+        component.set("v.objContact", objContact);
     },
     
     isNullCheck:function(variable){
-        if(variable==''||variable==null||variable==undefined){
+        if (variable==""||variable==null||variable==undefined) {
             return true;
-        }
-        else{
+        }else{
             return false;
         }
     },
     
     getContactFields : function(component,event,helper){
-        let list_conFieldsToRender=[];
-        let obj_contact = component.get('v.obj_contact');
-        let list_contactFieldSet = component.get('v.list_contactFieldSet');
-        list_contactFieldSet.forEach(function(field_contact){
+        let list_ContactFieldsToRender=[];
+        let objContact = component.get("v.objContact");
+        let list_ContactFieldSet = component.get("v.list_ContactFieldSet");
+        list_ContactFieldSet.forEach(function(field_contact){
             let objectContactRecord = {};
-            objectContactRecord.name= field_contact.name;//gets the api name of the field
-            objectContactRecord.required=field_contact.required;
-            if(!helper.isNullCheck(obj_contact[objectContactRecord.name])){
-                objectContactRecord.value=obj_contact[objectContactRecord.name];
+            objectContactRecord.name = field_contact.name;//gets the api name of the field
+            objectContactRecord.required = field_contact.required;
+            if(!helper.isNullCheck(objContact[objectContactRecord.name])){
+                objectContactRecord.value = objContact[objectContactRecord.name];
             }
             else{
-                objectContactRecord.value='';
-                obj_contact[objectContactRecord.name]='';
+                objectContactRecord.value = "";
+                objContact[objectContactRecord.name] = "";
             }
-            list_conFieldsToRender.push(objectContactRecord);
+            list_ContactFieldsToRender.push(objectContactRecord);
         })
-        component.set('v.obj_contact',obj_contact);
-        component.set('v.list_conFieldsToRender',list_conFieldsToRender);
+        component.set("v.objContact", objContact);
+        component.set("v.list_ContactFieldsToRender", list_ContactFieldsToRender);
         
     },
     existingContactHelper : function (component, event, helper) {
-        let str_contactId = component.get("v.str_contactId");
-        var action = component.get('c.getContact');
-        action.setParams({'strcontactId':str_contactId});
+        let strContactId = component.get("v.strContactId");
+        var action = component.get("c.getContact");
+        action.setParams({"strcontactId":strContactId});
         action.setCallback(this,function(response){
             var state = response.getState();
-            if(state === 'SUCCESS'){
+            if(state === "SUCCESS"){
                 var result = response.getReturnValue();
-                component.set('v.obj_contact',result);
+                component.set("v.objContact", result);
             }
         })
          $A.enqueueAction(action);        
     },
      configureIfParentAlreadyConverted: function (component, event, helper){
-        if(component.get('v.blnisParentProspectConverted')){
-            component.set('v.blnallowInput2',false);
-            component.set('v.blnallowInput1',false);
-            component.set('v.blnRadio2Available',false);
-            component.set('v.blnRadio1Available',false);
-            component.set('v.isRadio1Checked',false);
-            component.set('v.isRadio2Checked',true);
-        }
-        else{
+        if (component.get("v.blnIsParentProspectConverted")) {
+            component.set("v.blnAllowContactSelection",false);
+            component.set("v.blnAllowContactCreation",false);
+            component.set("v.blnIsContactSelectionAvailable",false);
+            component.set("v.blnIsContactCreationAvailable",false);
+            component.set("v.blnIsContactCreationSelected",false);
+            component.set("v.blnIsContactCreationSelected",true);
+        }else{
             helper.generateContact(component, event, helper);
         }
      }
-    
-    
     
 })
