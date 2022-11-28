@@ -315,9 +315,12 @@
                         strObjectName=strfieldName.substring(0,strfieldName.length-1)+"r";
                     }
                     
-                    list_ProspectChildLeads.forEach(objLead=>{
-                        objLead[objColumn.fieldName]="/"+objLead[strfieldName];                               
-                        objLead[strfieldName+"Name"]=objLead[strObjectName]["Name"];
+                    list_ProspectChildLeads.forEach(objLead=>{                           
+                        if(!this.isNullCheck(objLead[strObjectName])){
+                            objLead[objColumn.fieldName]="/"+objLead[strfieldName]; 
+                            objLead[strfieldName+"Name"]=objLead[strObjectName]["Name"];
+                        }                       
+                        
                     });
                 }
             }                    
