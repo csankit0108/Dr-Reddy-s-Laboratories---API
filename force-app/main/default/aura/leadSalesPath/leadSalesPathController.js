@@ -87,8 +87,8 @@
                 if(component.get("v.getStep")=='Converted')
                 {
                    
-                    if((product!=undefined&&product!=null&&product!='') )
-                    {
+                    // if((product!=undefined&&product!=null&&product!='') )
+                    // {
                        /* if((convertReason==null || convertReason==undefined || convertReason=='')){
                             var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
@@ -116,18 +116,18 @@
                         component.set("v.openPopup","Open");
                     if(loop==false&&openwindow=='Open')
                         component.set("v.openPopup","Close");    
-                    } 
-                    else
-                    {
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            "type": "error",
-                            "title": "Error !",
-                            "message": "Please update the Product field and update the Status"
-                        });
-                        toastEvent.fire();
-                        $A.get('e.force:refreshView').fire();
-                    }
+                    // } 
+                    // else
+                    // {
+                    //     var toastEvent = $A.get("e.force:showToast");
+                    //     toastEvent.setParams({
+                    //         "type": "error",
+                    //         "title": "Error !",
+                    //         "message": "Please update the Product field and update the Status"
+                    //     });
+                    //     toastEvent.fire();
+                    //     $A.get('e.force:refreshView').fire();
+                    // }
                 }
                 else
                 {
