@@ -173,6 +173,7 @@
 		<members>DRL_convertLeadAccountSection</members>
 		<members>DRL_convertLeadContactSection</members>
 		<members>DRL_ConvertLeadRunAutomationSection</members>
+		<members>leadSalesPath</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
