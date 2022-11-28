@@ -138,6 +138,8 @@
         if(component.get("v.blnrenderfrompath")){
             var modal = component.find("modal");
             $A.util.addClass(modal, "hideContent");
+            var modalbackdrop = component.find("modalbackdrop");
+            $A.util.addClass(modalbackdrop, "hideContent"); 
         }
     },
     openAlert : function(strtheme,strlabel,strmessage,action){
