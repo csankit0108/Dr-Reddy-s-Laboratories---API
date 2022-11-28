@@ -1,0 +1,33 @@
+.THIS .header{
+    padding: 0.313rem;
+}
+.THIS .headerLabel{
+    font-size: 1rem;
+    text-align: center;
+}
+.THIS .formContainer{
+    width: 100%;
+    background-color: white;
+    padding-left: 1.23rem;
+    padding-right: 0.438rem;
+    padding-bottom: 0.313rem;
+    border-radius: 0.313rem;
+}
+.THIS.opportunitySection{
+    background-color: #f3f3f3;
+    margin-top: 0.625rem;
+}
+.THIS .opportunityFormSectionContainer{
+    width: 44%;
+    padding: 1.25rem;
+}
+.THIS .opportunityRadioButton{
+    margin-bottom: 0.625rem;
+}
+.THIS .opportunityFormSection{
+    display: inline-flex;
+    width: 100%;
+    padding-bottom: 0.125rem;
+    margin-top: 0.625rem;
+    justify-content: center;
+}

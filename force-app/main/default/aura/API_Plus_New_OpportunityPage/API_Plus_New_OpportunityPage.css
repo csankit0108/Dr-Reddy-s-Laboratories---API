@@ -14,3 +14,22 @@
     width: 2% !important;
     height: 2% !important;
 }*/
+.THIS .slds-modal__container{ 
+    height : auto; 
+    width: 80%; 
+    max-width: 300vh;
+    padding-left:200px;
+    padding-right:200px;
+}
+.THIS .modal-body{ 
+    height : 400vh !important; 
+    max-height: 400vh !important; 
+}
+.THIS .slds-modal__footer{ 
+    display: inline !important; 
+    }
+    
+.THIS .header{
+    display: inline-block; 
+    width: 100%;
+}

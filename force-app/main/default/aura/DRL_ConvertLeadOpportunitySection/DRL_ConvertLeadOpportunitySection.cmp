@@ -1,0 +1,66 @@
+<!--
+* 
+* @ Name    :   DRL_ConvertLeadOpportunitySection
+* @ Purpose :   to render opportunity form
+* @ Author  :   Kishore Pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   04-11-2022      |  Kishore Pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:component>
+
+    <aura:attribute name="objOpportunity" type="Opportunity" />
+    <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_FieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
+    <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
+    <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
+
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+
+    <div class="opportunitySection slds-border_bottom">
+        <span class="header slds-theme_alt-inverse">
+            <span class="headerLabel">Opportunity</span>
+        </span>
+        <div class="opportunityFormSection">            
+            <div class="opportunityFormSectionContainer">
+                <lightning:input type="radio" label="Create New"
+                                        class="opportunityRadioButton" name="opportunityOptions" checked="true" disabled="true"/>
+                <lightning:recordEditForm aura:id="opportunityForm"  objectApiName="Opportunity">
+                    <lightning:messages />
+                    <div class="slds-form formContainer">
+                        <div class="slds-col slds-size_1-of-1">
+                            <aura:iteration items="{!v.list_FieldsToRender}" var="objField" indexVar="name">
+                                <aura:if isTrue="{!objField.name == 'RecordTypeId'}">
+                                    <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objOpportunity.RecordTypeId}">
+                                        <aura:iteration items="{!v.list_OpportunityRecordTypes}" var="recordType">
+                                            <option value="{!recordType.key}">{!recordType.value}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </aura:if>
+                                <aura:if isTrue="{!objField.name != 'RecordTypeId'}">
+                                    <aura:if isTrue="{!objField.required}">
+                                        <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                required="{!objField.required}" disabled="{!objField.disabled}"
+                                                class="slds-form-element" onchange="{!c.handleValueChange}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                disabled="{!objField.disabled}"
+                                                class="slds-form-element" onchange="{!c.handleValueChange}"/>
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                </aura:if>
+                                
+                            </aura:iteration>
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </div>
+            <div class="opportunityFormSectionContainer">
+            </div>
+        </div>
+    </div>
+</aura:component>

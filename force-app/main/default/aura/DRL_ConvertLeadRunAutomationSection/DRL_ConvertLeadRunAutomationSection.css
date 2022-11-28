@@ -1,0 +1,24 @@
+.THIS .contentInavailableDiv{
+    text-align: center; 
+    padding: 1.25rem; 
+    font-size: large; 
+    border: 0.063rem solid #032d60; 
+    background-color: white; 
+    margin-top: 0.625rem; 
+    margin-bottom: 0.625rem;
+}
+
+.THIS .runAutomationFieldContainer{
+    padding-left: 0.625rem;
+}
+.THIS.runAutomationSection{
+    background-color: #f3f3f3;
+    padding-top: 0.625rem;
+}
+.THIS .header{
+    padding:0.313rem;
+}
+.THIS .headerLabel{
+    font-size: 1rem;
+    text-align: center;
+}

@@ -1,0 +1,106 @@
+<!--
+* 
+* @ Name    :   DRL_LeadConvertSuccessSection
+* @ Purpose :   To Display Account,Contact and Opportunities On successfull Lead conversion
+* @ Author  :   Kishore Pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   17-11-2022      |  Kishore Pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:component controller="DRL_ConvertLeadProspectController">
+    <aura:attribute name="objAccount" type="Account"/>
+    <aura:attribute name="objContact" type="Contact"/>
+    <aura:attribute name="objOpportunity" type="Opportunity"/>
+    <aura:attribute name="list_Opportunities" type="List"/>
+    <aura:attribute name="list_OpportunityColumns" type="List" default="[]"/>
+    <aura:attribute name="map_SuccessFieldsToShow" type="Map" default="{}"/>   
+    <aura:attribute name="list_AccountFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_ContactFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="list_OpportunityFieldsToRender" type="List" default="[]"/>
+    
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
+    <div class="successScreenContainer">
+        <div class="slds-align_absolute-center successImageContainer">
+            <span>
+                <img src="{!$Resource.DRL_LeadConvertCelebrationGif}"/>
+            </span>
+        </div>
+        <div class="infoWrapper">
+            <div class="infoContainer">
+                <div class="recordCard">
+                    <div class="recordHeader">
+                        ACCOUNT
+                    </div>
+                    <div class="recordBody">
+                        <span class="iconContainer">
+                            <div class="iconHolder">
+                                <lightning:icon iconName="standard:account" alternativeText="Account" title="Account" />
+                            </div>                            
+                        </span>
+                        <div class="recordUrl">
+                            <a href="{!join('','/',v.objAccount.Id)}" target="_self">{!v.objAccount.Name}</a>
+                        </div>
+                        <ul class="recordFields">
+                            <aura:iteration items="{!v.list_AccountFieldsToRender}" var="objField" indexVar="Id">
+                                <li>{!objField.label} : {!objField.value}</li>
+                            </aura:iteration>                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="recordCard">
+                    <div class="recordHeader">
+                        CONTACT
+                    </div>
+                    <div class="recordBody">
+                        <span class="iconContainer">
+                            <div class="iconHolder">
+                                <lightning:icon iconName="standard:contact" alternativeText="Contact" title="Contact" />
+                            </div> 
+                        </span>
+                        <div class="recordUrl">
+                            <a href="{!join('','/',v.objContact.Id)}" target="_self">{!v.objContact.Name}</a>
+                        </div>
+                        <ul class="recordFields">
+                            <aura:iteration items="{!v.list_ContactFieldsToRender}" var="objField" indexVar="Id">
+                                <li>{!objField.label} : {!objField.value}</li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </div>
+                <aura:if isTrue="{!!empty(v.objOpportunity)}">
+                    <div class="recordCard">
+                        <div class="recordHeader">
+                            OPPORTUNITY
+                        </div>
+                        <div class="recordBody">
+                            <span class="iconContainer">
+                                <div class="iconHolder">
+                                    <lightning:icon iconName="standard:opportunity" alternativeText="Opportunity" title="Opportunity" />
+                                </div> 
+                            </span>
+                            <div class="recordUrl">
+                                <a href="{!join('','/',v.objOpportunity.Id)}" target="_self">{!v.objOpportunity.Name}</a>
+                            </div>
+                            <ul class="recordFields">
+                                <aura:iteration items="{!v.list_OpportunityFieldsToRender}" var="objField" indexVar="Id">
+                                    <li>{!objField.label} : {!objField.value}</li>
+                                </aura:iteration>
+                            </ul>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+        <div class="childOpportunities">
+            <aura:if isTrue="{!!or(empty(v.list_Opportunities),empty(v.list_OpportunityColumns))}">
+                <lightning:datatable
+                    hideCheckboxColumn="true"
+                    columns="{! v.list_OpportunityColumns }"
+                    data="{! v.list_Opportunities }"
+                    keyField="Id"/>
+            </aura:if>
+        </div>
+    </div>   
+</aura:component>

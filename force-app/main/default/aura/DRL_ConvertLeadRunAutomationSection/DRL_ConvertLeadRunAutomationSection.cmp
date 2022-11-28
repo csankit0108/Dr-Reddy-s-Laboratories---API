@@ -1,0 +1,74 @@
+<!--
+* 
+* @ Name    :   DRL_ProspectRelatedChildLeads
+* @ Purpose :   to render run Automation Section
+* @ Author  :   Kishore pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   22-11-2022      |  Kishore pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:component>
+    
+    <aura:attribute name="blnIsProspect" type="boolean" default="false" />
+    <aura:attribute name="strLeadId" type="String" default="" />
+    <aura:attribute name="blnContentAvailable" type="boolean" default="false" />
+    <aura:attribute name="map_ContentTotal" type="Map" />
+    <aura:attribute name="list_DocumentCategoriesAvailable" type="Object[]" default="[]" />
+    <aura:attribute name="strRunAfter" type="String" default="" />
+    <aura:attribute name="list_FinalSelectedContentCatalogs" type="Object[]" default="[]" />
+
+    <aura:attribute name="map_BlnContentAvailable" type="Map" />
+    <aura:attribute name="map_MapContentTotal" type="Map" />
+    <aura:attribute name="map_ListDocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_StrRunAfter" type="Map"/>
+    <aura:attribute name="map_ListFinalSelectedContentCatalogs" type="Map"/>
+
+    <aura:attribute name="list_DocumentCategoriesSelected" type="Object[]" default="[]" />
+    <aura:attribute name="list_DocumentsAvailable" type="Object[]" default="[]" />
+    <aura:attribute name="list_DocumentsSelected" type="Object[]" default="[]" /> 
+
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+
+    <aura:handler name="selectedContent" event="c:getSelectedContent" action="{!c.populateContent}" />
+    <aura:handler name="passDocumentList" event="c:documentDirectionEvent" action="{!c.loadItemsApp}" />
+
+    <div class="runAutomationSection slds-border_bottom">
+        <span class="header slds-theme_alt-inverse">
+            <span class="headerLabel">Run Automated Marketing Campaign</span>
+        </span>
+        <aura:if isTrue="{!v.blnContentAvailable}">
+            <div>
+                <div class="slds-grid slds-wrap slds-text-align_left custom-container">
+                    <div class="runAutomationFieldContainer">
+                        <lightning:recordEditForm objectApiName="Lead">
+                            <lightning:inputField required="true" value="{!v.strRunAfter}" onchange="{!c.handleChangeDays}"
+                                fieldName="Run_Automation_After__c" />
+                        </lightning:recordEditForm>
+                    </div>
+                </div>
+                <div class="slds">
+                    <div class="slds-box" >
+                        <c:DualSelect fieldName="Select Document Category (Available)"
+                            aura:id="docApp" leftValues="{!v.list_DocumentCategoriesAvailable}"
+                            rightValues="{!v.list_DocumentCategoriesSelected}" />
+                    </div>
+                </div>
+                <div class="slds">
+                    <div class="slds-box">
+                        <c:documentSelectionScreen fieldName="Document Names" aura:id="docApp2"
+                            leftValues="{!v.list_DocumentsAvailable}"
+                            rightValues="{!v.list_DocumentsSelected}" />
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!!v.blnContentAvailable}">
+            <div class="contentInavailableDiv">
+                {!$Label.c.CLDRL00014}
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

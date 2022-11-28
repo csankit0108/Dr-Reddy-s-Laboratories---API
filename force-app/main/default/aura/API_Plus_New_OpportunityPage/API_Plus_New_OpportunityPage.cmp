@@ -24,34 +24,7 @@
     <aura:attribute name="contactId" type="String"/>
     <hr/>
     
-    <aura:html tag="style">
-        .slds-modal__container{ 
-        height : auto; width: 80%; max-width: 300vh;
-        padding-left:200px;
-        padding-right:200px;
-        
-        
-        
-        <!-- 
-   overflow: scroll;
-        padding-left:200px;
-        padding-right:200px;-->
-        }
-        .modal-body{ 
-        height : 400vh !important; 
-        max-height: 400vh !important; 
-        <!--overflow-y: scroll;-->
-        } 
-        .slds-modal__footer{ 
-        display: inline !important; 
-        }
-        
-        .header {
-        display: inline-block; 
-        width: 100%;
-        }
-        
-    </aura:html>
+    
     
     <!--<lightning:button variant="Neutral" 
                       label="Awarded Quantity" 
