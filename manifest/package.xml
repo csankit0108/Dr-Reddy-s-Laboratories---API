@@ -43,8 +43,8 @@
 		<members>DRL_ProspectLeadStatusMapping__mdt.LeadStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.ProspectStatus__c</members>
 		<members>DRL_ProspectLeadStatusMapping__mdt.Weightage__c</members>
-		<members>DRL_LeadConvertFormController__mdt.Field_Set_Api_Name__c</members>
-		<members>DRL_ConvertLeadSuccessConfiguration__mdt.list_API_Names__c</members>
+		<members>DRL_LeadConvertFormController__mdt.FieldSetAPIName__c</members>
+		<members>DRL_ConvertLeadSuccessConfiguration__mdt.FieldAPINames__c</members>
 		<name>CustomField</name>
 	</types> 
 	<types>

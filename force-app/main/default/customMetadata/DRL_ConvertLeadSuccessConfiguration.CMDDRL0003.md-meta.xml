@@ -3,7 +3,7 @@
     <label>Opportunity</label>
     <protected>false</protected>
     <values>
-        <field>list_API_Names__c</field>
+        <field>FieldAPINames__c</field>
         <value xsi:type="xsd:string">Name,StageName,Amount</value>
     </values>
 </CustomMetadata>

@@ -3,7 +3,7 @@
     <label>Bio batch ordered</label>
     <protected>false</protected>
     <values>
-        <field>Field_Set_Api_Name__c</field>
+        <field>FieldSetAPIName__c</field>
         <value xsi:type="xsd:string">DRL_FieldsToDisableSet3</value>
     </values>
 </CustomMetadata>

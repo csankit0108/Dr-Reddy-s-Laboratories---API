@@ -378,7 +378,7 @@ public with sharing class DRL_ConvertLeadProspectController {
     public static List<DRL_LeadConvertFormController__mdt >  getOpportunityStageFieldsetDisableMap() {
         return [select 
                 Label,
-                Field_Set_Api_Name__c 
+                FieldSetAPIName__c 
                 from DRL_LeadConvertFormController__mdt ];
     }
     /**
@@ -560,12 +560,12 @@ public with sharing class DRL_ConvertLeadProspectController {
     **/
     public static Map<String,Map<String,String>> getResultFieldInformation() {
         Map<String,Map<String,String>> map_successFieldsToShow=new Map<String,Map<String,String>>();
-        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
+        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, FieldAPINames__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
             Map<String,String> map_fieldApitoLabel=new Map<String,String>();
             Schema.DescribeSObjectResult objdescribeSobjectsResult = Schema.getGlobalDescribe().get(objfieldsToshow.Label).getDescribe();
             Map<String, Schema.SObjectField> map_allFieldsInformation=objdescribeSobjectsResult.fields.getMap();
 
-            for(String strFieldApiName:objfieldsToshow.list_API_Names__c.split(',')){
+            for(String strFieldApiName:objfieldsToshow.FieldAPINames__c.split(',')){
                 map_fieldApitoLabel.put(strFieldApiName,map_allFieldsInformation.get(strFieldApiName).getDescribe().getLabel());
             }
             map_successFieldsToShow.put(objfieldsToshow.Label,map_fieldApitoLabel);
@@ -580,7 +580,7 @@ public with sharing class DRL_ConvertLeadProspectController {
     **/
     public static ConvertLeadDataWrapper getResultRecords(ConvertLeadDataWrapper objresponse) {
         
-        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, list_API_Names__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
+        for(DRL_ConvertLeadSuccessConfiguration__mdt objfieldsToshow:[SELECT Label, FieldAPINames__c FROM DRL_ConvertLeadSuccessConfiguration__mdt]){
             String strId='';
             if(objfieldsToshow.Label=='Account'){
                 strId=objresponse.objaccount.Id;
@@ -594,7 +594,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 }
                 strId=objresponse.objopportunity.Id;
             }
-            String strquery='select Id,'+objfieldsToshow.list_API_Names__c+' from '+objfieldsToshow.Label+' where Id=:strId';
+            String strquery='select Id,'+objfieldsToshow.FieldAPINames__c+' from '+objfieldsToshow.Label+' where Id=:strId';
             if(objfieldsToshow.Label=='Account'){
                 objresponse.objaccount=Database.query(strquery);
             }

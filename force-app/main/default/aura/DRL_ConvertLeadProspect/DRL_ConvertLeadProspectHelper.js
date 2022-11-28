@@ -100,7 +100,7 @@
         let map_StageToFieldSetMap={};
         let list_LeadConvertOpportunityFormControllers=result.list_LeadConvertOpportunityFormControllers;
         list_LeadConvertOpportunityFormControllers.forEach(function(objformController){
-            map_StageToFieldSetMap[objformController["Label"]]=objformController["Field_Set_Api_Name__c"].toLowerCase();
+            map_StageToFieldSetMap[objformController["Label"]]=objformController["FieldSetAPIName__c"].toLowerCase();
         });
         component.set("v.map_StageToFieldSetMap",map_StageToFieldSetMap);
         
