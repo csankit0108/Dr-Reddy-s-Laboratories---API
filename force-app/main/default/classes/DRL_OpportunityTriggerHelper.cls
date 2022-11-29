@@ -3,6 +3,7 @@
 * @ Name            :   DRL_OpportunityTriggerHelper
 * @ Author          :   Deeksha Suvarna
 * @ Usage           :   To Calculate Influence Percentage in Campaign Influence Record.
+* @ Test Class Name :   DRL_OpportunityTriggerHelperTest
 *
 *   Date            |  Developer Name                |  Version      |  Changes
 * ========================================================================================================

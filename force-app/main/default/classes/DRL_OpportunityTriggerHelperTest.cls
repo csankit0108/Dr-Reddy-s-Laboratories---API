@@ -1,17 +1,15 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_LeadTriggerHelperTest
-* @ Purpose         :   Test class for DRL_LeadTriggerHelper
+* @ Name            :   DRL_OpportunityTriggerHelperTest
+* @ Purpose         :   Test class for DRL_OpportunityTriggerHelper
 * @ Author          :   Deeksha Suvarna
 *
 *   Date            |  Developer Name                       |  Version      |  Changes
 * ======================================================================================================
 *   04-11-2022      |  deeksha.suvarna@absyz.com            |  1.0          |  Initial Version
-*   08-11-2022      |  mahalakshmi.sadhanantham@absyz.com   |  1.1          |  Campaign Record Creation
 *******************************************************************************************************/
 @isTest
 public class DRL_OpportunityTriggerHelperTest {
-
     /**
     * @ author       :  Deeksha Suvarna
     * @ description  :  This method is used to setup data for testing class 'DRL_OpportunityTriggerHelper'
