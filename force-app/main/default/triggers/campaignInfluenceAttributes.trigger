@@ -1,7 +1,4 @@
 trigger campaignInfluenceAttributes on CampaignInfluence (after insert,after update) {
-    if (DRL_OpportunityTriggerHelper.blnskipCampaignInfluenceTrigger) {
-        return;
-    }
     if (caseStaticVars.allowInfluenceInTrigger) {
         List<CampaignInfluence> camplist = new List<CampaignInfluence>();
         List<CampaignInfluence> camplist2 = new List<CampaignInfluence>();
