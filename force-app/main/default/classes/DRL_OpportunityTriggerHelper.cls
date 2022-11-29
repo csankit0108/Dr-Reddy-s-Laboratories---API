@@ -18,9 +18,11 @@ public class DRL_OpportunityTriggerHelper {
     public static Map<Id,Lead> map_LeadsById = new Map<Id,Lead>();
     //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Label
     public static Map<String, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationByLabel = new Map<String, DRL_CampaignInfluenceConfiguration__mdt>();
-    ////Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Sort Order
+    //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Sort Order
     public static Map<Decimal, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationBySortOrder = new Map<Decimal, DRL_CampaignInfluenceConfiguration__mdt>();
+    //Custom Label with Value 'DRL_APICampaignsDistributionModel'
     public static String strModelDeveloperName = Label.CLDRL00001;
+    //Quering the Value of DeveloperName 
     public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
                                                                       Id,
                                                                       DeveloperName 
@@ -176,88 +178,6 @@ public class DRL_OpportunityTriggerHelper {
         }
     }
 
-    /**
-    * @ author       :  Dinesh Chandra
-    * @ description  :  DRL-85-Create CampaignInfluence Records for Converted Leads and Contacts
-    * @ params       :  map_NewOpportunitiesById - Tigger newMap on Opportunity
-    * @ return       :  N/A
-    **/
-    /*public static void createLeadCampaignInfluence(Map<Id,Opportunity> map_NewOpportunitiesById) {
-        //Set of Converted LeadIds in Opportunity
-        Set<Id> set_LeadIds = new Set<Id>();
-        //List of LeadIds with Converted Leads setIds
-        List<Lead> list_Leads = new List<Lead>();
-        //Map of SourceCampaignIds with LeadIds
-        Map<Id,Id> map_SourceCampaignIds =new Map<Id,Id>();
-        //List of CampaignInfluences during DML operation
-        List<CampaignInfluence> list_InsertCampaignInfluences = new List<CampaignInfluence>();
-        try {
-            for (Opportunity objOpportunity : map_NewOpportunitiesById.values()) {
-                if (objOpportunity.Lead_Converted_From__c != NULL) {
-                    set_LeadIds.add(objOpportunity.Lead_Converted_From__c);
-                }
-            }
-
-            if (set_LeadIds != NULL) {
-
-                list_Leads = [SELECT Id,
-                            DRL_SourceCampaign__c,
-                            CreatedDate
-                            FROM Lead 
-                            WHERE Id IN :set_LeadIds  
-                            ORDER by CreatedDate desc
-                            LIMIT 1];
-            }
-            
-            if (list_Leads.size() > 0) {
-                for (Lead objLead : list_Leads) {
-                    map_SourceCampaignIds.put(objLead.Id,objLead.DRL_SourceCampaign__c);
-                }
-            }
-
-            for ( DRL_CampaignInfluenceConfiguration__mdt objCampaignInfluenceConfiguration : DRL_CampaignInfluenceConfiguration__mdt.getAll().values()) {
-                map_CampaignInfluenceConfigurationByLabel.put(objCampaignInfluenceConfiguration.Label, objCampaignInfluenceConfiguration);
-            }
-            
-            if (map_SourceCampaignIds.size() > 0) {
-                for (Opportunity objOpportunity : map_NewOpportunitiesById.values()) {
-                    CampaignInfluence objCampaignInfluence = new CampaignInfluence();
-                    objCampaignInfluence.ContactId = objOpportunity.Contact__c;
-                    objCampaignInfluence.CampaignId = map_SourceCampaignIds.get(objOpportunity.Lead_Converted_From__c);
-                    objCampaignInfluence.OpportunityId = objOpportunity.Id;
-                    objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
-                    objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
-                    objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
-                    objCampaignInfluence.Stage_Updated_On__c = System.now();
-                    list_InsertCampaignInfluences.add(objCampaignInfluence);
-                }
-
-                if (!list_InsertCampaignInfluences.isEmpty()) {
-                    CaseStaticVars.allowInfluenceInTrigger = false;
-                    List<Database.SaveResult> list_Results = Database.insert(list_InsertCampaignInfluences, false);
-                    list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results,'Insert'));
-                    CaseStaticVars.allowInfluenceInTrigger = true; 
-                }
-                
-                if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                    DRLUtil.logDMLException(
-                    'DRL_OpportunityTriggerHelper',
-                    'createLeadCampaignInfluence',
-                    list_ConsolidatedDMLErrors
-                    );
-                }
-            }
-
-        }  catch(Exception objException) {
-            DRLUtil.logException(
-                'DRL_OpportunityTriggerHelper',
-                'createLeadCampaignInfluence',
-                 objException,
-                 true
-            );
-        }
-    }*/
-    
     /**
     * @ author       :  Deeksha Suvarna
     * @ description  :  Calculate Influence Percentage field on Campaign Influence Record
