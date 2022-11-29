@@ -12,10 +12,13 @@
 		<members>DRL_UpdatePotentialAtLaunchBatchTest</members>
 		<members>DRL_ConvertLeadProspectController</members>
 		<members>DRL_convertLeadProspectTest</members>
+		<members>DRL_OpportunityTriggerHelper</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
 		<members>LeadTrigger</members>
+		<members>OpporTrigger</members>
+		<members>campaignInfluenceAttributes</members>
 		<members>Populate_Opportunity_stage_tracker</members>
 		<name>ApexTrigger</name>
 	</types>
