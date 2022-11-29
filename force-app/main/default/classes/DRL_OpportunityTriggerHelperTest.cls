@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_LeadTriggerHelperTest
-* @ Purpose         :   Test class for DRL_LeadTriggerHelper
+* @ Name            :   DRL_OpportunityTriggerHelperTest
+* @ Purpose         :   Test class for DRL_OpportunityTriggerHelper
 * @ Author          :   Deeksha Suvarna
 *
 *   Date            |  Developer Name                       |  Version      |  Changes
