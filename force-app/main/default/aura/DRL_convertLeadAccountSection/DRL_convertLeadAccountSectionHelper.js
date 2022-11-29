@@ -53,7 +53,7 @@
             component.set('v.blnIsAccountSelectionAvailable', false);
             component.set('v.blnIsAccountCreationAvailable', false);
             component.set('v.blnIsAccountCreationSelected', false);
-            component.set('v.blnIsAccountSelectionSelected', false);
+            component.set('v.blnIsAccountSelectionSelected', true);
         }else{
             helper.generateAccount(component, event, helper);
         }
