@@ -33,7 +33,7 @@ public class DRL_OpportunityTriggerHelper {
     public static void createCampaignInfluence (Map<Id,Opportunity> map_NewOpportunitiesById) {
         //Set of ContactIds
         Set<Id> set_ContactIds = new Set<Id>();
-        //Set of OpportunityIds
+        //Set of OpportunityIds 
         Set<Id> set_OpportunityIds = new Set<Id>();
         //Map of CampaignIds with ContactIds
         Map<Id,Id> map_CampaignIds = new Map<Id,Id>();
