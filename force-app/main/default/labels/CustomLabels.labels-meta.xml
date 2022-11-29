@@ -4,7 +4,7 @@
         <fullName>CLDRL00001</fullName>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>API Campaign Influence Model Id</shortDescription>
+        <shortDescription>API Campaign Influence Model Name</shortDescription>
         <value>DRL_APICampaignsDistributionModel</value>
     </labels>
     <labels>
