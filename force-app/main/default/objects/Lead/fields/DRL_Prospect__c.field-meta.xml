@@ -5,16 +5,6 @@
     <description>DRL - To maintain hierarchical relationship and track multiple Lead records of same customer</description>
     <externalId>false</externalId>
     <label>Prospect</label>
-    <lookupFilter>
-        <active>true</active>
-        <errorMessage>Value does not exist or does not match filter criteria.</errorMessage>
-        <filterItems>
-            <field>Lead.RecordType.DeveloperName</field>
-            <operation>equals</operation>
-            <value>DRL_Prospect</value>
-        </filterItems>
-        <isOptional>false</isOptional>
-    </lookupFilter>
     <referenceTo>Lead</referenceTo>
     <relationshipLabel>Leads</relationshipLabel>
     <relationshipName>Leads</relationshipName>

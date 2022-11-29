@@ -67,7 +67,7 @@
             component.set("v.blnIsContactSelectionAvailable",false);
             component.set("v.blnIsContactCreationAvailable",false);
             component.set("v.blnIsContactCreationSelected",false);
-            component.set("v.blnIsContactCreationSelected",true);
+            component.set("v.blnIsContactSelectionSelected",true);
         }else{
             helper.generateContact(component, event, helper);
         }
