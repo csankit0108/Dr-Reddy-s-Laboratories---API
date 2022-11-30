@@ -19,7 +19,7 @@ public class DRL_OpportunityTriggerHelper {
     //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Label
     public static Map<String, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationByLabel = new Map<String, DRL_CampaignInfluenceConfiguration__mdt>();
     //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Sort Order
-    public static Map<Decimal, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationBySortOrder = new Map<Decimal, DRL_CampaignInfluenceConfiguration__mdt>();
+    public static Map<Integer, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationBySortOrder = new Map<Integer, DRL_CampaignInfluenceConfiguration__mdt>();
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
     public static String strModelDeveloperName = Label.CLDRL00001;
     //Quering the Value of DeveloperName 
@@ -56,8 +56,14 @@ public class DRL_OpportunityTriggerHelper {
 
         try {
             for (DRL_CampaignInfluenceConfiguration__mdt objCampaignInfluenceConfiguration : DRL_CampaignInfluenceConfiguration__mdt.getAll().values()) {
-                map_CampaignInfluenceConfigurationByLabel.put(objCampaignInfluenceConfiguration.Label, objCampaignInfluenceConfiguration);
-            	map_CampaignInfluenceConfigurationBySortOrder.put(objCampaignInfluenceConfiguration.SortOrder__c, objCampaignInfluenceConfiguration);
+                map_CampaignInfluenceConfigurationByLabel.put(
+                    objCampaignInfluenceConfiguration.Label, 
+                    objCampaignInfluenceConfiguration
+                );
+            	map_CampaignInfluenceConfigurationBySortOrder.put(
+                    Integer.valueOf(objCampaignInfluenceConfiguration.SortOrder__c), 
+                    objCampaignInfluenceConfiguration
+                );
             }
 
             for (Opportunity objOpportunity : list_Opportunities) {
@@ -196,7 +202,6 @@ public class DRL_OpportunityTriggerHelper {
                     if (objOpportunity.Lead_Converted_From__c!=null && 
                        (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
                         map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Label == 'Lead Generation' ) {                  
-                        decTempInfluenceWeightage = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
                         continue;
                     }
                     //If Stage selected On Opportunity is present in Metadata
@@ -210,8 +215,7 @@ public class DRL_OpportunityTriggerHelper {
                     //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered(Lead Converted Opportunity & Source Campaign is Present on Lead)
                     if (objOpportunity.Lead_Converted_From__c!=null &&
                        (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
-                       map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
-                        decTempInfluenceWeightage = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
+                        map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
                         continue;
                     }
                     
