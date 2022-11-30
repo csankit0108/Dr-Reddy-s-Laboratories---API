@@ -20,6 +20,7 @@
         let map_FieldSetToFieldsMap = component.get("v.map_FieldSetToFieldsMap");
         let map_StageToFieldSetMap = component.get("v.map_StageToFieldSetMap");
         let objOpportunity = component.get("v.objOpportunity");
+        let map_FieldTypes={};
         if (this.isNullCheck(strstageName)) {
             strstageName = "--None--";
         }
@@ -40,11 +41,17 @@
                                         ? false 
                                         : objField.required;
             objFieldToRender.disabled = blnisDisabled;
+            map_FieldTypes[objField.name]=objField.type;
             if (!helper.isNullCheck(objOpportunity[objFieldToRender.name]) && !blnisDisabled) {
                 objFieldToRender.value = objOpportunity[objFieldToRender.name];
             }else{
-                objFieldToRender.value = "";
-                objOpportunity[objFieldToRender.name] = "";
+                if (objField.type=='BOOLEAN') {
+                    objFieldToRender.value = false;
+                    objOpportunity[objFieldToRender.name] = false;                    
+                } else {
+                    objFieldToRender.value = "";
+                    objOpportunity[objFieldToRender.name] = "";                    
+                }                  
             }
             list_FieldsToRender.push(objFieldToRender);            
         })

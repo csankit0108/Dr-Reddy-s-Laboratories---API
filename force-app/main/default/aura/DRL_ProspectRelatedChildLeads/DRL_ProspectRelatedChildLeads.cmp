@@ -49,7 +49,7 @@
         <aura:if isTrue="{!v.list_SelectedLeads.length>0}">
             <lightning:tabset variant="scoped" >
                 <aura:iteration items="{!v.list_Opportunities}" var="objOpportunity" indexVar="Id">
-                    <lightning:tab label="{!objOpportunity.Name}" id="{!objOpportunity.Lead_Converted_From__c}">
+                    <lightning:tab label="{!objOpportunity.productName}" id="{!objOpportunity.Lead_Converted_From__c}">
                         <c:DRL_ConvertLeadOpportunitySection
                             objOpportunity="{!objOpportunity}"  
                             list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"

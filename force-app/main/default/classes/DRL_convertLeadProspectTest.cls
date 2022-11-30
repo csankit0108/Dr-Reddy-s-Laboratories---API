@@ -256,6 +256,34 @@ public class DRL_convertLeadProspectTest {
         
         
     }
+    /**
+    * @ author       : Kishore Pedireddy
+    * @ description  : This method is used to test the method getErroMessage -
+    **/
+    @isTest
+    public static void testGetErroMessage(){
+        Database.SaveResult objSaveResult=Database.insert(new Account(),false);
+        if(objSaveResult.getErrors().size()>0){
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+        }
+        objSaveResult=Database.insert(new Lead(
+                                                Company='Test Enterrises',
+                                                LastName='testLead',
+                                                Status='Qualified',
+                                                RecordTypeId=Schema.SObjectType.Lead.getRecordTypeInfosByDeveloperName().get('DRL_Prospect').getRecordTypeId())
+                                                ,false);
+        if(objSaveResult.getErrors().size()>0){
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Lead','Insertion');
+        }
+       objSaveResult=Database.insert(new Account(Name='Test Error Account'),false);
+        if(objSaveResult.getErrors().size()>0){
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+        }
+       objSaveResult=Database.insert(new Account(Name='Test Error Account'),false);
+        if(objSaveResult.getErrors().size()>0){
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+        }        
+    }
     
     
 }

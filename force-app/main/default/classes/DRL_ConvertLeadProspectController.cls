@@ -155,8 +155,9 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    objresponse.strstatus = 'Duplicate Account';
-                    return objresponse;
+                    objresponse.strstatus = 'Fail';
+                    objresponse.strmessage = getErroMessage(list_Results[0].getErrors()[0],'Account','Insertion');
+                    return objresponse;                                     
                 } 
             }
 
@@ -170,7 +171,8 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    objresponse.strstatus = 'Duplicate';
+                    objresponse.strstatus = 'Fail';
+                    objresponse.strmessage = getErroMessage(list_Results[0].getErrors()[0],'Contact','Insertion');
                     return objresponse;
                 } 
             }
@@ -190,7 +192,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                     if (!list_ConsolidatedDMLErrors.isEmpty()) {
                         DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                         database.rollback(save);
-                        throw new AuraHandledException('Lead update Failed');
+                        throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Lead','Updation'));
                     }                                    
                     Database.LeadConvert objLeadConvert =  convertLeadHelper(objlead, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel);                
                     list_leadsToconvert.add(objLeadConvert);
@@ -222,7 +224,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new AuraHandledException('Opportunity Insertion Failed');
+                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Opportunity','Insertion'));
                 } 
 
                 objlead.Converted_Account__c = objaccount.Id;
@@ -235,7 +237,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new AuraHandledException('Lead update Failed');
+                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Lead','Updation'));
                 } 
 
                 LeadStatus convertStatus = [SELECT Id, MasterLabel, IsConverted
@@ -252,9 +254,20 @@ public with sharing class DRL_ConvertLeadProspectController {
             }
             objresponse.map_successFieldsToShow = getResultFieldInformation();  
             objresponse = getResultRecords(objresponse);
-        } Catch (Exception objException){
+        } Catch (CustomDMLException objException){
             database.rollback(save);
             objresponse.strmessage = objException.getMessage();
+            objresponse.strstatus = 'Fail';
+            DRLUtil.logException(
+                        'DRL_ConvertLeadProspectController',
+                        'convertLead',
+                        objException,
+                        true
+                    );
+            return objresponse;         
+        } Catch (Exception objException){
+            database.rollback(save);
+            objresponse.strmessage = 'Error While Converting Lead';
             objresponse.strstatus = 'Fail';
             DRLUtil.logException(
                         'DRL_ConvertLeadProspectController',
@@ -308,7 +321,11 @@ public with sharing class DRL_ConvertLeadProspectController {
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertChildLeads', list_ConsolidatedDMLErrors);
                 database.rollback(save);
-                throw new AuraHandledException('Opportunity Insertion Failed');
+                for(Database.SaveResult objSaveResult:list_Results){
+                    if(objSaveResult.getErrors().size()>0){
+                        throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Opportunity','Insertion'));
+                    }
+                }                
             } 
             for(Lead objlead:list_leads){
                 objlead.Converted_Account__c = straccountId;
@@ -323,7 +340,11 @@ public with sharing class DRL_ConvertLeadProspectController {
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertChildLeads', list_ConsolidatedDMLErrors);
                 database.rollback(save);
-                throw new AuraHandledException('Lead update Failed');
+                for(Database.SaveResult objSaveResult:list_Results){
+                    if(objSaveResult.getErrors().size()>0){
+                        throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Lead','Updation'));
+                    }
+                }  
             } 
             
             return list_childLeadConvertRecords;
@@ -569,9 +590,13 @@ public with sharing class DRL_ConvertLeadProspectController {
                         continue;
                     }
                     else if(objField.getFieldPath()=='Name'){
+                        if(objField.getLabel()=='Name'){
+                            jsonPart='{"label":"'+objDescribe.getLabel()+' Name",';
+                        }                        
                         jsonPart += '"fieldName":"'+strSObjectName+'Url",';
                         jsonPart += '"type":"url",';
                         jsonPart += '"typeAttributes":{';
+                        jsonPart += '"tooltip":{ "fieldName": "Name" }, ';
                         jsonPart += '"label":{';
                         jsonPart += '"fieldName":"Name"';
                         jsonPart += '}},';
@@ -590,6 +615,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                         jsonPart += '"fieldName":"'+objField.getFieldPath()+'Url",';
                         jsonPart += '"type":"url",';
                         jsonPart += '"typeAttributes":{';
+                        jsonPart += '"tooltip":{ "fieldName": "'+ objField.getFieldPath()+'Name" }, ';
                         jsonPart += '"label":{';
                         jsonPart += '"fieldName":"'+objField.getFieldPath()+'Name"';
                         jsonPart += '}},';
@@ -869,6 +895,36 @@ public with sharing class DRL_ConvertLeadProspectController {
         }
         return strcontentIds;
     }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to handle DML errors and set error message to return
+    * @ params       :  objError - Error Object
+                        strObjectName - object on which DML operation is appied
+                        strOpertation - type of operation done on object
+    * @ return       :  Returns String  error message 
+    **/
+    public static String getErroMessage(Database.Error objError, String strObjectName, String strOpertation){
+        String strErrorMessage = '';
+        if (String.valueOf(objError.getStatusCode()).contains('DUPLICATES_DETECTED')) {            
+            strErrorMessage = 'Duplicate '+strObjectName+' Found';
+        }
+        else if (String.valueOf(objError.getStatusCode()).contains('FIELD_CUSTOM_VALIDATION_EXCEPTION')) {            
+            strErrorMessage = strObjectName+' :'+objError.getMessage();
+        } 
+        else if (String.valueOf(objError.getStatusCode()).contains('REQUIRED_FIELD_MISSING')) {            
+            strErrorMessage = strObjectName+' :'+objError.getMessage();
+        } 
+        else{            
+            strErrorMessage = 'Error during '+strObjectName+' '+ strOpertation;
+        }  
+        return strErrorMessage;        
+    }
+
+
+    public class CustomDMLException extends Exception{}
+
+
 
     public class ConvertLeadDataWrapper{
         @AuraEnabled

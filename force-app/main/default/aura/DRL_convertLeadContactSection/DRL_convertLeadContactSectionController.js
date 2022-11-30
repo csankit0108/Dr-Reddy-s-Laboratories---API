@@ -5,11 +5,17 @@
         helper.getContactFields(component, event, helper);      
     },
     
-    handleValueChange:function(component, event, helper){        
-        let value = event.getParam("value");
-        let field = event.getSource().get("v.fieldName");        
+    handleValueChange:function(component, event, helper){     
+        let field = event.getSource().get("v.fieldName");
         let objContact = component.get("v.objContact");
-        objContact[field] = value;
+        let map_FieldTypes = component.get('v.map_FieldTypes');
+        if (map_FieldTypes[field] == 'BOOLEAN') {
+            objContact[field] = !objContact[field];
+        } else {
+            let value = event.getSource().get('v.value');
+            objContact[field] = value;
+        }
+        component.set('v.objContact', objContact);        
     },
     
     handleLookup: function(component, event, helper){
