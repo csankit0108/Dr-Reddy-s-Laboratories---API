@@ -100,7 +100,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                       FROM CampaignInfluence 
                                       WHERE OpportunityId =: objOpportunity.Id];
         
-        System.assertEquals(75, objCampaignInfluenceWhenStageSample.Influence);
+        System.assertEquals(55, objCampaignInfluenceWhenStageSample.Influence);
         
         objOpportunity.StageName = 'Planning';
         update objOpportunity;
@@ -112,7 +112,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                       FROM CampaignInfluence 
                                       WHERE OpportunityId =: objOpportunity.Id];
         
-        System.assertEquals(100, objCampaignInfluenceWhenStageDropped.Influence);
+        System.assertEquals(80, objCampaignInfluenceWhenStageDropped.Influence);
         Test.stopTest();   
     }
     
