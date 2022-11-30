@@ -29,8 +29,17 @@
                     }
                 component.set("v.list_AccountFieldSet", JSON.parse(result.strAccountMasterFieldSet));
                 component.set("v.list_ContactFieldSet", JSON.parse(result.strContactMasterFieldSet));
-                helper.setOpportunityDetailsOnLoad(component, helper, result)
+                helper.setOpportunityDetailsOnLoad(component, helper, result);
                 if (
+                    (objLeadRecord.IsConverted == true && 
+                     objLeadRecord.RecordType.DeveloperName == "DRL_Lead")||
+                    (objLeadRecord.IsConverted == true && 
+                     objLeadRecord.RecordType.DeveloperName == "DRL_Prospect" &&
+                     result.listProspectChildLeads.length == 0)
+                    ){       
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00010"),"error","dismissible");
+                    helper.closeQuickAction(component);
+                } else if (
                     (   objLeadRecord.Product_Lookup__c == undefined || 
                         objLeadRecord.Product_Lookup__c == null || 
                         objLeadRecord.Product_Lookup__c == "" ) && 
@@ -45,20 +54,6 @@
                         toastEvent.fire();
                         $A.get("e.force:refreshView").fire();
                         $A.get("e.force:closeQuickAction").fire();
-                    }else{                    
-                        if (
-                            (objLeadRecord.IsConverted == true && 
-                             objLeadRecord.RecordType.DeveloperName == "DRL_Lead")||
-                            (objLeadRecord.IsConverted == true && 
-                             objLeadRecord.RecordType.DeveloperName == "DRL_Prospect" &&
-                             result.listProspectChildLeads.length == 0)
-                            ){       
-                            helper.showMessage("Error!",$A.get("$Label.c.CLDRL00010"),"error","dismissible");
-                            helper.closeQuickAction(component);
-                            return;
-                        }             
-                        if (objLeadRecord.IsConverted == false)
-                            component.set("v.convertedStatus", false);
                     }
                 //set Automation data
                 if((objLeadRecord.RecordTypeId && objLeadRecord.RecordType.DeveloperName==="DRL_Lead")){
