@@ -127,6 +127,7 @@
 	</types>
 	<types>
 		<members>Lead.Check_Country_Field</members>
+		<members>Lead.CheckRunAutomation</members>
 		<members>Opportunity.DRL_ContactChangeValidation</members>
 		<name>ValidationRule</name>
 	</types>
