@@ -23,6 +23,7 @@
                 objopportunity.Name = objLead.Name;
                 objopportunity.Lead_Converted_From__c = objLead.Id;
                 objopportunity.RecordTypeId = component.get("v.strDefaultRecordTypeId");
+                objopportunity.productName=objLead.Product_Lookup__r.Name;
                 map_SelectedLeads[objLead.Id] = objopportunity;
                 list_Opportunities.push(objopportunity);
             }else{

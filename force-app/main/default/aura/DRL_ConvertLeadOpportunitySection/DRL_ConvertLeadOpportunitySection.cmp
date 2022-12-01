@@ -17,6 +17,7 @@
     <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
     <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
     <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
+    <aura:attribute name="map_FieldTypes" type="Object" default="{}" />
 
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
 
@@ -27,7 +28,7 @@
         <div class="opportunityFormSection">            
             <div class="opportunityFormSectionContainer">
                 <lightning:input type="radio" label="Create New"
-                                        class="opportunityRadioButton" name="opportunityOptions" checked="true" disabled="true"/>
+                                        class="opportunityRadioButton" checked="true" disabled="true"/>
                 <lightning:recordEditForm aura:id="opportunityForm"  objectApiName="Opportunity">
                     <lightning:messages />
                     <div class="slds-form formContainer">

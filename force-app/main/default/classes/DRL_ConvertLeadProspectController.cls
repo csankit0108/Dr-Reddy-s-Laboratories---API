@@ -155,8 +155,9 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    objresponse.strstatus = 'Duplicate Account';
-                    return objresponse;
+                    objresponse.strstatus = 'Fail';
+                    objresponse.strmessage = getErroMessage(list_Results[0].getErrors()[0],'Account','Insertion');
+                    return objresponse;                                     
                 } 
             }
 
@@ -170,7 +171,8 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    objresponse.strstatus = 'Duplicate';
+                    objresponse.strstatus = 'Fail';
+                    objresponse.strmessage = getErroMessage(list_Results[0].getErrors()[0],'Contact','Insertion');
                     return objresponse;
                 } 
             }
@@ -190,12 +192,12 @@ public with sharing class DRL_ConvertLeadProspectController {
                     if (!list_ConsolidatedDMLErrors.isEmpty()) {
                         DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                         database.rollback(save);
-                        throw new AuraHandledException('Lead update Failed');
+                        throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Lead','Updation'));
                     }                                    
                     Database.LeadConvert objLeadConvert =  convertLeadHelper(objlead, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel);                
                     list_leadsToconvert.add(objLeadConvert);
                 }
-                if(list_leadOpportunities.size()>0){
+                if(list_leadOpportunities!=null && list_leadOpportunities.size()>0){
                     list_leadsToconvert.addAll(convertChildLeads(objaccount.Id,
                                                                 objcontact.Id,
                                                                 list_leadOpportunities,
@@ -207,7 +209,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 List<Database.LeadConvertResult> list_leadConvertResults = Database.convertLead(list_leadsToconvert);
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
-                if(list_leadOpportunities.size() > 0){
+                if(list_leadOpportunities!=null && list_leadOpportunities.size() > 0){
                     objresponse.list_opportunities = Database.query('select'+getQueryFields('Opportunity','DRL_convertLeadSuccessScreenList') + 'from Opportunity where Id in:list_leadOpportunities');
                 }
                 
@@ -222,7 +224,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new AuraHandledException('Opportunity Insertion Failed');
+                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Opportunity','Insertion'));
                 } 
 
                 objlead.Converted_Account__c = objaccount.Id;
@@ -235,7 +237,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new AuraHandledException('Lead update Failed');
+                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Lead','Updation'));
                 } 
 
                 LeadStatus convertStatus = [SELECT Id, MasterLabel, IsConverted
@@ -252,6 +254,17 @@ public with sharing class DRL_ConvertLeadProspectController {
             }
             objresponse.map_successFieldsToShow = getResultFieldInformation();  
             objresponse = getResultRecords(objresponse);
+        } Catch (CustomDMLException objException){
+            database.rollback(save);
+            objresponse.strmessage = objException.getMessage();
+            objresponse.strstatus = 'Fail';
+            DRLUtil.logException(
+                        'DRL_ConvertLeadProspectController',
+                        'convertLead',
+                        objException,
+                        true
+                    );
+            return objresponse;         
         } Catch (Exception objException){
             database.rollback(save);
             objresponse.strmessage = objException.getMessage();
@@ -308,7 +321,11 @@ public with sharing class DRL_ConvertLeadProspectController {
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertChildLeads', list_ConsolidatedDMLErrors);
                 database.rollback(save);
-                throw new AuraHandledException('Opportunity Insertion Failed');
+                for(Database.SaveResult objSaveResult:list_Results){
+                    if(objSaveResult.getErrors().size()>0){
+                        throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Opportunity','Insertion'));
+                    }
+                }                
             } 
             for(Lead objlead:list_leads){
                 objlead.Converted_Account__c = straccountId;
@@ -323,7 +340,11 @@ public with sharing class DRL_ConvertLeadProspectController {
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertChildLeads', list_ConsolidatedDMLErrors);
                 database.rollback(save);
-                throw new AuraHandledException('Lead update Failed');
+                for(Database.SaveResult objSaveResult:list_Results){
+                    if(objSaveResult.getErrors().size()>0){
+                        throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Lead','Updation'));
+                    }
+                }  
             } 
             
             return list_childLeadConvertRecords;
@@ -456,7 +477,10 @@ public with sharing class DRL_ConvertLeadProspectController {
                 Status,
                 OwnerId,
                 Owner.Name,
-                Cluster__c 
+                Cluster__c ,
+                CPR__c,
+                Target_Region__c,
+                Reporting_Region__c
                 from Lead 
                 where DRL_Prospect__c=:prospectId 
                 AND IsConverted=false
@@ -569,9 +593,13 @@ public with sharing class DRL_ConvertLeadProspectController {
                         continue;
                     }
                     else if(objField.getFieldPath()=='Name'){
+                        if(objField.getLabel()=='Name'){
+                            jsonPart='{"label":"'+objDescribe.getLabel()+' Name",';
+                        }                        
                         jsonPart += '"fieldName":"'+strSObjectName+'Url",';
                         jsonPart += '"type":"url",';
                         jsonPart += '"typeAttributes":{';
+                        jsonPart += '"tooltip":{ "fieldName": "Name" }, ';
                         jsonPart += '"label":{';
                         jsonPart += '"fieldName":"Name"';
                         jsonPart += '}},';
@@ -590,6 +618,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                         jsonPart += '"fieldName":"'+objField.getFieldPath()+'Url",';
                         jsonPart += '"type":"url",';
                         jsonPart += '"typeAttributes":{';
+                        jsonPart += '"tooltip":{ "fieldName": "'+ objField.getFieldPath()+'Name" }, ';
                         jsonPart += '"label":{';
                         jsonPart += '"fieldName":"'+objField.getFieldPath()+'Name"';
                         jsonPart += '}},';
@@ -869,6 +898,36 @@ public with sharing class DRL_ConvertLeadProspectController {
         }
         return strcontentIds;
     }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to handle DML errors and set error message to return
+    * @ params       :  objError - Error Object
+                        strObjectName - object on which DML operation is appied
+                        strOpertation - type of operation done on object
+    * @ return       :  Returns String  error message 
+    **/
+    public static String getErroMessage(Database.Error objError, String strObjectName, String strOpertation){
+        String strErrorMessage = '';
+        if (String.valueOf(objError.getStatusCode()).contains('DUPLICATES_DETECTED')) {            
+            strErrorMessage = 'Duplicate '+strObjectName+' Found';
+        }
+        else if (String.valueOf(objError.getStatusCode()).contains('FIELD_CUSTOM_VALIDATION_EXCEPTION')) {            
+            strErrorMessage = strObjectName+' :'+objError.getMessage();
+        } 
+        else if (String.valueOf(objError.getStatusCode()).contains('REQUIRED_FIELD_MISSING')) {            
+            strErrorMessage = strObjectName+' :'+objError.getMessage();
+        } 
+        else{            
+            strErrorMessage = 'Error during '+strObjectName+' '+ strOpertation;
+        }  
+        return strErrorMessage;        
+    }
+
+
+    public class CustomDMLException extends Exception{}
+
+
 
     public class ConvertLeadDataWrapper{
         @AuraEnabled

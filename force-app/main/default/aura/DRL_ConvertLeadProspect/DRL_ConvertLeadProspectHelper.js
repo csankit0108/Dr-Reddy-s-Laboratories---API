@@ -29,8 +29,17 @@
                     }
                 component.set("v.list_AccountFieldSet", JSON.parse(result.strAccountMasterFieldSet));
                 component.set("v.list_ContactFieldSet", JSON.parse(result.strContactMasterFieldSet));
-                helper.setOpportunityDetailsOnLoad(component, helper, result)
+                helper.setOpportunityDetailsOnLoad(component, helper, result);
                 if (
+                    (objLeadRecord.IsConverted == true && 
+                     objLeadRecord.RecordType.DeveloperName == "DRL_Lead")||
+                    (objLeadRecord.IsConverted == true && 
+                     objLeadRecord.RecordType.DeveloperName == "DRL_Prospect" &&
+                     result.listProspectChildLeads.length == 0)
+                    ){       
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00010"),"error","dismissible");
+                    helper.closeQuickAction(component);
+                } else if (
                     (   objLeadRecord.Product_Lookup__c == undefined || 
                         objLeadRecord.Product_Lookup__c == null || 
                         objLeadRecord.Product_Lookup__c == "" ) && 
@@ -45,24 +54,6 @@
                         toastEvent.fire();
                         $A.get("e.force:refreshView").fire();
                         $A.get("e.force:closeQuickAction").fire();
-                    }else{                    
-                        if (
-                            (objLeadRecord.IsConverted == true && 
-                             objLeadRecord.RecordType.DeveloperName == "DRL_Lead")||
-                            (objLeadRecord.IsConverted == true && 
-                             objLeadRecord.RecordType.DeveloperName == "DRL_Prospect" &&
-                             result.listProspectChildLeads.length == 0)
-                            ){                        
-                            helper.openAlert("error",
-                                                $A.get("$Label.c.CLDRL00011"),
-                                                $A.get("$Label.c.CLDRL00010"),
-                                                function(){}
-                                            );
-                            helper.closeQuickAction(component);
-                            return;
-                        }             
-                        if (objLeadRecord.IsConverted == false)
-                            component.set("v.convertedStatus", false);
                     }
                 //set Automation data
                 if((objLeadRecord.RecordTypeId && objLeadRecord.RecordType.DeveloperName==="DRL_Lead")){
@@ -82,6 +73,7 @@
             }
             else{
                 helper.showMessage("Error!",$A.get("$Label.c.CLDRL00003"),"error","dismissible");
+                helper.closeQuickAction(component);
             }
             component.set("v.blnIsLoading",false);
         });        
@@ -142,13 +134,6 @@
             $A.util.addClass(modalbackdrop, "hideContent"); 
         }
     },
-    openAlert : function(strtheme,strlabel,strmessage,action){
-        this.LightningAlert.open({
-            theme: strtheme,
-            label: strlabel,
-            message: strmessage
-        }).then(action);
-    },
     isNullCheck:function(variable){
         if(variable==""||variable==null||variable==undefined){
             return true;
@@ -170,27 +155,27 @@
     isValidAccount : function(component, event, helper){
         var objAccount = component.get("v.objAccount")       
         let list_fieldArray = component.get("v.list_AccountFieldSet");
-        list_fieldArray.forEach(function(objaccountField){
-            if(objaccountField.required== true && helper.isNullCheck(objAccount[objaccountField.name])){
+        for (const objaccountField of list_fieldArray) {
+            if(objaccountField.required== 'true' && helper.isNullCheck(objAccount[objaccountField.name])){
                 component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
                 component.set("v.blnShowErrorMessage",true);
                 return false;
-            }
-        });
+            }         
+        }
         return true;        
     },
     
     isValidContact : function(component, event, helper){
         var objContact = component.get("v.objContact")    
         let list_fieldArray = component.get("v.list_ContactFieldSet");
-        list_fieldArray.forEach(function(objcontactField){
-            if(objcontactField.required== true && helper.isNullCheck(objContact[objcontactField.name])){
+        for (const objcontactField of list_fieldArray) {
+            if(objcontactField.required== 'true' && helper.isNullCheck(objContact[objcontactField.name])){
                 component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
                 component.set("v.blnShowErrorMessage",true);
                 component.set("v.blnIsLoading",false);
                 return false;
-            }
-        });
+            }            
+        }
         //radio button check for new contact
         var strContactRadioButtonSelected = component.get("v.strContactRadioButtonSelected");
         if(strContactRadioButtonSelected==="3" && !component.get("v.blnIsParentProspectConverted")){
@@ -345,7 +330,7 @@
                 }
             }
         }
-        else if(objLead.RecordTypeId && objLead.RecordType.DeveloperName==="DRL_Prospect" && component.get("v.blnisChildRecordsFound")){
+        else if(objLead.RecordTypeId && objLead.RecordType.DeveloperName==="DRL_Prospect" && component.get("v.blnIsChildRecordsFound")){
             let list_Opportunities=component.get("v.list_Opportunities");
             if(!helper.isNullCheck(list_Opportunities)&&list_Opportunities.length>0){
                 let map_BlnContentAvailable=component.get("v.map_BlnContentAvailable");
@@ -388,35 +373,32 @@
             let state=response.getState();
             if(state==="SUCCESS"){
                 let result=response.getReturnValue();
-                if(result.strstatus=="Success"){
-                    helper.showMessage("Success!",$A.get("$Label.c.CLDRL00012"),"success","dismissible");
+                if(result.strstatus=="Success"){                    
                     component.set("v.objAccount",result.objaccount);
                     component.set("v.objContact",result.objcontact);
                     if(!helper.isNullCheck(result.objopportunity)){
                         component.set("v.objOpportunity",result.objopportunity);
                     }
-                    if(!helper.isNullCheck(result.list_opportunities)){
-                        component.set("v.list_Opportunities",result.list_opportunities);
-                    }
                     component.set("v.map_SuccessFieldsToShow",result.map_successFieldsToShow);
                     component.set("v.strErrorMessage","");
                     component.set("v.blnShowErrorMessage",false);                  
                     component.set("v.blnIsConvertedSuccess",true);
+                    helper.showMessage("Success!",$A.get("$Label.c.CLDRL00012"),"success","dismissible");
+                    component.set("v.blnIsLoading",false);
+                    if(!helper.isNullCheck(result.list_opportunities)){
+                        let list_Opportunities = JSON.parse(JSON.stringify(result.list_opportunities))
+                        component.set("v.list_Opportunities", list_Opportunities);                        
+                    }                    
                 }
-                else if(result.strstatus=="Duplicate Account"){
-                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00004"),"error","dismissible");
-                }
-                else if(result.strstatus=="Duplicate"){
-                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00005"),"error","dismissible");
-                }
-                else{                    
-                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00006") ,"error","dismissible");
+                else{          
+                    component.set("v.blnIsLoading",false);
+                    helper.showMessage("Error!",result.strmessage,"error","dismissible");
                 }
             }
             else{
                 helper.showMessage("Error!",$A.get("$Label.c.CLDRL00006"),"error","dismissible");
+                component.set("v.blnIsLoading",false);
             }
-            component.set("v.blnIsLoading",false);
         });
         $A.enqueueAction(action);
     }

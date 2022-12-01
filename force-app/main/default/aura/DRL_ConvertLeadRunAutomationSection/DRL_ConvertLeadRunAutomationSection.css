@@ -16,7 +16,7 @@
     padding-top: 0.625rem;
 }
 .THIS .header{
-    padding:0.313rem;
+    padding:0.313rem!important;
 }
 .THIS .headerLabel{
     font-size: 1rem;

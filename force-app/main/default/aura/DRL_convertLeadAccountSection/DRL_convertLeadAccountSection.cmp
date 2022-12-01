@@ -30,6 +30,7 @@
     <aura:attribute name="blnIsAccountCreationSelected" type="Boolean" default = "true"/>
     <aura:attribute name="blnIsAccountSelectionSelected" type="Boolean" default = "false"/>
     <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
+    <aura:attribute name="map_FieldTypes" type="Object" default="{}" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
