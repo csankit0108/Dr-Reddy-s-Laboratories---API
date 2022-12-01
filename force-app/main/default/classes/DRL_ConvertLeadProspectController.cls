@@ -477,7 +477,10 @@ public with sharing class DRL_ConvertLeadProspectController {
                 Status,
                 OwnerId,
                 Owner.Name,
-                Cluster__c 
+                Cluster__c ,
+                CPR__c,
+                Target_Region__c,
+                Reporting_Region__c
                 from Lead 
                 where DRL_Prospect__c=:prospectId 
                 AND IsConverted=false
