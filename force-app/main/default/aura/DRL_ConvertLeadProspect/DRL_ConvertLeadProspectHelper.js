@@ -73,6 +73,7 @@
             }
             else{
                 helper.showMessage("Error!",$A.get("$Label.c.CLDRL00003"),"error","dismissible");
+                helper.closeQuickAction(component);
             }
             component.set("v.blnIsLoading",false);
         });        

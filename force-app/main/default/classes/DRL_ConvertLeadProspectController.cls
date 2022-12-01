@@ -197,7 +197,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                     Database.LeadConvert objLeadConvert =  convertLeadHelper(objlead, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel);                
                     list_leadsToconvert.add(objLeadConvert);
                 }
-                if(list_leadOpportunities.size()>0){
+                if(list_leadOpportunities!=null && list_leadOpportunities.size()>0){
                     list_leadsToconvert.addAll(convertChildLeads(objaccount.Id,
                                                                 objcontact.Id,
                                                                 list_leadOpportunities,
@@ -209,7 +209,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 List<Database.LeadConvertResult> list_leadConvertResults = Database.convertLead(list_leadsToconvert);
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
-                if(list_leadOpportunities.size() > 0){
+                if(list_leadOpportunities!=null && list_leadOpportunities.size() > 0){
                     objresponse.list_opportunities = Database.query('select'+getQueryFields('Opportunity','DRL_convertLeadSuccessScreenList') + 'from Opportunity where Id in:list_leadOpportunities');
                 }
                 
@@ -267,7 +267,7 @@ public with sharing class DRL_ConvertLeadProspectController {
             return objresponse;         
         } Catch (Exception objException){
             database.rollback(save);
-            objresponse.strmessage = 'Error While Converting Lead';
+            objresponse.strmessage = objException.getMessage();
             objresponse.strstatus = 'Fail';
             DRLUtil.logException(
                         'DRL_ConvertLeadProspectController',
