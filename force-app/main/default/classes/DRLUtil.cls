@@ -322,6 +322,29 @@ else{
         
         return list_Errors;
     }
+    
+    /**
+    * @ author       :  Ankit C
+    * @ description  :  This method is used to process the errors occured in an upsert operation
+    * @ params       :  list_SaveResults - List of Database.UpsertResult records from upsert operation
+    *                   strOperationType - Type of DML operation
+    * @ return       :  list_Errors - List of Error messages from the failed DML operations.
+    **/
+    public static List<String> processUpsertResult(List<Database.UpsertResult> list_SaveResults) {
+        List<String> list_Errors = new List<String>();
+        for (Database.UpsertResult objUpsertResult : list_SaveResults) {
+            if (!objUpsertResult.isSuccess()) {
+                for (Database.Error objError : objUpsertResult.getErrors()) {
+                    String strErrorMessage = 'Upsert failed for ' + 
+                        objUpsertResult.getId() + '. Error: ' + objError.getMessage() + 
+                        '. Status Code: ' + objError.getStatusCode();
+                    list_Errors.add(strErrorMessage);
+                }
+            }
+        }
+        
+        return list_Errors;
+    }
 
     /**
     * @ author       :  Kishore Pedireddy
