@@ -33,6 +33,22 @@
                 component.set('v.blnIsLoading', false);
                 return false;
             }
+            if(strAccountRadioButtonSelected=='2') {
+                var objAccount = component.get("v.objAccount"); 
+                if(helper.isNullCheck(objAccount.Id)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00004"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                }
+            }
+            if (strContactRadioButtonSelected === '4') {
+                var objContact = component.get("v.objContact"); 
+                if(helper.isNullCheck(objContact.Id)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00002"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                }
+            }
             if (strAccountRadioButtonSelected === '1' && strContactRadioButtonSelected === '4') {
                 var objContact = component.get("v.objContact"); 
                 if(!helper.isNullCheck(objContact.AccountId)){

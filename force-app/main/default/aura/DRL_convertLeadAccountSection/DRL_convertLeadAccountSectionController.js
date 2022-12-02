@@ -21,6 +21,9 @@
     
     handleLookup: function(component, event, helper){
         var strAccountId = event.getParam('value')[0];
+        if(helper.isNullCheck(strAccountId)){
+            component.set('v.objAccount',{ 'sobjectType': 'Account'});
+        }
         component.set('v.strAccountId',strAccountId);
         helper.existingAccountHelper(component, event, helper);
         
@@ -40,6 +43,7 @@
             if(radioBtn === '2'){
                 component.set('v.objAccount',{ 'sobjectType': 'Account'});
                 helper.getAccountFields(component, event, helper);
+                component.set('v.objAccount',{ 'sobjectType': 'Account'});
                 component.set('v.blnAllowAccountCreation',false);
                 component.set('v.blnAllowAccountSelection',true);                
             }
