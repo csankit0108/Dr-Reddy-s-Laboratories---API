@@ -96,11 +96,13 @@
         <aura:if isTrue="{!!or(empty(v.list_Opportunities),empty(v.list_OpportunityColumns))}">
             <div class="childOpportunities">                
                 <div class="recordHeader alignCenter">Opportunities</div>
-                <lightning:datatable
-                    hideCheckboxColumn="true"
-                    columns="{! v.list_OpportunityColumns }"
-                    data="{! v.list_Opportunities }"
-                    keyField="Id"/>
+                <div class="opportunitiestableContainer">
+                    <lightning:datatable
+                        hideCheckboxColumn="true"
+                        columns="{! v.list_OpportunityColumns }"
+                        data="{! v.list_Opportunities }"
+                        keyField="Id"/>
+                </div>                
             </div>
         </aura:if>
     </div>   

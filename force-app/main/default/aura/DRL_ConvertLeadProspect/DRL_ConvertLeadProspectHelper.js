@@ -165,20 +165,20 @@
         return true;        
     },
     
-    isValidContact : function(component, event, helper){
-        var objContact = component.get("v.objContact")    
-        let list_fieldArray = component.get("v.list_ContactFieldSet");
-        for (const objcontactField of list_fieldArray) {
-            if(objcontactField.required== 'true' && helper.isNullCheck(objContact[objcontactField.name])){
-                component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
-                component.set("v.blnShowErrorMessage",true);
-                component.set("v.blnIsLoading",false);
-                return false;
-            }            
-        }
+    isValidContact : function(component, event, helper){        
         //radio button check for new contact
         var strContactRadioButtonSelected = component.get("v.strContactRadioButtonSelected");
         if(strContactRadioButtonSelected==="3" && !component.get("v.blnIsParentProspectConverted")){
+            var objContact = component.get("v.objContact");   
+            let list_fieldArray = component.get("v.list_ContactFieldSet");
+            for (const objcontactField of list_fieldArray) {
+                if(objcontactField.required== 'true' && helper.isNullCheck(objContact[objcontactField.name])){
+                    component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
+                    component.set("v.blnShowErrorMessage",true);
+                    component.set("v.blnIsLoading",false);
+                    return false;
+                }            
+            }
             var action = component.get("c.checkEmail");
             action.setParams({"strmail":objContact.email});
             action.setCallback(this,function(response){

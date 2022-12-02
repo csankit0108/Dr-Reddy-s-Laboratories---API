@@ -74,8 +74,8 @@
         <fullName>CLDRL00011</fullName>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>LeadAlreadyConvertedMessageHeader</shortDescription>
-        <value>Lead Status</value>
+        <shortDescription>selectedContactLinkedToAccountError</shortDescription>
+        <value>Please select Contact not linked to any other Account or create new Contact</value>
     </labels>
     <labels>
         <fullName>CLDRL00012</fullName>
