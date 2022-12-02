@@ -22,14 +22,8 @@ public class DRL_OpportunityTriggerHelper {
     public static Map<Integer, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationBySortOrder = new Map<Integer, DRL_CampaignInfluenceConfiguration__mdt>();
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
     public static String strModelDeveloperName = Label.CLDRL00001;
-    //Map of OpportunityIds and Previous Influences
-    public static Map<Id,CampaignInfluence> map_PreviousInfluences = new Map<Id,CampaignInfluence>();
-    //Map of Latest CampaignId
-    public static Map<Id,Id> map_CampaignIdByOpportunityId = new Map<Id,Id>();
     //Map of CampaignIds with ContactIds
     public static Map<Id,Id> map_CampaignIdByContactId = new Map<Id,Id>();
-    //List of previous CampaignInfluences
-    public static List<CampaignInfluence> list_CampaignInfluencesToDelete = new List<CampaignInfluence>();
     //Quering the Value of DeveloperName 
     public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
                                                                       Id,
@@ -132,7 +126,6 @@ public class DRL_OpportunityTriggerHelper {
                 for (CampaignInfluence objCampaignInfluence : list_CampaignInfluences) {
                     String strUniqueKey = objCampaignInfluence.OpportunityId + '' + objCampaignInfluence.ContactId + '' + objCampaignInfluence.CampaignId;
                     map_CampaignInfluenceByUniqueKey.put(strUniqueKey, objCampaignInfluence);
-                	map_PreviousInfluences.put(objCampaignInfluence.OpportunityId, objCampaignInfluence);
                 }
             }
             
