@@ -11,6 +11,7 @@
 @isTest
 public class DRL_OpportunityTriggerHelperTest {
     public static Boolean blnThrowException = false;
+    public static String strModelDeveloperName = Label.CLDRL00001;
 
     /**
     * @ author       :  Deeksha Suvarna
@@ -45,6 +46,15 @@ public class DRL_OpportunityTriggerHelperTest {
             .createCampaign();
         insert objCampaign;
         
+        Campaign objCampaign1 = new DRL_TestUtility.CampaignBuilder()
+            .setCampaignName('Test Campaign1')
+            .setAllowMassEmail('No')
+            .setDescription('Test Campaign Description')
+            .setCampaignCode('Campaign 1006')
+            .setIsActive(true)
+            .createCampaign();
+        insert objCampaign1;
+        
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
 
         Lead objLead = new DRL_TestUtility.LeadBuilder()
@@ -55,7 +65,7 @@ public class DRL_OpportunityTriggerHelperTest {
             .setStatus('Open')
             .setCountry('India')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-            .setSouceCampaignId(objCampaign.Id) 
+            .setSouceCampaignId(objCampaign1.Id) 
             .createLead();
         insert objLead;
 
@@ -73,9 +83,32 @@ public class DRL_OpportunityTriggerHelperTest {
     **/
     @isTest
     private static void testCalculateInfluence() {
-        Lead objLead = [SELECT ID FROM Lead LIMIT 1];
-        Product2 objProduct = [SELECT Id FROM Product2 LIMIT 1];
-        Contact objContact = [SELECT Id, AccountId FROM Contact LIMIT 1];
+        Lead objLead = [SELECT 
+                        ID 
+                        FROM Lead 
+                        LIMIT 1];
+
+        Product2 objProduct = [SELECT 
+                                Id 
+                                FROM Product2 
+                                LIMIT 1];
+
+        Contact objContact = [SELECT 
+                              Id, 
+                              AccountId 
+                              FROM Contact 
+                              LIMIT 1];
+
+        Campaign objCampaign = [SELECT 
+                                Id 
+                                FROM Campaign 
+                                LIMIT 1];
+
+        Campaign objCampaign1 = [SELECT 
+                                 Id 
+                                 FROM Campaign 
+                                 LIMIT 1];
+
         Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
             .setName('Test Opportunity1')
             .setAccountId(objContact.AccountId)
@@ -92,29 +125,200 @@ public class DRL_OpportunityTriggerHelperTest {
  
         Test.startTest();
         insert objOpportunity;
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                            Id,
+                                                            DeveloperName 
+                                                            FROM CampaignInfluenceModel 
+                                                            WHERE DeveloperName = :strModelDeveloperName];
+
+        List<CampaignInfluence> list_CampaignInfluenceWhenStageSample = [SELECT 
+                                                                        OpportunityId,
+                                                                        ContactId,
+                                                                        ModelId,
+                                                                        CampaignId,
+                                                                        Influence
+                                                                        FROM CampaignInfluence 
+                                                                        WHERE OpportunityId =: objOpportunity.Id
+                                                                        AND ModelId =: objCampaignInfluenceModel.Id
+                                                                        AND CampaignId=:objCampaign1.Id];
         
-        CampaignInfluence objCampaignInfluenceWhenStageSample = [SELECT 
-                                      OpportunityId,
-                                      ContactId,
-                                      Influence
-                                      FROM CampaignInfluence 
-                                      WHERE OpportunityId =: objOpportunity.Id];
-        
-        System.assertEquals(55, objCampaignInfluenceWhenStageSample.Influence);
+        System.assertEquals(55, list_CampaignInfluenceWhenStageSample[0].Influence);
+        DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger =false;
         
         objOpportunity.StageName = 'Planning';
         update objOpportunity;
         
-        CampaignInfluence objCampaignInfluenceWhenStageDropped = [SELECT 
-                                      OpportunityId,
-                                      ContactId,
-                                      Influence
-                                      FROM CampaignInfluence 
-                                      WHERE OpportunityId =: objOpportunity.Id];
-        
-        System.assertEquals(80, objCampaignInfluenceWhenStageDropped.Influence);
+        CampaignInfluence objCampaignInfluenceWhenStagePlanning = [SELECT 
+                                                                    OpportunityId,
+                                                                    ContactId,
+                                                                    ModelId,
+                                                                    CampaignId,
+                                                                    Influence
+                                                                    FROM CampaignInfluence 
+                                                                    WHERE OpportunityId =: objOpportunity.Id
+                                                                    AND ModelId =: objCampaignInfluenceModel.Id
+                                                                    AND CampaignId =:objCampaign.Id
+                                                                    LIMIT 1];
+            
+        System.assertEquals(80, objCampaignInfluenceWhenStagePlanning.Influence);
         Test.stopTest();   
     }
+    
+    /**
+    * @ author       :  Deeksha
+    * @ description  :  This method is used to test the method to Calculate Influence Percentage in 'DRL_OpportunityTriggerHelper'
+    **/
+    @isTest
+    private static void testCalculateInfluenceCase2() {
+        Lead objLead = [SELECT 
+                        ID 
+                        FROM Lead 
+                        LIMIT 1];
+
+        Product2 objProduct = [SELECT 
+                                Id 
+                                FROM Product2 
+                                LIMIT 1];
+
+        Contact objContact = [SELECT 
+                              Id, 
+                              AccountId 
+                              FROM Contact 
+                              LIMIT 1];
+
+        Campaign objCampaign = [SELECT 
+                                Id 
+                                FROM Campaign 
+                                LIMIT 1];
+
+        Campaign objCampaign1 = [SELECT 
+                                 Id 
+                                 FROM Campaign 
+                                 LIMIT 1];
+
+        Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
+            .setName('Test Opportunity1')
+            .setAccountId(objContact.AccountId)
+            .setContactId(objContact.Id)
+            .setProductId(objProduct.Id)
+            .setStageName('Planning')
+            .setCloseDate(System.today())
+            .setPriceAtLaunch(1000)
+            .setQuantityAtLaunch(10)
+            .setLeadId(objLead.Id)
+            .setLaunchYear('2000')
+            .setSourceType('Primary Source')
+            .createOpportunity();
+ 
+        Test.startTest();
+        insert objOpportunity;
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                            Id,
+                                                            DeveloperName 
+                                                            FROM CampaignInfluenceModel 
+                                                            WHERE DeveloperName = :strModelDeveloperName];
+
+        List<CampaignInfluence> list_CampaignInfluenceWhenStagePlanning = [SELECT 
+                                                                            OpportunityId,
+                                                                            ContactId,
+                                                                            ModelId,
+                                                                            CampaignId,
+                                                                            Influence
+                                                                            FROM CampaignInfluence 
+                                                                            WHERE OpportunityId =: objOpportunity.Id
+                                                                            AND ModelId =: objCampaignInfluenceModel.Id
+                                                                            AND CampaignId=:objCampaign1.Id];
+        
+        System.assertEquals(80, list_CampaignInfluenceWhenStagePlanning[0].Influence);
+        Test.stopTest();   
+    }
+    
+    /**
+    * @ author       :  Deeksha
+    * @ description  :  This method is used to test the method to Calculate Influence Percentage in 'DRL_OpportunityTriggerHelper'
+    **/
+    @isTest
+    private static void testCalculateInfluenceCase3() {
+        Lead objLead = [SELECT 
+                        ID 
+                        FROM Lead 
+                        LIMIT 1];
+
+        Product2 objProduct = [SELECT 
+                                Id 
+                                FROM Product2 
+                                LIMIT 1];
+
+        Contact objContact = [SELECT 
+                              Id, 
+                              AccountId 
+                              FROM Contact 
+                              LIMIT 1];
+
+        Campaign objCampaign = [SELECT 
+                                Id 
+                                FROM Campaign 
+                                LIMIT 1];
+
+        Campaign objCampaign1 = [SELECT 
+                                 Id 
+                                 FROM Campaign 
+                                 LIMIT 1];
+
+        Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
+            .setName('Test Opportunity1')
+            .setAccountId(objContact.AccountId)
+            .setContactId(objContact.Id)
+            .setProductId(objProduct.Id)
+            .setStageName('Discussion')
+            .setCloseDate(System.today())
+            .setPriceAtLaunch(1000)
+            .setQuantityAtLaunch(10)
+            .setLeadId(objLead.Id)
+            .setLaunchYear('2000')
+            .setSourceType('Primary Source')
+            .createOpportunity();
+ 
+        Test.startTest();
+        insert objOpportunity;
+        CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                            Id,
+                                                            DeveloperName 
+                                                            FROM CampaignInfluenceModel 
+                                                            WHERE DeveloperName = :strModelDeveloperName];
+
+        List<CampaignInfluence> list_CampaignInfluenceWhenStageDiscussion = [SELECT 
+                                                                            OpportunityId,
+                                                                            ContactId,
+                                                                            ModelId,
+                                                                            CampaignId,
+                                                                            Influence
+                                                                            FROM CampaignInfluence 
+                                                                            WHERE OpportunityId =: objOpportunity.Id
+                                                                            AND ModelId =: objCampaignInfluenceModel.Id
+                                                                            AND CampaignId=:objCampaign1.Id];
+        
+        System.assertEquals(35, list_CampaignInfluenceWhenStageDiscussion[0].Influence);
+        DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger =false;
+        objOpportunity.StageName = 'Development';
+        update objOpportunity;
+        
+        CampaignInfluence objCampaignInfluenceWhenStageDevelopment = [SELECT 
+                                                                    OpportunityId,
+                                                                    ContactId,
+                                                                    ModelId,
+                                                                    CampaignId,
+                                                                    Influence
+                                                                    FROM CampaignInfluence 
+                                                                    WHERE OpportunityId =: objOpportunity.Id
+                                                                    AND ModelId =: objCampaignInfluenceModel.Id
+                                                                    AND CampaignId =:objCampaign.Id
+                                                                    LIMIT 1];
+        
+        System.assertEquals(70, objCampaignInfluenceWhenStageDevelopment.Influence);
+        Test.stopTest();   
+    }
+    
     
     /**
     * @ author       :  Deeksha Suvarna
@@ -122,9 +326,22 @@ public class DRL_OpportunityTriggerHelperTest {
     **/
     @isTest
     static void testExceptions() {
-        Lead objLead = [SELECT ID FROM Lead LIMIT 1];
-        Product2 objProduct = [SELECT Id FROM Product2 LIMIT 1];
-        Contact objContact = [SELECT Id, AccountId FROM Contact LIMIT 1];
+        Lead objLead = [SELECT 
+                        ID 
+                        FROM Lead 
+                        LIMIT 1];
+
+        Product2 objProduct = [SELECT 
+                                Id 
+                                FROM Product2 
+                                LIMIT 1];
+
+        Contact objContact = [SELECT 
+                              Id, 
+                              AccountId 
+                              FROM Contact 
+                              LIMIT 1];
+
         Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
             .setName('Test Opportunity1')
             .setAccountId(objContact.AccountId)
@@ -138,6 +355,7 @@ public class DRL_OpportunityTriggerHelperTest {
             .setLaunchYear('2000')
             .setSourceType('Primary Source')
             .createOpportunity();
+
         Test.startTest();
         blnThrowException = true;
         insert objOpportunity;
