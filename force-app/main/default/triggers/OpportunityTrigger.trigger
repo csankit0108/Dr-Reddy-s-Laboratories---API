@@ -1,6 +1,9 @@
 trigger OpportunityTrigger on Opportunity (after insert,after update) {
     
-    if (DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger) {
+    if (
+        DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger || 
+        Disable_Trigger__c.getInstance().DisableOpportunityTrigger__c
+    ) {
         return;
     }
 

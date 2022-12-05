@@ -327,8 +327,7 @@ else{
     * @ author       :  Ankit C
     * @ description  :  This method is used to process the errors occured in an upsert operation
     * @ params       :  list_SaveResults - List of Database.UpsertResult records from upsert operation
-    *                   strOperationType - Type of DML operation
-    * @ return       :  list_Errors - List of Error messages from the failed DML operations.
+    * @ return       :  list_Errors - List of Error messages from the failed upsert operation.
     **/
     public static List<String> processUpsertResult(List<Database.UpsertResult> list_SaveResults) {
         List<String> list_Errors = new List<String>();

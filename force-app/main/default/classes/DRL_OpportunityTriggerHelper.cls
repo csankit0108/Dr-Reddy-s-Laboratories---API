@@ -119,7 +119,8 @@ public class DRL_OpportunityTriggerHelper {
                                       Influence,
                                       ModelId 
                                       FROM CampaignInfluence 
-                                      WHERE OpportunityId IN :set_OpportunityIds AND ModelId = : objCampaignInfluenceModel.Id
+                                      WHERE OpportunityId IN :set_OpportunityIds 
+                                      AND ModelId = :objCampaignInfluenceModel.Id
                                       AND ContactId IN :set_ContactIds];
                                 
             if (!list_CampaignInfluences.isEmpty()) {
