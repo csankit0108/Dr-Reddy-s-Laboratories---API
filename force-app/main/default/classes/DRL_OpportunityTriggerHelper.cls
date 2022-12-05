@@ -22,6 +22,8 @@ public class DRL_OpportunityTriggerHelper {
     public static Map<Integer, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationBySortOrder = new Map<Integer, DRL_CampaignInfluenceConfiguration__mdt>();
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
     public static String strModelDeveloperName = Label.CLDRL00001;
+    //Map of CampaignIds with ContactIds
+    public static Map<Id,Id> map_CampaignIdByContactId = new Map<Id,Id>();
     //Quering the Value of DeveloperName 
     public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
                                                                       Id,
@@ -34,13 +36,11 @@ public class DRL_OpportunityTriggerHelper {
     * @ params       :  list_Opportunities - Trigger.new list on Opportunity
     * @ return       :  N/A
     **/
-    public static void createCampaignInfluence(List<Opportunity> list_Opportunities) {
+    public static void createCampaignInfluence(List<Opportunity> list_Opportunities, Map<Id,Opportunity> map_OldOpportunities) {
         //Set of ContactIds
         Set<Id> set_ContactIds = new Set<Id>();
         //Set of OpportunityIds 
         Set<Id> set_OpportunityIds = new Set<Id>();
-        //Map of CampaignIds with ContactIds
-        Map<Id,Id> map_CampaignIdByContactId = new Map<Id,Id>();
         //List of CampaignMembers in CampaignId
         List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
         //Map of Record Type Id by Developer Name
@@ -53,17 +53,21 @@ public class DRL_OpportunityTriggerHelper {
         Set<Id> set_LeadIds = new Set<Id>();
         //Map of SourceCampaignIds By LeadIds
         Map<Id,Id> map_SourceCampaignIdByLeadId =new Map<Id,Id>();
+        //Map of CampaignInfluence record by combinaation of Opp Id+Contact Id+Campaign Id
+        Map<String, CampaignInfluence> map_CampaignInfluenceByUniqueKey = new Map<String, CampaignInfluence>();
 
-        try {
+        try{
             for (DRL_CampaignInfluenceConfiguration__mdt objCampaignInfluenceConfiguration : DRL_CampaignInfluenceConfiguration__mdt.getAll().values()) {
                 map_CampaignInfluenceConfigurationByLabel.put(
                     objCampaignInfluenceConfiguration.Label, 
                     objCampaignInfluenceConfiguration
-                );
-            	map_CampaignInfluenceConfigurationBySortOrder.put(
-                    Integer.valueOf(objCampaignInfluenceConfiguration.SortOrder__c), 
-                    objCampaignInfluenceConfiguration
-                );
+                    );
+                if (String.isNotBlank(String.valueOf(objCampaignInfluenceConfiguration.SortOrder__c))) {
+                    map_CampaignInfluenceConfigurationBySortOrder.put(
+                        Integer.valueOf(objCampaignInfluenceConfiguration.SortOrder__c), 
+                        objCampaignInfluenceConfiguration);
+
+                }
             }
 
             for (Opportunity objOpportunity : list_Opportunities) {
@@ -109,16 +113,21 @@ public class DRL_OpportunityTriggerHelper {
             }
 
             list_CampaignInfluences = [SELECT 
-                                       OpportunityId,
-                                       ContactId,
-                                       Influence
-                                       FROM CampaignInfluence 
-                                       WHERE OpportunityId IN :set_OpportunityIds 
-                                       AND ContactId IN :set_ContactIds
-                                      ];
+                                      OpportunityId,
+                                      CampaignId,
+                                      ContactId,
+                                      Influence,
+                                      ModelId 
+                                      FROM CampaignInfluence 
+                                      WHERE OpportunityId IN :set_OpportunityIds 
+                                      AND ModelId = :objCampaignInfluenceModel.Id
+                                      AND ContactId IN :set_ContactIds];
                                 
             if (!list_CampaignInfluences.isEmpty()) {
-                Database.DeleteResult[] list_DeleteResults = Database.delete(list_CampaignInfluences);
+                for (CampaignInfluence objCampaignInfluence : list_CampaignInfluences) {
+                    String strUniqueKey = objCampaignInfluence.OpportunityId + '' + objCampaignInfluence.ContactId + '' + objCampaignInfluence.CampaignId;
+                    map_CampaignInfluenceByUniqueKey.put(strUniqueKey, objCampaignInfluence);
+                }
             }
             
             for (Opportunity objOpportunity : list_Opportunities) {
@@ -127,31 +136,45 @@ public class DRL_OpportunityTriggerHelper {
                     String.isNotBlank(objOpportunity.Contact__c) && 
                     map_CampaignIdByContactId.containsKey(objOpportunity.Contact__c)
                 ) {
-                    CampaignInfluence objCampaignInfluence = new CampaignInfluence();
-                    objCampaignInfluence.ContactId = objOpportunity.Contact__c;
-                    objCampaignInfluence.CampaignId = map_CampaignIdByContactId.get(objOpportunity.Contact__c);
-                    objCampaignInfluence.OpportunityId = objOpportunity.Id;
-                    objCampaignInfluence.Influence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity);
-                    objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
-                    objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
-                    objCampaignInfluence.Stage_Updated_On__c = System.now();
+                    CampaignInfluence objCampaignInfluence;
+                    String strUniqueKey = objOpportunity.Id + '' + objOpportunity.Contact__c + '' + map_CampaignIdByContactId.get(objOpportunity.Contact__c);
+                    //Update existing campaign influence
+                    if (map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKey)) {
+                        objCampaignInfluence = map_CampaignInfluenceByUniqueKey.get(strUniqueKey);
+                        objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
+                        objCampaignInfluence.Stage_Updated_On__c = System.now();
+                        objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity,map_OldOpportunities?.get(objOpportunity.Id), objCampaignInfluence);
+                    } else {
+                        objCampaignInfluence = new CampaignInfluence();
+                        objCampaignInfluence.ContactId = objOpportunity.Contact__c;
+                        objCampaignInfluence.CampaignId = map_CampaignIdByContactId.get(objOpportunity.Contact__c);
+                        objCampaignInfluence.OpportunityId = objOpportunity.Id;
+                        objCampaignInfluence.Influence = 0;
+                        objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity,map_OldOpportunities?.get(objOpportunity.Id), objCampaignInfluence);
+                        objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
+                        objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
+                        objCampaignInfluence.Stage_Updated_On__c = System.now();
+                    }
                     list_InsertCampaignInfluences.add(objCampaignInfluence);
                 }
 
-                //Create CampaignInfluence for the Campaign from the converted Lead
+                //Create CampaignInfluence for the Campaign from the Lead
                 if (
                     String.isNotBlank(objOpportunity.Lead_Converted_From__c) && 
                     map_SourceCampaignIdByLeadId.containsKey(objOpportunity.Lead_Converted_From__c)
                 ) {
-                    CampaignInfluence objCampaignInfluence = new CampaignInfluence();
-                    objCampaignInfluence.ContactId = objOpportunity.Contact__c;
-                    objCampaignInfluence.CampaignId = map_SourceCampaignIdByLeadId.get(objOpportunity.Lead_Converted_From__c);
-                    objCampaignInfluence.OpportunityId = objOpportunity.Id;
-                    objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
-                    objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
-                    objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
-                    objCampaignInfluence.Stage_Updated_On__c = System.now();
-                    list_InsertCampaignInfluences.add(objCampaignInfluence);
+                    String strUniqueKey = objOpportunity.Id + '' + objOpportunity.Contact__c + '' + map_SourceCampaignIdByLeadId.get(objOpportunity.Lead_Converted_From__c); 
+                    if (!map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKey)) {
+                        CampaignInfluence objCampaignInfluence = new CampaignInfluence();
+                        objCampaignInfluence.ContactId = objOpportunity.Contact__c;
+                        objCampaignInfluence.CampaignId = map_SourceCampaignIdByLeadId.get(objOpportunity.Lead_Converted_From__c);
+                        objCampaignInfluence.OpportunityId = objOpportunity.Id;
+                        objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
+                        objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
+                        objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
+                        objCampaignInfluence.Stage_Updated_On__c = System.now();
+                        list_InsertCampaignInfluences.add(objCampaignInfluence);
+                    }
                 }
             }
             
@@ -161,9 +184,9 @@ public class DRL_OpportunityTriggerHelper {
                 } 
                 
                 CaseStaticVars.allowInfluenceInTrigger = false;
-                List<Database.SaveResult> list_Results = Database.insert(list_InsertCampaignInfluences, false);
-                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results,'Insert'));
-                CaseStaticVars.allowInfluenceInTrigger = true;
+                blnSkipOpportunityTrigger = true;
+                List<Database.UpsertResult> list_Results = Database.upsert(list_InsertCampaignInfluences, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processUpsertResult(list_Results));
             }
             
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
@@ -183,16 +206,19 @@ public class DRL_OpportunityTriggerHelper {
             );
         }
     }
-
+    
     /**
     * @ author       :  Deeksha Suvarna
     * @ description  :  Calculate Influence Percentage field on Campaign Influence Record
     * @ params       :  objOpportunity - Tigger newMap on Opportunity
     * @ return       :  decTempInfluenceWeightage - Influence Weightage
     **/    
-    public static Decimal calculateInfluencePercentage(Opportunity objOpportunity) {
+    public static CampaignInfluence CalculateInfluencePercentage(Opportunity objOpportunity, Opportunity objOldOpportunity, CampaignInfluence objCampaignInfluence) {
         Decimal decTempInfluenceWeightage = 0;
-        if (objOpportunity != null) {
+        decTempInfluenceWeightage = objCampaignInfluence.Influence;
+        if (objOldOpportunity == null) {
+            
+            
             //If Stage is present in Metadata
             if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
             Integer intStageSortOrder = Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c);
@@ -215,7 +241,7 @@ public class DRL_OpportunityTriggerHelper {
                     //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered(Lead Converted Opportunity & Source Campaign is Present on Lead)
                     if (objOpportunity.Lead_Converted_From__c!=null &&
                        (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
-                        map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
+                       map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
                         continue;
                     }
                     
@@ -226,7 +252,22 @@ public class DRL_OpportunityTriggerHelper {
                 }
             }
         }
+        else {
 
-    return decTempInfluenceWeightage;
+            if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOldOpportunity.StageName)) {
+                if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
+                    for (Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1 ; intSortOrder <= map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c; intSortOrder++) {
+                        decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
+                    }  
+                }
+                else {
+                    for ( Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++ ) {
+                        decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
+                    }
+                }
+            }
+        }
+        objCampaignInfluence.Influence = decTempInfluenceWeightage;
+    return objCampaignInfluence;
     }
 }
