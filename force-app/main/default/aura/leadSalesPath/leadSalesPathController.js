@@ -12,6 +12,7 @@
                 component.set("v.currentStep",response.getReturnValue().ld.Status);
                 component.set("v.getStep",response.getReturnValue().ld.Status);
                 component.set("v.product",response.getReturnValue().ld.Product_Lookup__c );
+                component.set('v.objLead',response.getReturnValue().ld);
                 if(response.getReturnValue().ld.IsConverted==true)
                     component.set("v.disableMark",true);
                 console.log(response.getReturnValue().ld.IsConverted);
@@ -22,6 +23,10 @@
         $A.enqueueAction(action);
     },
     getPathStatus:function(component,event,helper){
+        let objLead=component.get("v.objLead");
+        if(objLead.IsConverted){
+            return;
+        }
         var getStatus= event.getParam("detail").value;
         var initialStatus=component.get("v.initialStep");
         component.set("v.getStep",getStatus);

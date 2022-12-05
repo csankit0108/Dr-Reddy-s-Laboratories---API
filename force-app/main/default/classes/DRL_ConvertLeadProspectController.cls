@@ -142,7 +142,9 @@ public with sharing class DRL_ConvertLeadProspectController {
                             CPR__c,
                             Target_Region__c,
                             Reporting_Region__c,
-                            RecordType.DeveloperName
+                            RecordType.DeveloperName,
+                            DRL_Prospect__r.IsConverted,
+                            DRL_Prospect__c
                             FROM Lead
                             WHERE Id = :strleadRecordId];
 
@@ -231,27 +233,50 @@ public with sharing class DRL_ConvertLeadProspectController {
                     database.rollback(save);
                     throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Opportunity','Insertion'));
                 } 
+                List<Lead> list_leadsToUpdate = new List<Lead>();
+                List<Database.LeadConvert> list_LeadsToConvert = new List<Database.LeadConvert>();
+                LeadStatus convertStatus = [SELECT Id, MasterLabel, IsConverted
+                                            FROM LeadStatus
+                                            WHERE IsConverted = true
+                                            limit 1];
+
+                if ( 
+                    objlead.RecordType.DeveloperName == 'DRL_Lead' && 
+                    objlead.DRL_Prospect__c !=null && 
+                    !objlead.DRL_Prospect__r.IsConverted
+                    ){
+                        Lead objProspect=new Lead(Id=objlead.DRL_Prospect__c);
+                        objProspect.Converted_Account__c = objaccount.Id;
+                        objProspect.Converted_Contact__c = objcontact.Id;
+                        objProspect.Status = 'Converted';
+                        list_leadsToUpdate.add(objProspect);
+                        list_LeadsToConvert.add(convertLeadHelper(objProspect, objaccount.Id, objcontact.Id, null,convertStatus.MasterLabel));
+                    }                     
 
                 objlead.Converted_Account__c = objaccount.Id;
                 objlead.Converted_Contact__c = objcontact.Id;
                 objlead.Converted_Opportunity__c = objopportunity.Id;
                 objlead.Status = 'Converted';
+                list_leadsToUpdate.add(objlead);
                 list_Results=new List<Database.SaveResult>();
-                list_Results.add(Database.update(objlead, false));
+                list_Results.addAll(Database.update(list_leadsToUpdate, false));
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Update'));
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Lead','Updation'));
-                } 
-
-                LeadStatus convertStatus = [SELECT Id, MasterLabel, IsConverted
-                                            FROM LeadStatus
-                                            WHERE IsConverted = true
-                                            limit 1];
+                    for(Database.SaveResult objSaveResult:list_Results){
+                        if(objSaveResult.getErrors().size()>0){
+                            if(objlead.DRL_Prospect__c != null && objSaveResult.getId() == objlead.DRL_Prospect__c){
+                                throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Parent Prospect','Updation'));
+                            } else{
+                                throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Lead','Updation'));
+                            }                            
+                        }
+                    } 
+                }                
                 
-                Database.LeadConvert objLeadConvert = convertLeadHelper(objlead, objaccount.Id, objcontact.Id, objopportunity.Id,convertStatus.MasterLabel);                
-                Database.LeadConvertResult list_leadConvertResult = Database.convertLead(objLeadConvert);
+                list_LeadsToConvert.add(convertLeadHelper(objlead, objaccount.Id, objcontact.Id, objopportunity.Id,convertStatus.MasterLabel));                
+                List<Database.LeadConvertResult> list_leadConvertResult = Database.convertLead(list_LeadsToConvert);
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
                 objresponse.objopportunity = objopportunity;                              

@@ -90,13 +90,6 @@
 		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0001</members>
 		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0002</members>
 		<members>DRL_ConvertLeadSuccessConfiguration.CMDDRL0003</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0001</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0002</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0003</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0004</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0005</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0006</members>
-		<members>DRL_ProspectLeadStatusMapping.CMDDRL0007</members>
 		<name>CustomMetadata</name>
 	</types>
 	<types>
@@ -138,6 +131,7 @@
 		<name>Flow</name>
 	</types>
 	<types>
+		<members>Lead.DRL_ConvertedLeadStatusCannotbeUpdated</members>        
 		<members>Lead.Check_Country_Field</members>
 		<members>Lead.CheckRunAutomation</members>
 		<members>Opportunity.DRL_ContactChangeValidation</members>

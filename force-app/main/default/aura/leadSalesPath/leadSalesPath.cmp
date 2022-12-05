@@ -6,6 +6,7 @@
     <aura:attribute name="currentStep" type="String" default="Draft" />
     <aura:attribute name="initialStep" type="String" default="" />
     <aura:attribute name="getStep" type="String" />
+    <aura:attribute name="objLead" type="Lead" />
     
     <aura:attribute name="product" type="String" default="" />
     
