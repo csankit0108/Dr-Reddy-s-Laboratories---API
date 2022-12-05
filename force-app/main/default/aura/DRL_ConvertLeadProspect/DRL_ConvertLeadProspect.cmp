@@ -1,0 +1,157 @@
+<!--DRL_ConvertLeadProspect-->
+
+<aura:component controller="DRL_ConvertLeadProspectController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
+                access='global'>
+    
+    <aura:import library="lightning:alert" property="LightningAlert" />
+    <aura:html tag="style">
+        .slds-modal__container {
+            max-width: 80rem !important;
+            width: 80% !important;
+        }
+        .slds-modal__header .slds-modal__close{
+            display:none;
+        }
+    </aura:html>
+
+    <aura:attribute name="blnIsProspect" type="Boolean"/>
+    <aura:attribute name="blnIsChildRecordsFound" type="Boolean" default="false"/>  
+    <aura:attribute name="list_ProspectChildLeads" type="List" default="[]"/>
+    <aura:attribute name="list_SelectedLeads" type="List" default="[]"/>
+    <aura:attribute name="list_Opportunities" type="List" default="[]"/>
+    <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="blnIsFormDataLoaded" type="Boolean" default="false"/>
+    <aura:attribute name="objOpportunity" type="Opportunity" />
+    <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
+    <aura:attribute name="strDefaultRecordTypeId" type="String" default="" />
+    <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
+    <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
+    <aura:attribute name="blnShowErrorMessage" type="Boolean" default="false"/>
+    <aura:attribute name="strErrorMessage" type="String" default=""/>
+    <aura:attribute name= "strAccountRadioButtonSelected" type="String"/>
+    <aura:attribute name= "strContactRadioButtonSelected" type="String"/>
+    <aura:attribute name = "strAccountId" type = "String"/>
+    <aura:attribute name = 'list_AccountFieldSet' type = 'List' default="[]"/>
+    <aura:attribute name = 'list_ContactFieldSet' type = 'List' default="[]"/>
+    <aura:attribute name ="objAccount" type = "Account" default="{ 'sobjectType': 'Account'}"/> 
+    <aura:attribute name="objContact" type="Contact" default="{ 'sobjectType': 'Contact'}"/>
+    <aura:attribute name = 'strContactId' type = 'String'/>
+    <aura:attribute name="blnIsParentProspectConverted" type="Boolean" default="false" />
+    <aura:attribute name="blnIsConvertedSuccess" type="Boolean" default="false" />   
+    <aura:attribute name="blnrenderfrompath" type="Boolean" default="false" />   
+    <aura:attribute name="blnIsLoading" type="Boolean" default="false" /> 
+    <aura:attribute name ="objLead" type = "Lead" default="{ 'sobjectType': 'Lead'}"/> 
+    <aura:attribute name ="list_ChildLeadTableColumns" type = "List" default="[]"/> 
+    <aura:attribute name="map_SuccessFieldsToShow" type="Map" default="{}"/>   
+
+    <aura:attribute name="blnContentAvailable" type="boolean" default="false" />
+    <aura:attribute name="map_ContentTotal" type="Map" />
+    <aura:attribute name="list_DocumentCategoriesAvailable" type="Object[]" default="[]" />
+    <aura:attribute name="strRunAfter" type="String" default="" />
+    <aura:attribute name="list_FinalSelectedContentCatalogs" type="Object[]" default="[]" />
+
+    <aura:attribute name="map_BlnContentAvailable" type="Map" />
+    <aura:attribute name="map_MapContentTotal" type="Map" />
+    <aura:attribute name="map_ListDocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_StrRunAfter" type="Map"/>
+    <aura:attribute name="map_ListFinalSelectedContentCatalogs" type="Map"/>
+    
+    
+    
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+    
+    <div role="dialog" aura:id="modal" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container Container" aura:id="modalContainer">
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.CLDRL00007}</h1>
+            </div>
+            <div class="slds-modal__content" id="modal-content-id-1">
+                <aura:if isTrue ="{!and(v.blnIsFormDataLoaded,!v.blnIsConvertedSuccess)}">
+                    <c:DRL_convertLeadAccountSection aura:id='accountSectionCall' 
+                        objLead="{!v.objLead}"
+                        strRadioButtonSelected = "{!v.strAccountRadioButtonSelected}" 
+                        strAccountId = '{!v.strAccountId}'
+                        objAccount = "{!v.objAccount}"
+                        list_AccountFields = '{!v.list_AccountFieldSet}'
+                        blnIsParentProspectConverted="{!v.blnIsParentProspectConverted}"/>
+
+                    <c:DRL_convertLeadContactSection aura:id='contactSectionCall'
+                        objLead="{!v.objLead}"
+                        strRadioButtonSelected =  "{!v.strContactRadioButtonSelected}" 
+                        strContactId  = '{!v.strContactId}'
+                        objContact = "{!v.objContact}"
+                        blnIsParentProspectConverted="{!v.blnIsParentProspectConverted}"
+                        list_ContactFieldSet ='{!v.list_ContactFieldSet}'/>
+                
+                    <aura:if isTrue="{!v.blnIsProspect}">
+                        <c:DRL_ProspectRelatedChildLeads 
+                            list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
+                            list_ProspectChildLeads="{!v.list_ProspectChildLeads}"
+                            strDefaultRecordTypeId="{!v.strDefaultRecordTypeId}"
+                            blnIsChildRecordsFound="{!v.blnIsChildRecordsFound}" 
+                            list_Opportunities="{!v.list_Opportunities}"
+                            list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
+                            map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"
+                            list_SelectedLeads="{!v.list_SelectedLeads}" 
+                            list_Columns="{!v.list_ChildLeadTableColumns}"
+                            map_FieldSetToFieldsMap="{!v.map_FieldSetToFieldsMap}"
+                            map_BlnContentAvailable="{!v.map_BlnContentAvailable}"
+                            map_MapContentTotal="{!v.map_MapContentTotal}"
+                            map_ListDocumentCategoriesAvailable="{!v.map_ListDocumentCategoriesAvailable}"
+                            map_StrRunAfter="{!v.map_StrRunAfter}"
+                            map_ListFinalSelectedContentCatalogs="{!v.map_ListFinalSelectedContentCatalogs}"/>
+                    </aura:if>
+                
+                    <aura:if isTrue="{!!v.blnIsProspect}">
+
+                        <c:DRL_ConvertLeadOpportunitySection
+                            objOpportunity="{!v.objOpportunity}"  
+                            list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
+                            list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
+                            map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"
+                            map_FieldSetToFieldsMap="{!v.map_FieldSetToFieldsMap}"/>
+
+                        <c:DRL_ConvertLeadRunAutomationSection                         
+                            blnContentAvailable="{!v.blnContentAvailable}"
+                            map_ContentTotal="{!v.map_ContentTotal}"
+                            list_DocumentCategoriesAvailable="{!v.list_DocumentCategoriesAvailable}"
+                            strRunAfter="{!v.strRunAfter}"                            
+                            list_FinalSelectedContentCatalogs="{!v.list_FinalSelectedContentCatalogs}"/>
+                            
+                    </aura:if> 
+                </aura:if>
+                <aura:if isTrue="{!v.blnIsLoading}">
+                        <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
+                </aura:if>    
+                <aura:if isTrue="{!v.blnIsConvertedSuccess}">
+                    <c:DRL_LeadConvertSuccessSection 
+                    objAccount="{!v.objAccount}"
+                    objContact="{!v.objContact}"
+                    objOpportunity="{!v.objOpportunity}"
+                    list_Opportunities="{!v.list_Opportunities}"
+                    map_SuccessFieldsToShow="{!v.map_SuccessFieldsToShow}"
+                    />                    
+                </aura:if>                      
+            </div>
+            <div class="slds-modal__footer">
+                <aura:if isTrue="{!v.blnShowErrorMessage}">
+                    <lightning:icon iconName="utility:warning" size="xx-small" class="customIcon" variant="error" /> 
+                    <b class="errorMsg">{!v.strErrorMessage}</b>
+                </aura:if>        
+                <aura:if isTrue="{!v.blnIsConvertedSuccess}">
+                    <lightning:button name='CloseButton' label='Close' variant='brand'
+                                  onclick="{!c.cancelAction}" />   
+                </aura:if>   
+                <aura:if isTrue="{!!v.blnIsConvertedSuccess}">
+                    <lightning:button name='cancelButton' label='Cancel' variant='neutral'
+                                  onclick="{!c.cancelAction}" />                
+                    <lightning:button name='convertButton' label="Convert" variant="brand"
+                                  onclick="{!c.handleConvert}" />
+                </aura:if>                
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation" aura:id="modalbackdrop"></div>
+    
+</aura:component>

@@ -21,37 +21,10 @@
    
     <!-- by SK-->
     <aura:attribute name="isModalOpen" type="Boolean" default="true"/>
-        
+    <aura:attribute name="contactId" type="String"/>
     <hr/>
     
-    <aura:html tag="style">
-        .slds-modal__container{ 
-        height : auto; width: 80%; max-width: 300vh;
-        padding-left:200px;
-        padding-right:200px;
-        
-        
-        
-        <!-- 
-   overflow: scroll;
-        padding-left:200px;
-        padding-right:200px;-->
-        }
-        .modal-body{ 
-        height : 400vh !important; 
-        max-height: 400vh !important; 
-        <!--overflow-y: scroll;-->
-        } 
-        .slds-modal__footer{ 
-        display: inline !important; 
-        }
-        
-        .header {
-        display: inline-block; 
-        width: 100%;
-        }
-        
-    </aura:html>
+    
     
     <!--<lightning:button variant="Neutral" 
                       label="Awarded Quantity" 
@@ -175,7 +148,7 @@
                                                         <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
                                                             <lightning:inputField fieldName="Name"></lightning:inputField>
                                                             <lightning:inputField fieldName="Product__c" required="true"></lightning:inputField> 
-                                                            <lightning:inputField fieldName="Contact__c" required="true"></lightning:inputField>
+                                                            <lightning:inputField fieldName="Contact__c" required="true" value="{!v.contactId}"></lightning:inputField>
                                                             <lightning:inputField fieldName="Target_Markets__c" required="true"></lightning:inputField>
                                                             <lightning:inputField fieldName="TotalOpportunityQuantity"></lightning:inputField> 
                                                             <lightning:inputField fieldName="Source_type__c"></lightning:inputField>

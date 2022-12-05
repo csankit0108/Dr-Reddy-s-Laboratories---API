@@ -9,7 +9,7 @@
 *   04-07-2022      |  deeksha.suvarna@absyz.com      |  1.0          |  Initial Version
 *
 ***********************************************************************************************************************/@isTest
-public class DRL_TestUtility {
+public class DRL_TestUtility { 
     /**
     * @ Name     :  LeadBuilder
     * @ Purpose  :  To create Lead record
@@ -25,8 +25,9 @@ public class DRL_TestUtility {
         private String strUTMSource;
         private Id idProspectId;
         private String strStatus;
-        private String strCountry;
+        private String strCountry; 
         private String strReasonForDecline;
+        private Id idSourceCampaignId;
         
         public LeadBuilder() {
             this.strFirstName = '';
@@ -38,7 +39,7 @@ public class DRL_TestUtility {
             this.strStatus = '';
             this.strCountry = '';
             this.strReasonForDecline = '';
-        }
+        } 
         
         public LeadBuilder setFirstName(String strValue) {
             this.strFirstName = strValue;
@@ -79,6 +80,10 @@ public class DRL_TestUtility {
             this.idProspectId = idValue;
             return this;
         }
+        public LeadBuilder setSouceCampaignId(Id idValue) {
+            this.idSourceCampaignId = idValue;
+            return this;
+        }
         public LeadBuilder setStatus (String strValue) {
             this.strStatus = strValue;
             return this;
@@ -88,7 +93,7 @@ public class DRL_TestUtility {
             return this;
         }
         
-         public LeadBuilder setReasonForDecline (String strValue) {
+         public LeadBuilder setReasonForDecline(String strValue) {
             this.strReasonForDecline = strValue;
             return this;
         }        
@@ -105,6 +110,7 @@ public class DRL_TestUtility {
             objLead.Status = this.strStatus;
             objLead.Country = this.strCountry;
             objLead.Reason_for_Decline__c = this.strReasonForDecline;
+            objLead.DRL_SourceCampaign__c = this.idSourceCampaignId;
             return objLead;
         }
     }
@@ -174,6 +180,99 @@ public class DRL_TestUtility {
             return objCampaign;
         }
     }
+    /**
+    * @ Name     :  CampaignInfluenceModel Builder
+    * @ Purpose  :  To create CampaignInfluenceModel record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignInfluenceModelBuilder {
+        private Id idModelId;
+
+        public CampaignInfluenceModelBuilder() {
+            this.idModelId = '';
+        }
+
+        public CampaignInfluenceModelBuilder setModelId(Id idValue) {
+            this.idModelId = idValue;
+            return this;
+        }
+
+        public CampaignInfluenceModel createCampaignInfluenceModel() {
+            CampaignInfluenceModel objCampaignInfluenceModel = new CampaignInfluenceModel();
+            objCampaignInfluenceModel.Id = this.idModelId;
+            return objCampaignInfluenceModel;
+        }
+    }
+
+    /**
+    * @ Name     :  CampaignMemberBuilder
+    * @ Purpose  :  To create CampaignMember record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignMemberBuilder {
+        private Id idContactId;
+        private Id idCampaignId;
+
+    public CampaignMemberBuilder setCampaignId(Id idValue) {
+        this.idCampaignId = idValue;
+        return this;
+    }
+
+    public CampaignMemberBuilder setContactId(Id idValue) {
+        this.idContactId = idValue;
+        return this;
+    }
+
+    public CampaignMember createCampaignMember() {
+        CampaignMember objCampaignMember = new CampaignMember();
+        objCampaignMember.CampaignId = this.idCampaignId;
+        objCampaignMember.ContactId = this.idContactId;
+        return objCampaignMember;
+    }
+
+}
+
+    
+    /**
+    * @ Name     :  CampaignInfluence Builder
+    * @ Purpose  :  To create CampaignInfluence record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignInfluenceBuilder {
+        private Id idCampaignId;
+        private Id idOpportunityId;
+        private Decimal decInfluencePercentage;
+        private Id idModelId;
+
+    public CampaignInfluenceBuilder setCampaignId(Id idValue) {
+        this.idCampaignId = idValue;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setOpportunityId(Id idValue) {
+        this.idOpportunityId = idValue;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setInfluence(Decimal decInfluencePercentage) {
+        this.decInfluencePercentage = decInfluencePercentage;
+        return this;
+    }
+
+    public CampaignInfluenceBuilder setModelId(Id idValue) {
+        this.idModelId = idValue;
+        return this;
+    }
+    
+    public CampaignInfluence createCampaignInfluence() {
+        CampaignInfluence objCampaignInfluence = new CampaignInfluence();
+        objCampaignInfluence.CampaignId = this.idCampaignId;
+        objCampaignInfluence.OpportunityId = this.idOpportunityId;
+        objCampaignInfluence.Influence = this.decInfluencePercentage;
+        objCampaignInfluence.ModelId = this.idModelId;
+        return objCampaignInfluence;
+    }
+} 
 
     /**
     * @ Name     :  AccountBuilder
@@ -189,11 +288,11 @@ public class DRL_TestUtility {
         public AccountBuilder setName(String strValue) {
             this.strName = strValue;
             return this;
-        }
+        } 
 
         public Account createAccount() {
             Account objAccount = new Account();
-            objAccount.Name = this.strName;
+            objAccount.Name = this.strName; 
             return objAccount;
         }
     }
@@ -245,7 +344,7 @@ public class DRL_TestUtility {
     public class ProductBuilder {
         private String strName;
         
-        public ProductBuilder() {
+        public ProductBuilder() { 
             this.strName = '';
         }
         
@@ -277,6 +376,7 @@ public class DRL_TestUtility {
         private Id idContactId;
         private Id idAccountId;
         private Id idProductId;
+        private Id idLeadId;
         private Id idRecordTypeId;
         
         public OpportunityBuilder() {
@@ -303,6 +403,11 @@ public class DRL_TestUtility {
 
         public OpportunityBuilder setProductId(Id idValue) {
             this.idProductId = idValue;
+            return this;
+        }
+
+        public OpportunityBuilder setLeadId(Id idValue) {
+            this.idLeadId = idValue;
             return this;
         }
 
@@ -348,6 +453,7 @@ public class DRL_TestUtility {
             objOpportunity.AccountId = this.idAccountId;
             objOpportunity.Contact__c = this.idContactId;
             objOpportunity.Product__c = this.idProductId;
+            objOpportunity.Lead_Converted_From__c = this.idLeadId;
             return objOpportunity;
         }
     }
