@@ -30,21 +30,29 @@
         let list_ContactFieldsToRender=[];
         let objContact = component.get("v.objContact");
         let list_ContactFieldSet = component.get("v.list_ContactFieldSet");
+        let map_FieldTypes={};
         list_ContactFieldSet.forEach(function(field_contact){
             let objectContactRecord = {};
             objectContactRecord.name = field_contact.name;//gets the api name of the field
             objectContactRecord.required = field_contact.required;
+            map_FieldTypes[field_contact.name]=field_contact.type;
             if(!helper.isNullCheck(objContact[objectContactRecord.name])){
                 objectContactRecord.value = objContact[objectContactRecord.name];
             }
             else{
-                objectContactRecord.value = "";
-                objContact[objectContactRecord.name] = "";
+                if (field_contact.type=='BOOLEAN') {
+                    objectContactRecord.value = false;
+                    objContact[objectContactRecord.name] = false;                    
+                } else {
+                    objectContactRecord.value = "";
+                    objContact[objectContactRecord.name] = "";                    
+                }                
             }
             list_ContactFieldsToRender.push(objectContactRecord);
         })
         component.set("v.objContact", objContact);
         component.set("v.list_ContactFieldsToRender", list_ContactFieldsToRender);
+        component.set('v.map_FieldTypes',map_FieldTypes);
         
     },
     existingContactHelper : function (component, event, helper) {
@@ -67,7 +75,7 @@
             component.set("v.blnIsContactSelectionAvailable",false);
             component.set("v.blnIsContactCreationAvailable",false);
             component.set("v.blnIsContactCreationSelected",false);
-            component.set("v.blnIsContactCreationSelected",true);
+            component.set("v.blnIsContactSelectionSelected",true);
         }else{
             helper.generateContact(component, event, helper);
         }

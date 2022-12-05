@@ -32,3 +32,10 @@
     padding: 0.313rem;
     border-radius: 0.313rem;
 }
+.THIS .slds-pill a {
+    padding-bottom: 0.313rem;
+    padding-top: 0.313rem;
+}
+.THIS .slds-pill__icon_container{
+    padding-left: 0.125rem;
+}

@@ -17,15 +17,22 @@
         let list_AccountFieldsToRender = [];
         let objAccount = component.get('v.objAccount');
         let list_AccountFields = component.get('v.list_AccountFields');
+        let map_FieldTypes = {};
         list_AccountFields.forEach(function(objAccountField){
             let objAccountFieldWithValue = {};
             objAccountFieldWithValue.name = objAccountField.name;//gets the api name of the field
             objAccountFieldWithValue.required = objAccountField.required;
+            map_FieldTypes[objAccountField.name] = objAccountField.type;
              if (!helper.isNullCheck(objAccount[objAccountFieldWithValue.name])) {
                 objAccountFieldWithValue.value = objAccount[objAccountFieldWithValue.name];
-            }else{
-                objAccountFieldWithValue.value = '';
-                objAccount[objAccountFieldWithValue.name] = '';
+            } else {
+                if (objAccountField.type == 'BOOLEAN') {
+                    objAccountFieldWithValue.value = false;
+                    objAccount[objAccountFieldWithValue.name] = false;                    
+                } else {
+                    objAccountFieldWithValue.value = "";
+                    objAccount[objAccountFieldWithValue.name] = "";                    
+                }  
             }
             list_AccountFieldsToRender.push(objAccountFieldWithValue);
         })
@@ -53,7 +60,7 @@
             component.set('v.blnIsAccountSelectionAvailable', false);
             component.set('v.blnIsAccountCreationAvailable', false);
             component.set('v.blnIsAccountCreationSelected', false);
-            component.set('v.blnIsAccountSelectionSelected', false);
+            component.set('v.blnIsAccountSelectionSelected', true);
         }else{
             helper.generateAccount(component, event, helper);
         }

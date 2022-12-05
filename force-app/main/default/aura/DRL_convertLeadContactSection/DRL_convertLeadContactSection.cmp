@@ -29,6 +29,8 @@
     <aura:attribute name="blnIsContactCreationSelected" type="Boolean" default = "true"/>
     <aura:attribute name="blnIsContactSelectionSelected" type="Boolean" default = "false"/>
     <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
+    <aura:attribute name="map_FieldTypes" type="Object" default="{}" />
+    
     
     <aura:handler name = "init" value = "{!this}" action = "{!c.doInit}"/>
     

@@ -27,6 +27,7 @@ public class DRL_TestUtility {
         private String strStatus;
         private String strCountry; 
         private String strReasonForDecline;
+        private Id idSourceCampaignId;
         
         public LeadBuilder() {
             this.strFirstName = '';
@@ -38,7 +39,7 @@ public class DRL_TestUtility {
             this.strStatus = '';
             this.strCountry = '';
             this.strReasonForDecline = '';
-        }
+        } 
         
         public LeadBuilder setFirstName(String strValue) {
             this.strFirstName = strValue;
@@ -79,6 +80,10 @@ public class DRL_TestUtility {
             this.idProspectId = idValue;
             return this;
         }
+        public LeadBuilder setSouceCampaignId(Id idValue) {
+            this.idSourceCampaignId = idValue;
+            return this;
+        }
         public LeadBuilder setStatus (String strValue) {
             this.strStatus = strValue;
             return this;
@@ -105,6 +110,7 @@ public class DRL_TestUtility {
             objLead.Status = this.strStatus;
             objLead.Country = this.strCountry;
             objLead.Reason_for_Decline__c = this.strReasonForDecline;
+            objLead.DRL_SourceCampaign__c = this.idSourceCampaignId;
             return objLead;
         }
     }
@@ -197,6 +203,35 @@ public class DRL_TestUtility {
             return objCampaignInfluenceModel;
         }
     }
+
+    /**
+    * @ Name     :  CampaignMemberBuilder
+    * @ Purpose  :  To create CampaignMember record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class CampaignMemberBuilder {
+        private Id idContactId;
+        private Id idCampaignId;
+
+    public CampaignMemberBuilder setCampaignId(Id idValue) {
+        this.idCampaignId = idValue;
+        return this;
+    }
+
+    public CampaignMemberBuilder setContactId(Id idValue) {
+        this.idContactId = idValue;
+        return this;
+    }
+
+    public CampaignMember createCampaignMember() {
+        CampaignMember objCampaignMember = new CampaignMember();
+        objCampaignMember.CampaignId = this.idCampaignId;
+        objCampaignMember.ContactId = this.idContactId;
+        return objCampaignMember;
+    }
+
+}
+
     
     /**
     * @ Name     :  CampaignInfluence Builder
@@ -341,6 +376,7 @@ public class DRL_TestUtility {
         private Id idContactId;
         private Id idAccountId;
         private Id idProductId;
+        private Id idLeadId;
         private Id idRecordTypeId;
         
         public OpportunityBuilder() {
@@ -367,6 +403,11 @@ public class DRL_TestUtility {
 
         public OpportunityBuilder setProductId(Id idValue) {
             this.idProductId = idValue;
+            return this;
+        }
+
+        public OpportunityBuilder setLeadId(Id idValue) {
+            this.idLeadId = idValue;
             return this;
         }
 
@@ -412,6 +453,7 @@ public class DRL_TestUtility {
             objOpportunity.AccountId = this.idAccountId;
             objOpportunity.Contact__c = this.idContactId;
             objOpportunity.Product__c = this.idProductId;
+            objOpportunity.Lead_Converted_From__c = this.idLeadId;
             return objOpportunity;
         }
     }

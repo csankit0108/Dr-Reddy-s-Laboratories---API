@@ -122,7 +122,7 @@
                     </aura:if> 
                 </aura:if>
                 <aura:if isTrue="{!v.blnIsLoading}">
-                        <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+                        <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
                 </aura:if>    
                 <aura:if isTrue="{!v.blnIsConvertedSuccess}">
                     <c:DRL_LeadConvertSuccessSection 
