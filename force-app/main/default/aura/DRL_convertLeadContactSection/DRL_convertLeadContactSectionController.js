@@ -20,6 +20,9 @@
     
     handleLookup: function(component, event, helper){
         var strContactId = event.getParam("value")[0];
+        if(helper.isNullCheck(strContactId)){
+            component.set("v.objContact",{ "sobjectType": "Contact"});
+        }
         component.set("v.strContactId", strContactId);
         helper.existingContactHelper(component, event, helper);
     },
@@ -38,6 +41,7 @@
         if (strRadioButton === "4") {
             component.set("v.objContact",{ "sobjectType": "Contact"});
             helper.getContactFields(component, event, helper);
+            component.set("v.objContact",{ "sobjectType": "Contact"});
             component.set("v.blnAllowContactCreation", false);
             component.set("v.blnAllowContactSelection", true);            
         }        

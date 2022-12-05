@@ -162,17 +162,22 @@ public with sharing class DRL_ConvertLeadProspectController {
             }
 
             //set contact information
-            if (objcontact.Id == null){
+            if (objcontact.Id == null || objcontact.AccountId == null){
                 objcontact.AccountId = objaccount.Id;
                 objcontact.Lead_Converted_From__c = objlead.Id;
-                List<Database.SaveResult> list_Results=new List<Database.SaveResult>();
-                list_Results.add(Database.insert(objcontact, false));
-                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
-                if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                    DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
+                Database.UpsertResult objResult= Database.upsert(objcontact, false);
+                List<String> list_Errors = new List<String>();
+                for (Database.Error objError : objResult.getErrors()) {
+                    String strErrorMessage = 'Upsert failed for ' +objResult.getId() + 
+                                             '. Error: ' + objError.getMessage() + 
+                                             '. Status Code: ' + objError.getStatusCode();
+                    list_Errors.add(strErrorMessage);                    
+                }
+                if (!list_Errors.isEmpty()) {
+                    DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_Errors);
                     database.rollback(save);
                     objresponse.strstatus = 'Fail';
-                    objresponse.strmessage = getErroMessage(list_Results[0].getErrors()[0],'Contact','Insertion');
+                    objresponse.strmessage = getErroMessage(objResult.getErrors()[0],'Contact','Upsert');
                     return objresponse;
                 } 
             }
@@ -912,6 +917,9 @@ public with sharing class DRL_ConvertLeadProspectController {
         if (String.valueOf(objError.getStatusCode()).contains('DUPLICATES_DETECTED')) {            
             strErrorMessage = 'Duplicate '+strObjectName+' Found';
         }
+        else if (String.valueOf(objError.getStatusCode()).contains('DUPLICATE_VALUE')) {            
+            strErrorMessage = 'Duplicate '+strObjectName+' Found : '+ objError.getMessage();
+        }
         else if (String.valueOf(objError.getStatusCode()).contains('FIELD_CUSTOM_VALIDATION_EXCEPTION')) {            
             strErrorMessage = strObjectName+' :'+objError.getMessage();
         } 
@@ -919,7 +927,7 @@ public with sharing class DRL_ConvertLeadProspectController {
             strErrorMessage = strObjectName+' :'+objError.getMessage();
         } 
         else{            
-            strErrorMessage = 'Error during '+strObjectName+' '+ strOpertation;
+            strErrorMessage = 'Error during '+strObjectName+' '+ strOpertation+' :'+objError.getMessage();
         }  
         return strErrorMessage;        
     }

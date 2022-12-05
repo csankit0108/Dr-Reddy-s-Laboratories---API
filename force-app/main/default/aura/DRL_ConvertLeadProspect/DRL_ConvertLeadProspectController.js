@@ -23,13 +23,41 @@
     },
     handleConvert:function(component,event,helper){   
         component.set('v.blnIsLoading', true);
+        component.set('v.strErrorMessage', '');
         if (!component.get('v.blnIsParentProspectConverted')) {
-            if(!helper.isValidAccount(component, event, helper)) {
+
+            var strAccountRadioButtonSelected = component.get('v.strAccountRadioButtonSelected');
+            var strContactRadioButtonSelected = component.get('v.strContactRadioButtonSelected');
+
+            if(strAccountRadioButtonSelected=='1'&&!helper.isValidAccount(component, event, helper)) {
                 component.set('v.blnIsLoading', false);
                 return false;
             }
-            var strAccountRadioButtonSelected = component.get('v.strAccountRadioButtonSelected');
-            var strContactRadioButtonSelected = component.get('v.strContactRadioButtonSelected');
+            if(strAccountRadioButtonSelected=='2') {
+                var objAccount = component.get("v.objAccount"); 
+                if(helper.isNullCheck(objAccount.Id)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00004"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                }
+            }
+            if (strContactRadioButtonSelected === '4') {
+                var objContact = component.get("v.objContact"); 
+                if(helper.isNullCheck(objContact.Id)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00002"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                }
+            }
+            if (strAccountRadioButtonSelected === '1' && strContactRadioButtonSelected === '4') {
+                var objContact = component.get("v.objContact"); 
+                if(!helper.isNullCheck(objContact.AccountId)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00011"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;                    
+                }
+            }
+            
             if (strAccountRadioButtonSelected === '2' && strContactRadioButtonSelected === '4') {
              if (!helper.isAccountRelatedContact(component,event,helper)) {
                 component.set('v.blnIsLoading', false);
