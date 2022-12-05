@@ -65,6 +65,10 @@
 		<members>DRL_ExceptionLog__c</members>
 		<name>CustomTab</name>
 	</types> 
+	<types>
+		<members>standard__PardotAppV1</members>
+		<name>CustomApplication</name>
+	</types>
 	</types>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0001</members>
 		<members>DRL_CampaignInfluenceConfiguration__mdt.CMDDRL0002</members>
@@ -185,6 +189,10 @@
 	<types>
 		<members>DRL_LeadConvertCelebrationGif</members>
 		<name>StaticResource</name>
+	</types>
+	<types>
+		<members>Pardot_Permission</members>
+		<name>PermissionSet</name>
 	</types>
 	<version>55.0</version>
 </Package>
