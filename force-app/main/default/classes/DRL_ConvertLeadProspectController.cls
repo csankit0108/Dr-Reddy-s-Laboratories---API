@@ -942,8 +942,10 @@ public with sharing class DRL_ConvertLeadProspectController {
         if (String.valueOf(objError.getStatusCode()).contains('DUPLICATES_DETECTED')) {            
             strErrorMessage = 'Duplicate '+strObjectName+' Found';
         }
-        else if (String.valueOf(objError.getStatusCode()).contains('DUPLICATE_VALUE')) {            
-            strErrorMessage = 'Duplicate '+strObjectName+' Found : '+ objError.getMessage();
+        else if (String.valueOf(objError.getStatusCode()).contains('DUPLICATE_VALUE')) {
+            String strDuplicateRecordId = objError.getMessage().split(' ')[objError.getMessage().split(' ').size()-1];  
+            SObject objRecord = Database.query('select Name from Opportunity  where Id=:strDuplicateRecordId')[0];      
+            strErrorMessage = 'Duplicate '+strObjectName+' Found : '+ objRecord.get('Name');
         }
         else if (String.valueOf(objError.getStatusCode()).contains('FIELD_CUSTOM_VALIDATION_EXCEPTION')) {            
             strErrorMessage = strObjectName+' :'+objError.getMessage();
