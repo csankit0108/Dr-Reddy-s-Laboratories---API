@@ -15,6 +15,9 @@
         if (!helper.isNullCheck(objLead.Email)) {
             objContact.Email = objLead.Email;
         }
+        if (objLead.RecordTypeId && objLead.RecordType.DeveloperName=='DRL_Lead' && !helper.isNullCheck(objLead.DRL_Email__c)) {
+            objContact.Email = objLead.DRL_Email__c;
+        }
         component.set("v.objContact", objContact);
     },
     
