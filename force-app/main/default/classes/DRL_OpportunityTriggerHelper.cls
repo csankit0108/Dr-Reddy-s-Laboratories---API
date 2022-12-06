@@ -174,13 +174,18 @@ public class DRL_OpportunityTriggerHelper {
                         objCampaignInfluence.OpportunityId = objOpportunity.Id;
                         if (objOpportunity.StageName == 'Lead Generation' && blnContactCampaignAdded) {
                             objCampaignInfluence.Influence = 10 ;
-                        }
-                        else {
+                        } else {
                         	objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
                         }
-                            if (!blnContactCampaignAdded) {
-                        	objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity,map_OldOpportunities?.get(objOpportunity.Id), objCampaignInfluence);
+
+                        if (!blnContactCampaignAdded) {
+                        	objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(
+                                objOpportunity,
+                                map_OldOpportunities?.get(objOpportunity.Id), 
+                                objCampaignInfluence
+                            );
                         }
+
                         objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
                         objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
                         objCampaignInfluence.Stage_Updated_On__c = System.now();
@@ -228,13 +233,13 @@ public class DRL_OpportunityTriggerHelper {
         Decimal decTempInfluenceWeightage = 0;
         decTempInfluenceWeightage = objCampaignInfluence.Influence;
         if (objOldOpportunity == null) {
-     
-            if(objOpportunity.StageName == 'Lead Generation' && 
-            objOpportunity.Lead_Converted_From__c!=null && 
-            (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null) {
+            if (
+                objOpportunity.StageName == 'Lead Generation' && 
+                objOpportunity.Lead_Converted_From__c!=null && 
+                (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c) != null
+            ) {
             	decTempInfluenceWeightage = 10 ;
-            }
-            else {
+            } else {
                 //If Stage is present in Metadata
                 if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
                 Integer intStageSortOrder = Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c);
