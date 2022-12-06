@@ -25,83 +25,86 @@
     
     <aura:attribute name="openConvertLeadWindow" type="Boolean" default="false" />
     <aura:attribute name="openPopup" type="String" default="false" />
+    <aura:attribute name="blnIsComponentRendered" type="Boolean" default="false" />
     
-    <aura:if isTrue="{!and(v.formFactor!='DESKTOP')}">
-        <div>
-            <div dir="ltr" >
-                
-                <lightning:picklistPath recordId="{!v.recordId}"
-                                        variant="linear"
-                                        picklistFieldApiName="Status"
-                                        onselect="{!c.getPathStatus}" />
-                
+    <aura:if isTrue="{!v.blnIsComponentRendered}">
+        <aura:if isTrue="{!and(v.formFactor!='DESKTOP')}">
+            <div>
+                <div dir="ltr" >
+                    
+                    <lightning:picklistPath recordId="{!v.recordId}"
+                                            variant="linear"
+                                            picklistFieldApiName="Status"
+                                            onselect="{!c.getPathStatus}" />
+                    
+                </div>
+                <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;background-color:white;">
+                    <aura:if isTrue="{!v.spin}">
+                        <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
+                    </aura:if>
+                    <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
+                        <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
+                    </lightning:button>
+                </div>
             </div>
-            <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;background-color:white;">
-                <aura:if isTrue="{!v.spin}">
-                    <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
-                </aura:if>
-                <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
-                    <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
-                </lightning:button>
-            </div>
-        </div>
-    </aura:if>
-    
-    <aura:if isTrue="{!and(v.formFactor=='DESKTOP')}">
-        <div class="runtime_sales_pathassistantPathAssistant">
-            <article class="slds-card">
-                
-                <div class="slds-card__body slds-card__body_inner" style="margin:0;padding:0;">
-                    <h2 class="slds-assistive-text">Path</h2>
-                    <div class="slds-path">
-                        <div class="runtime_sales_pathassistantCollapsibleDrawer">
-                            <div class="slds-grid slds-path__track">
-                                <div class="slds-grid slds-path__scroller-container runtime_sales_pathassistantPathAssistantTabSet">
-                                    <div class="slds-path__scroller uiScroller scroller-wrapper scroll-horizontal">
-                                        <div class="slds-path__scroller_inner scroller" >
-                                            <div role="tablist">
-                                                <div dir="ltr" >
-                                                    <lightning:picklistPath recordId="{!v.recordId}"
-                                                                            variant="linear"
-                                                                            picklistFieldApiName="Status"
-                                                                            onselect="{!c.getPathStatus}" />
+        </aura:if>
+
+        <aura:if isTrue="{!and(v.formFactor=='DESKTOP')}">
+            <div class="runtime_sales_pathassistantPathAssistant">
+                <article class="slds-card">
+                    
+                    <div class="slds-card__body slds-card__body_inner" style="margin:0;padding:0;">
+                        <h2 class="slds-assistive-text">Path</h2>
+                        <div class="slds-path">
+                            <div class="runtime_sales_pathassistantCollapsibleDrawer">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container runtime_sales_pathassistantPathAssistantTabSet">
+                                        <div class="slds-path__scroller uiScroller scroller-wrapper scroll-horizontal">
+                                            <div class="slds-path__scroller_inner scroller" >
+                                                <div role="tablist">
+                                                    <div dir="ltr" >
+                                                        <lightning:picklistPath recordId="{!v.recordId}"
+                                                                                variant="linear"
+                                                                                picklistFieldApiName="Status"
+                                                                                onselect="{!c.getPathStatus}" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <div class="slds-path__scroll-controls" >
+                                        </div>
+                                        <div class="tooltip tooltip-hidden" role="tooltip" id="pa-tooltip" >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;">
+                                        <aura:if isTrue="{!v.spin}">
+                                            <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
+                                        </aura:if>
+                                        <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
+                                            <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
+                                        </lightning:button>
                                     </div>
                                     
-                                    <div class="slds-path__scroll-controls" >
-                                    </div>
-                                    <div class="tooltip tooltip-hidden" role="tooltip" id="pa-tooltip" >
-                                        
-                                    </div>
                                 </div>
-                                <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;">
-                                    <aura:if isTrue="{!v.spin}">
-                                        <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
-                                    </aura:if>
-                                    <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
-                                        <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
-                                    </lightning:button>
+                                <div class="slds-path__content slds-is-collapsed" >
+                                    <div ></div>
                                 </div>
-                                
-                            </div>
-                            <div class="slds-path__content slds-is-collapsed" >
-                                <div ></div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </article>
-        </div>
+                </article>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
+            <!--<c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />-->
+            <c:DRL_ConvertLeadProspect recordId="{!v.recordId}" blnrenderfrompath="true"/>
+        </aura:if>
+        <!--  <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
+            <c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />
+        </aura:if> -->
     </aura:if>
-    
-    <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
-        <!--<c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />-->
-        <c:DRL_ConvertLeadProspect recordId="{!v.recordId}" blnrenderfrompath="true"/>
-    </aura:if>
-  <!--  <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
-        <c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />
-    </aura:if> -->
     
 </aura:component>

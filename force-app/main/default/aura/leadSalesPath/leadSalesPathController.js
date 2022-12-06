@@ -1,6 +1,6 @@
 ({
     getLeadStatus:function(component,event,helper){
-        
+        component.set('v.blnIsComponentRendered',false);
         var action = component.get("c.getStatus");
         action.setParams({recordId : component.get("v.recordId"),objectType:component.get("v.objectType"),selectedField:component.get("v.selectedField")});
         action.setCallback(this, function(response) {
@@ -19,6 +19,7 @@
                 console.log(response.getReturnValue());
                 component.set("v.spin",false);
             }
+            component.set('v.blnIsComponentRendered',true);
         });
         $A.enqueueAction(action);
     },
