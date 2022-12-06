@@ -12,9 +12,11 @@
                 component.set("v.currentStep",response.getReturnValue().ld.Status);
                 component.set("v.getStep",response.getReturnValue().ld.Status);
                 component.set("v.product",response.getReturnValue().ld.Product_Lookup__c );
-                component.set('v.objLead',response.getReturnValue().ld);
-                if(response.getReturnValue().ld.IsConverted==true)
+                component.set('v.objLead',response.getReturnValue().ld);                
+                component.set("v.openPopup","Close");
+                if(response.getReturnValue().ld.IsConverted==true){
                     component.set("v.disableMark",true);
+                }                    
                 console.log(response.getReturnValue().ld.IsConverted);
                 console.log(response.getReturnValue());
                 component.set("v.spin",false);
@@ -30,11 +32,7 @@
         }
         var getStatus= event.getParam("detail").value;
         var initialStatus=component.get("v.initialStep");
-        component.set("v.getStep",getStatus);
-        //alert(currentStatus);
-        //alert(initialStatus);
-        //component.set("v.currentStep",currentStatus);
-        
+        component.set("v.getStep",getStatus);        
         var statusList=[];
         statusList=component.get("v.picklistValues");
         
