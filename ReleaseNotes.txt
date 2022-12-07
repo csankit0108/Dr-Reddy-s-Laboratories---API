@@ -27,3 +27,4 @@
     - Marketing Manager User
     - Marketing Manager User with Account Creation Permissions
 4. Assign the "Pardot Permission" permission set to the System Admin.
+5. Make Country Field Mandatory on Lead Layout
