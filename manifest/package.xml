@@ -197,5 +197,9 @@
 		<members>Marketing Manager User with Account Creation Permissions</members>
 		<name>Profile</name>
 	</types>
+	<types>
+		<members>DRL_Prospect_Record_Page</members>
+		<name>FlexiPage</name>
+	</types>
 	<version>55.0</version>
 </Package>
