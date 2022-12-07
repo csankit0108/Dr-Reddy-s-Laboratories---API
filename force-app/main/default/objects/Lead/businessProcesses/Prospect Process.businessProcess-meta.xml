@@ -3,19 +3,7 @@
     <fullName>Prospect Process</fullName>
     <isActive>true</isActive>
     <values>
-        <fullName>Contacted</fullName>
-        <default>false</default>
-    </values>
-    <values>
         <fullName>Converted</fullName>
-        <default>false</default>
-    </values>
-    <values>
-        <fullName>Declined</fullName>
-        <default>false</default>
-    </values>
-    <values>
-        <fullName>On Hold%2FPostponed</fullName>
         <default>false</default>
     </values>
     <values>
