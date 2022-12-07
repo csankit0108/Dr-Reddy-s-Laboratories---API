@@ -131,6 +131,7 @@ public class DRL_OpportunityTriggerHelper {
             }
             
             for (Opportunity objOpportunity : list_Opportunities) {
+                Boolean blnContactCampaignAdded = false ;
                 //Create CampaignInfluence for the Campaign from the Contact
                 if (
                     String.isNotBlank(objOpportunity.Contact__c) && 
@@ -144,6 +145,7 @@ public class DRL_OpportunityTriggerHelper {
                         objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
                         objCampaignInfluence.Stage_Updated_On__c = System.now();
                         objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity,map_OldOpportunities?.get(objOpportunity.Id), objCampaignInfluence);
+                        blnContactCampaignAdded = true;
                     } else {
                         objCampaignInfluence = new CampaignInfluence();
                         objCampaignInfluence.ContactId = objOpportunity.Contact__c;
@@ -151,6 +153,7 @@ public class DRL_OpportunityTriggerHelper {
                         objCampaignInfluence.OpportunityId = objOpportunity.Id;
                         objCampaignInfluence.Influence = 0;
                         objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(objOpportunity,map_OldOpportunities?.get(objOpportunity.Id), objCampaignInfluence);
+                        blnContactCampaignAdded = true;
                         objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
                         objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
                         objCampaignInfluence.Stage_Updated_On__c = System.now();
@@ -169,7 +172,20 @@ public class DRL_OpportunityTriggerHelper {
                         objCampaignInfluence.ContactId = objOpportunity.Contact__c;
                         objCampaignInfluence.CampaignId = map_SourceCampaignIdByLeadId.get(objOpportunity.Lead_Converted_From__c);
                         objCampaignInfluence.OpportunityId = objOpportunity.Id;
-                        objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
+                        if (objOpportunity.StageName == 'Lead Generation' && blnContactCampaignAdded) {
+                            objCampaignInfluence.Influence = 10 ;
+                        } else {
+                        	objCampaignInfluence.Influence = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
+                        }
+
+                        if (!blnContactCampaignAdded) {
+                        	objCampaignInfluence = DRL_OpportunityTriggerHelper.CalculateInfluencePercentage(
+                                objOpportunity,
+                                map_OldOpportunities?.get(objOpportunity.Id), 
+                                objCampaignInfluence
+                            );
+                        }
+
                         objCampaignInfluence.ModelId = objCampaignInfluenceModel.Id;
                         objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
                         objCampaignInfluence.Stage_Updated_On__c = System.now();
@@ -217,37 +233,44 @@ public class DRL_OpportunityTriggerHelper {
         Decimal decTempInfluenceWeightage = 0;
         decTempInfluenceWeightage = objCampaignInfluence.Influence;
         if (objOldOpportunity == null) {
-            
-            
-            //If Stage is present in Metadata
-            if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
-            Integer intStageSortOrder = Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c);
-                
-                for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
-                    //If Stage selected On Opportunity is present in Metadata(Lead Converted Opportunity & Source Campaign is Present on Lead)
-                    if (objOpportunity.Lead_Converted_From__c!=null && 
-                       (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
-                        map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Label == 'Lead Generation' ) {                  
-                        continue;
-                    }
-                    //If Stage selected On Opportunity is present in Metadata
-                    decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
-                }
-            }
-            else {
-                
-                //If Stage is beyond the Metadata
-                for (Integer intSortOrder = 1; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++) {
-                    //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered(Lead Converted Opportunity & Source Campaign is Present on Lead)
-                    if (objOpportunity.Lead_Converted_From__c!=null &&
-                       (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
-                       map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
-                        continue;
-                    }
+            if (
+                objOpportunity.StageName == 'Lead Generation' && 
+                objOpportunity.Lead_Converted_From__c!=null && 
+                (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c) != null
+            ) {
+            	decTempInfluenceWeightage = 10 ;
+            } else {
+                //If Stage is present in Metadata
+                if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
+                Integer intStageSortOrder = Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c);
                     
-                    //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered
-                    if ((map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder))!=null) {
+                    for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
+                        //If Stage selected On Opportunity is present in Metadata(Lead Converted Opportunity & Source Campaign is Present on Lead)
+                        if (objOpportunity.Lead_Converted_From__c!=null && 
+                           (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
+                            map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Label == 'Lead Generation' ) {                  
+                            decTempInfluenceWeightage = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get('Source Campaign').Weightage__c);
+                            continue;
+                        }
+                        //If Stage selected On Opportunity is present in Metadata
                         decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
+                    }
+                }
+                else {
+                    
+                    //If Stage is beyond the Metadata
+                    for (Integer intSortOrder = 1; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++) {
+                        //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered(Lead Converted Opportunity & Source Campaign is Present on Lead)
+                        if (objOpportunity.Lead_Converted_From__c!=null &&
+                           (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
+                           map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder)?.Label == 'Lead Generation') {
+                            continue;
+                        }
+                        
+                        //If Stage selected On Opportunity is beyond Metadata - Bio Batch Ordered
+                        if ((map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder))!=null) {
+                            decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
+                        }
                     }
                 }
             }

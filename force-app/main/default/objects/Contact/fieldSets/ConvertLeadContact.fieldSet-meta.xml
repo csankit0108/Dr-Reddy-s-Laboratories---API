@@ -38,7 +38,7 @@
         <isRequired>true</isRequired>
     </displayedFields>
     <displayedFields>
-        <field>Department</field>
+        <field>Department__c</field>
         <isFieldManaged>false</isFieldManaged>
         <isRequired>true</isRequired>
     </displayedFields>
