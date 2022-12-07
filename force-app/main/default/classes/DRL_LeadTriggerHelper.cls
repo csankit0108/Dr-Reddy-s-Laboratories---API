@@ -58,7 +58,7 @@ public without sharing class DRL_LeadTriggerHelper {
         
         try {
             for (Lead objLead : list_Leads) {
-                if (objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect')) {
+                if (objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect') && String.isBlank(objLead.DRL_Prospect__c) && String.isNotBlank(objLead.Email)) {
                     if (!map_ExistingLeadByEmail.containsKey(objLead.Email)) {
                         //Creating Prospect if it's not existing in the system
                         Map<String, Object> map_LeadFieldByName = objLead.getPopulatedFieldsAsMap();
@@ -82,7 +82,6 @@ public without sharing class DRL_LeadTriggerHelper {
                         objLeadToUpdate.DRL_Prospect__c = map_ExistingLeadByEmail.get(objLead.Email).Id;
                         objLeadToUpdate.DRL_Email__c = objLead.Email;
                         objLeadToUpdate.Email = null;
-                        objLeadToUpdate.Select_Country__c = null;
 
                         if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                             objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
@@ -99,7 +98,6 @@ public without sharing class DRL_LeadTriggerHelper {
                 Lead objLeadToUpdate = new Lead(Id = objLead.Id);
                 objLeadToUpdate.DRL_Email__c = objLead.Email;
                 objLeadToUpdate.Email = null;
-                objLeadToUpdate.Select_Country__c = null;
 
                 if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                     objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
