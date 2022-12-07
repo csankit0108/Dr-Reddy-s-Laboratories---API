@@ -28,6 +28,14 @@
         <apexClass>DRL_UpdatePotentialAtLaunchBatch</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>DRL_ConvertLeadProspectController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>DRL_OpportunityTriggerHelper</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <custom>false</custom>
     <fieldPermissions>
         <editable>true</editable>
