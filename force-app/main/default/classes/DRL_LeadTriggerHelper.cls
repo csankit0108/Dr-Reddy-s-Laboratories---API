@@ -99,7 +99,6 @@ public without sharing class DRL_LeadTriggerHelper {
                 Lead objLeadToUpdate = new Lead(Id = objLead.Id);
                 objLeadToUpdate.DRL_Email__c = objLead.Email;
                 objLeadToUpdate.Email = null;
-                objLeadToUpdate.Select_Country__c = null;
 
                 if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                     objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
