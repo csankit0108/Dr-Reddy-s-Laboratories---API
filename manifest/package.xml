@@ -148,10 +148,6 @@
 		<name>RecordType</name>
 	</types>
 	<types>
-		<members>Admin</members>
-		<name>Profile</name>
-	</types>
-	<types>
 		<members>CLDRL00001</members>
 		<members>CLDRL00002</members>
 		<members>CLDRL00003</members>
@@ -194,6 +190,12 @@
 	<types>
 		<members>Pardot_Permission</members>
 		<name>PermissionSet</name>
+	</types>
+	<types>
+		<members>Admin</members>
+		<members>Marketing Manager User</members>
+		<members>Marketing Manager User with Account Creation Permissions</members>
+		<name>Profile</name>
 	</types>
 	<version>55.0</version>
 </Package>
