@@ -142,7 +142,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                         AND ModelId =: objCampaignInfluenceModel.Id
                                                                         AND CampaignId=:objCampaign1.Id];
         
-        System.assertEquals(75, list_CampaignInfluenceWhenStageSample[0].Influence);
+        System.assertEquals(55, list_CampaignInfluenceWhenStageSample[0].Influence);
         DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger =false;
         
         objOpportunity.StageName = 'Planning';
@@ -159,7 +159,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                     AND ModelId =: objCampaignInfluenceModel.Id
                                                                     LIMIT 1];
             
-        System.assertEquals(100, objCampaignInfluenceWhenStagePlanning.Influence);
+        System.assertEquals(80, objCampaignInfluenceWhenStagePlanning.Influence);
         Test.stopTest();   
     }
     
@@ -297,7 +297,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                             AND ModelId =: objCampaignInfluenceModel.Id
                                                                             AND CampaignId=:objCampaign1.Id];
         
-        System.assertEquals(55, list_CampaignInfluenceWhenStageDiscussion[0].Influence);
+        System.assertEquals(35, list_CampaignInfluenceWhenStageDiscussion[0].Influence);
         DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger =false;
         objOpportunity.StageName = 'Development';
         update objOpportunity;
@@ -314,7 +314,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                     AND CampaignId =:objCampaign.Id
                                                                     LIMIT 1];
         
-        System.assertEquals(90, objCampaignInfluenceWhenStageDevelopment.Influence);
+        System.assertEquals(70, objCampaignInfluenceWhenStageDevelopment.Influence);
         Test.stopTest();   
     }
     
