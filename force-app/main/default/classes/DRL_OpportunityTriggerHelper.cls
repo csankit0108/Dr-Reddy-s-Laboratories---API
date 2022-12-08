@@ -15,7 +15,7 @@ public class DRL_OpportunityTriggerHelper {
     //List of all the Errors occurred during DML operation
     public static List<String> list_ConsolidatedDMLErrors = new List<String>();
     //Map of Leads By Id
-    public static Map<Id,Lead> map_LeadsById = new Map<Id,Lead>();
+    public static Map<Id, Lead> map_LeadsById = new Map<Id, Lead>();
     //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Label
     public static Map<String, DRL_CampaignInfluenceConfiguration__mdt> map_CampaignInfluenceConfigurationByLabel = new Map<String, DRL_CampaignInfluenceConfiguration__mdt>();
     //Map of Custom Metadata DRL_CampaignInfluenceConfiguration__mdt By Sort Order
@@ -23,7 +23,9 @@ public class DRL_OpportunityTriggerHelper {
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
     public static String strModelDeveloperName = Label.CLDRL00001;
     //Map of CampaignIds with ContactIds
-    public static Map<Id,Id> map_CampaignIdByContactId = new Map<Id,Id>();
+    public static Map<Id, Id> map_CampaignIdByContactId = new Map<Id, Id>();
+    //Map of OpportunityIds by List Of Influences
+    public static Map<Id, List<CampaignInfluence>> map_OpportunityIdByListOfInfluences = new Map<Id, List<CampaignInfluence>>();
     //Quering the Value of DeveloperName 
     public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
                                                                       Id,
@@ -52,7 +54,7 @@ public class DRL_OpportunityTriggerHelper {
         // Set of LeadIds
         Set<Id> set_LeadIds = new Set<Id>();
         //Map of SourceCampaignIds By LeadIds
-        Map<Id,Id> map_SourceCampaignIdByLeadId =new Map<Id,Id>();
+        Map<Id, Id> map_SourceCampaignIdByLeadId =new Map<Id, Id>();
         //Map of CampaignInfluence record by combinaation of Opp Id+Contact Id+Campaign Id
         Map<String, CampaignInfluence> map_CampaignInfluenceByUniqueKey = new Map<String, CampaignInfluence>();
 
@@ -122,17 +124,32 @@ public class DRL_OpportunityTriggerHelper {
                                       WHERE OpportunityId IN :set_OpportunityIds 
                                       AND ModelId = :objCampaignInfluenceModel.Id
                                       AND ContactId IN :set_ContactIds];
-                                
+                 
             if (!list_CampaignInfluences.isEmpty()) {
                 for (CampaignInfluence objCampaignInfluence : list_CampaignInfluences) {
                     String strUniqueKey = objCampaignInfluence.OpportunityId + '' + objCampaignInfluence.ContactId + '' + objCampaignInfluence.CampaignId;
                     map_CampaignInfluenceByUniqueKey.put(strUniqueKey, objCampaignInfluence);
+                    if (map_OpportunityIdByListOfInfluences.containsKey(objCampaignInfluence.OpportunityId)) {
+                        map_OpportunityIdByListOfInfluences.get(objCampaignInfluence.OpportunityId).add(objCampaignInfluence);
+                    }
+                    else {
+                        map_OpportunityIdByListOfInfluences.put(objCampaignInfluence.OpportunityId, new List<CampaignInfluence>{ objCampaignInfluence });
+                    }
                 }
             }
             
             for (Opportunity objOpportunity : list_Opportunities) {
                 Boolean blnContactCampaignAdded = false ;
-                //Create CampaignInfluence for the Campaign from the Contact
+                if (map_OpportunityIdByListOfInfluences.containskey(objOpportunity.Id)) {
+                    Decimal decCampaignInfluencePercentage = 0;
+                    for (CampaignInfluence objCampaignInfluence : map_OpportunityIdByListOfInfluences.get(objOpportunity.Id)) {
+                        decCampaignInfluencePercentage += objCampaignInfluence.Influence;
+                    }
+                    
+                    if (decCampaignInfluencePercentage == 100) {
+                    	continue;
+                    }
+                }
                 if (
                     String.isNotBlank(objOpportunity.Contact__c) && 
                     map_CampaignIdByContactId.containsKey(objOpportunity.Contact__c)
@@ -193,7 +210,7 @@ public class DRL_OpportunityTriggerHelper {
                     }
                 }
             }
-            
+               
             if (!list_InsertCampaignInfluences.isEmpty()) {
                 if (Test.isRunningTest() && DRL_OpportunityTriggerHelperTest.blnThrowException) {
                     throw new DMLException();

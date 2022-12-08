@@ -269,7 +269,7 @@ public class DRL_OpportunityTriggerHelperTest {
             .setAccountId(objContact.AccountId)
             .setContactId(objContact.Id)
             .setProductId(objProduct.Id)
-            .setStageName('Discussion')
+            .setStageName('Lead Generation')
             .setCloseDate(System.today())
             .setPriceAtLaunch(1000)
             .setQuantityAtLaunch(10)
@@ -297,7 +297,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                             AND ModelId =: objCampaignInfluenceModel.Id
                                                                             AND CampaignId=:objCampaign1.Id];
         
-        System.assertEquals(35, list_CampaignInfluenceWhenStageDiscussion[0].Influence);
+        System.assertEquals(10, list_CampaignInfluenceWhenStageDiscussion[0].Influence);
         DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger =false;
         objOpportunity.StageName = 'Development';
         update objOpportunity;
@@ -314,7 +314,7 @@ public class DRL_OpportunityTriggerHelperTest {
                                                                     AND CampaignId =:objCampaign.Id
                                                                     LIMIT 1];
         
-        System.assertEquals(70, objCampaignInfluenceWhenStageDevelopment.Influence);
+        System.assertEquals(80, objCampaignInfluenceWhenStageDevelopment.Influence);
         Test.stopTest();   
     }
     
