@@ -58,7 +58,11 @@ public without sharing class DRL_LeadTriggerHelper {
         
         try {
             for (Lead objLead : list_Leads) {
-                if (objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect')) {
+                if (
+                    objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect') && 
+                    String.isBlank(objLead.DRL_Prospect__c) && 
+                    String.isNotBlank(objLead.Email)
+                ) {
                     if (!map_ExistingLeadByEmail.containsKey(objLead.Email)) {
                         //Creating Prospect if it's not existing in the system
                         Map<String, Object> map_LeadFieldByName = objLead.getPopulatedFieldsAsMap();
