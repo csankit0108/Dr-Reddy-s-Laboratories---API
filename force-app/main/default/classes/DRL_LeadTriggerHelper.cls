@@ -38,6 +38,7 @@ public without sharing class DRL_LeadTriggerHelper {
         List<Lead> list_LeadsToUpdate = new List<Lead>();
         //List of Campaign Members to be created.
         List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
+        Set<Id> set_ProspectIds = new Set<Id>();
 
         for (FieldSetMember objFieldSetMember : list_LeadFieldSetMembers) {
             list_LeadObjectFields.add(objFieldSetMember.getSObjectField()); 
@@ -149,6 +150,18 @@ public without sharing class DRL_LeadTriggerHelper {
                                   FROM Lead 
                                   WHERE Id IN :list_LeadsToUpdate];
             for (Lead objLead : list_LeadsToUpdate) {
+                if (String.isNotBlank(objLead.DRL_Prospect__c)) {
+                    set_ProspectIds.add(objLead.DRL_Prospect__c);
+                }
+            }
+
+            Map<Id, Lead> map_ProspectById = new Map<Id, Lead>([
+                SELECT Id, IsConverted, Converted_Contact__c 
+                FROM Lead 
+                WHERE Id IN :set_ProspectIds
+            ]);
+
+            for (Lead objLead : list_LeadsToUpdate) {
                 if ( 
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
                     objLead.DRL_SourceCampaign__c != null &&
@@ -156,7 +169,15 @@ public without sharing class DRL_LeadTriggerHelper {
                 ) {
                     CampaignMember objCampaignMember = new CampaignMember();
                     objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
-                    objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                    objCampaignMember.LeadId = objLead.DRL_Prospect__c;
+                    if (
+                        map_ProspectById.containsKey(objLead.DRL_Prospect__c) &&
+                        map_ProspectById.get(objLead.DRL_Prospect__c).IsConverted &&
+                        String.isNotBlank(map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c)
+                    ) {
+                        objCampaignMember.ContactId = map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c;
+                    } 
+
                     list_CampaignMembers.add(objCampaignMember);
                 }
             }
@@ -371,6 +392,25 @@ public without sharing class DRL_LeadTriggerHelper {
         /*
         * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
         */
+        Set<Id> set_ConvertedProspectIds = new Set<Id>();
+        Map<Id, Lead> map_ProspectById = new Map<Id, Lead>();
+        for (Lead objLead : map_NewMap.values()) {
+            if (
+                objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                String.isNotBlank(objLead.DRL_Prospect__c)
+            ) {
+                set_ConvertedProspectIds.add(objLead.DRL_Prospect__c);
+            }
+        }
+
+        if (!set_ConvertedProspectIds.isEmpty()) {
+            map_ProspectById = new Map<Id, Lead>([
+                SELECT Id, IsConverted, Converted_Contact__c 
+                FROM Lead 
+                WHERE Id IN :set_ConvertedProspectIds
+            ]);
+        }
+
         for (Lead objLead : map_NewMap.values()) {
             if ( 
                 objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
@@ -381,6 +421,14 @@ public without sharing class DRL_LeadTriggerHelper {
                 CampaignMember objCampaignMember = new CampaignMember();
                 objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
                 objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                if (
+                    map_ProspectById.containsKey(objLead.DRL_Prospect__c) &&
+                    map_ProspectById.get(objLead.DRL_Prospect__c).IsConverted &&
+                    String.isNotBlank(map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c)
+                ) {
+                    objCampaignMember.ContactId = map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c;
+                } 
+
                 list_CampaignMembers.add(objCampaignMember);
             }
         }
