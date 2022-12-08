@@ -43,11 +43,6 @@
         <isRequired>true</isRequired>
     </displayedFields>
     <displayedFields>
-        <field>Select_Country__c</field>
-        <isFieldManaged>false</isFieldManaged>
-        <isRequired>false</isRequired>
-    </displayedFields>
-    <displayedFields>
         <field>On_board_customer_to_XCEED__c</field>
         <isFieldManaged>false</isFieldManaged>
         <isRequired>false</isRequired>
