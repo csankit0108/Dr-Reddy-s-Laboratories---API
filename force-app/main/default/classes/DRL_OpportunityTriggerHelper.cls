@@ -60,6 +60,12 @@ public class DRL_OpportunityTriggerHelper {
         //Set of ProspectIds
         Set<Id> set_ProspectIds = new Set<Id>();
 
+                
+        map_OpportunityIdByListOfInfluences = new Map<Id, List<CampaignInfluence>>();
+        map_CampaignIdByContactId = new Map<Id, Id>();
+        list_ConsolidatedDMLErrors = new List<String>();
+        map_LeadsById = new Map<Id, Lead>();
+
         try{
             for (DRL_CampaignInfluenceConfiguration__mdt objCampaignInfluenceConfiguration : DRL_CampaignInfluenceConfiguration__mdt.getAll().values()) {
                 map_CampaignInfluenceConfigurationByLabel.put(
@@ -259,7 +265,7 @@ public class DRL_OpportunityTriggerHelper {
                     }
                 }
             }
-           
+        
             if (!map_CampaignInfluenceToInsert.isEmpty()) {
                 if (Test.isRunningTest() && DRL_OpportunityTriggerHelperTest.blnThrowException) {
                     throw new DMLException();
