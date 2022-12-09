@@ -31,7 +31,7 @@
     
     getContactFields : function(component,event,helper){
         let list_ContactFieldsToRender=[];
-        let objContact = component.get("v.objContact");
+        let objContact = JSON.parse(JSON.stringify(component.get("v.objContact")));
         let list_ContactFieldSet = component.get("v.list_ContactFieldSet");
         let map_FieldTypes={};
         list_ContactFieldSet.forEach(function(field_contact){

@@ -48,7 +48,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                         Id=objRespone.objLead.DRL_Prospect__r.ConvertedContactId,
                         FirstName=objRespone.objLead.DRL_Prospect__r.ConvertedContact.FirstName,
                         LastName=objRespone.objLead.DRL_Prospect__r.ConvertedContact.LastName,
-                        AccountId= objRespone.objLead.ConvertedAccountId
+                        AccountId= objRespone.objLead.DRL_Prospect__r.ConvertedAccountId
                     );  
                 }
                 else{
