@@ -136,6 +136,7 @@
 		<members>Lead.Check_Country_Field</members>
 		<members>Lead.CheckRunAutomation</members>
 		<members>Opportunity.DRL_ContactChangeValidation</members>
+		<members>Lead.DRL_LeadShouldBeRelatedtoProspect</members>
 		<name>ValidationRule</name>
 	</types>
 	<types>
