@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Lead_should_be_related_to_Prospect</fullName>
+    <fullName>DRL_LeadShouldBeRelatedtoProspect</fullName>
     <active>true</active>
     <errorConditionFormula>AND(   NOT(ISNULL( DRL_Prospect__c ))  , DRL_Prospect__r.RecordType.Name = &apos;Lead&apos;)</errorConditionFormula>
     <errorDisplayField>DRL_Prospect__c</errorDisplayField>
