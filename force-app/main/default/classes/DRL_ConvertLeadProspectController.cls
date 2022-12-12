@@ -47,7 +47,8 @@ public with sharing class DRL_ConvertLeadProspectController {
                     objRespone.objparentProspectContact = new Contact(
                         Id=objRespone.objLead.DRL_Prospect__r.ConvertedContactId,
                         FirstName=objRespone.objLead.DRL_Prospect__r.ConvertedContact.FirstName,
-                        LastName=objRespone.objLead.DRL_Prospect__r.ConvertedContact.LastName
+                        LastName=objRespone.objLead.DRL_Prospect__r.ConvertedContact.LastName,
+                        AccountId= objRespone.objLead.DRL_Prospect__r.ConvertedAccountId
                     );  
                 }
                 else{
@@ -67,7 +68,8 @@ public with sharing class DRL_ConvertLeadProspectController {
                     objRespone.objparentProspectContact = new Contact(
                         Id = objRespone.objLead.ConvertedContactId,
                         FirstName = objRespone.objLead.ConvertedContact.FirstName,
-                        LastName = objRespone.objLead.ConvertedContact.LastName
+                        LastName = objRespone.objLead.ConvertedContact.LastName,
+                        AccountId= objRespone.objLead.ConvertedAccountId
                     );                  
                 }
                 objRespone.listProspectChildLeads=getChildLeads(strrecordId);
