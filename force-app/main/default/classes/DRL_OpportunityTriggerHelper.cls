@@ -351,15 +351,21 @@ public class DRL_OpportunityTriggerHelper {
             }
         }
         else {
-
+            integer intStartSortOrder;
+            if(!map_OpportunityIdByListOfInfluences.containsKey(objOpportunity.Id)) {
+                intStartSortOrder = 1;
+            }
+            else {
+                intStartSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1;
+            }
             if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOldOpportunity.StageName)) {
                 if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
-                    for (Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1 ; intSortOrder <= map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c; intSortOrder++) {
+                    for (Integer intSortOrder = intStartSortOrder ; intSortOrder <= map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c; intSortOrder++) {
                         decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
                     }  
                 }
                 else {
-                    for ( Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++ ) {
+                    for ( Integer intSortOrder = intStartSortOrder ; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++ ) {
                         decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
                     }
                 }
