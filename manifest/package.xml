@@ -15,6 +15,10 @@
 		<members>DRL_OpportunityTriggerHelper</members>
 		<members>DRL_OpportunityTriggerHelperTest</members>
 		<members>LeadReminderEmailSchedulerTest</members>
+		<members>CampaignApproval_Test</members>
+		<members>DRL_OfflineOpportunityTest</members>
+		<members>OpportunityTriggerHandlerTest</members>
+		<members>populateValuesInsertTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
