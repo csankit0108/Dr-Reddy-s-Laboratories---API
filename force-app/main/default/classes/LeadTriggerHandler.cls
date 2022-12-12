@@ -38,6 +38,16 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
     
     public override void afterInsert() {
         DRL_LeadTriggerHelper.processAfterInsert(this.newList);
+        try {
+            DRL_LeadTriggerHelper.processAfterInsert(this.newMap); 
+        } catch(Exception objException) {
+            DRLUtil.logException(
+                'DRL_LeadTriggerHelper',
+                'afterInsert',
+                objException,
+                true
+            );
+        }
     }
 
     public override void afterUpdate() {

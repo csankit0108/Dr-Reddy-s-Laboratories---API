@@ -14,7 +14,7 @@
 *******************************************************************************************************/
 public without sharing class DRL_LeadTriggerHelper {
     public static Boolean blnSkipTrigger = false;
-    public static void processAfterInsert(List<Lead> list_Leads) {
+    public static void processAfterInsert(List<Lead> list_Leads, Map<Id, Lead> map_NewMaps) {
         Schema.DescribeSObjectResult objDescribeSObjectResult = Lead.sObjectType.getDescribe();
         // Map of existing Leads by Email
         Map<String, Lead> map_ExistingLeadByEmail = new Map<String, Lead>();
@@ -39,6 +39,20 @@ public without sharing class DRL_LeadTriggerHelper {
         //List of Campaign Members to be created.
         List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
         Set<Id> set_ProspectIds = new Set<Id>();
+         //Set to store the Prospect Ids
+         Set<Id> set_ProspectId = new Set<Id>();
+         //map to get the weightage of Status value  
+         Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
+             = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
+         //List of Prospect records to update
+         List<Lead> list_ProspectsToUpdate  = new List<Lead>();
+         //list of DRL_ProspectLeadStatusMapping__mdt records
+         List<DRL_ProspectLeadStatusMapping__mdt> list_ProspectLeadStatusMappings 
+             = new List<DRL_ProspectLeadStatusMapping__mdt>();
+         //List of all the Errors occurred during DML operation
+         List<String> list_ConsolidatedDMLError = new List<String>();
+         //List of Leads for which Status has changed
+         List<Lead> list_Lead = new List<Lead>();
 
         for (FieldSetMember objFieldSetMember : list_LeadFieldSetMembers) {
             list_LeadObjectFields.add(objFieldSetMember.getSObjectField()); 
@@ -200,6 +214,82 @@ public without sharing class DRL_LeadTriggerHelper {
                 true
             );
         }
+        /* Prospect Status update on Lead Creation */
+        for (Lead objLead : map_NewMaps.values()) {
+            if (map_NewMaps.containsKey(objLead.Id) ) {
+                list_Lead.add(objLead);
+            }
+        }
+
+        for (Lead objLead : list_Lead) {
+            if (String.isNotBlank(objLead.DRL_Prospect__c)) {
+                set_ProspectId.add(objLead.DRL_Prospect__c);
+            }
+        }
+
+        //Map of Prospect records by Id
+        Map<Id, Lead> map_LeadById = new Map<Id, Lead>([
+            SELECT Id, Status
+            FROM Lead
+            WHERE Id IN :set_ProspectId
+        ]);
+
+        list_ProspectLeadStatusMappings = DRL_ProspectLeadStatusMapping__mdt.getAll().values();
+        //Fetch the records from Custom metadata and form a map of metadata record by status value
+        for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : list_ProspectLeadStatusMappings) {
+            if (objProspectLeadStatusMapping.Active__c) {
+                map_StatusMappingByLeadStatus.put(
+                    objProspectLeadStatusMapping.LeadStatus__c, 
+                    objProspectLeadStatusMapping
+                );
+            }
+        }
+
+        for (Lead objLead : list_Lead) {
+            if (String.isBlank(objLead.DRL_Prospect__c)) {
+                continue;
+            }
+            
+            Lead objProspect = map_LeadById.containsKey(objLead.DRL_Prospect__c) 
+                ? map_LeadById.get(objLead.DRL_Prospect__c)
+                : new Lead();
+            //New status value of the Lead
+            String strLeadStatus = objLead.Status;
+            //Current status value of the Prospect
+            String strProspectStatus = objProspect?.Status;
+            //Weightage of the new Lead status value
+            Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strLeadStatus)
+                ? (Integer)map_StatusMappingByLeadStatus.get(strLeadStatus).Weightage__c
+                : 0;
+            //Weightage of the current status value of the Prospect
+            Integer intOldStatusWeightage = (String.isNotBlank(strProspectStatus) && map_StatusMappingByLeadStatus.containsKey(strProspectStatus))
+                ? (Integer)map_StatusMappingByLeadStatus.get(strProspectStatus).Weightage__c
+                : 0;
+            
+            /*Check if the new Lead status weightage > current status of Prospect and
+              old Lead status is not same as the new Prospect status that needs to be updated
+            */
+            if (
+                (intNewStatusWeightage > intOldStatusWeightage) &&
+                map_StatusMappingByLeadStatus.containsKey(strLeadStatus) && 
+                (strProspectStatus != map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c)
+            ) {
+                objProspect.Status = map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c;
+                list_ProspectsToUpdate.add(objProspect);
+            }
+        }
+
+        if (!list_ProspectsToUpdate.isEmpty()) {
+            DRL_LeadTriggerHelper.blnSkipTrigger = true;
+            List<Database.SaveResult> list_Results = Database.update(list_ProspectsToUpdate, false);
+            DRL_LeadTriggerHelper.blnSkipTrigger = false;
+            list_ConsolidatedDMLError.addAll(DRLUtil.processDMLErrors(list_Results, 'Update'));
+        }
+
+        if (!list_ConsolidatedDMLError.isEmpty()) {
+            DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'processAfterInsert', list_ConsolidatedDMLError);
+        }   
+     
     } 
 
     /**
