@@ -21,7 +21,7 @@ Public class opportunityAPITest{
         o.RecordTypeId=optyRecordTypeID;
         o.Planned_Price_at_Launch__c=22;
         o.Source_type__c='Primary Source';
-		o.Planned_Qty_at_launch__c=40;
+        o.Planned_Qty_at_launch__c=40;
 		o.Planned_Year__c='2000';        
         insert o;
         Opportunity opt=new Opportunity();
@@ -79,11 +79,13 @@ Public class opportunityAPITest{
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
         insert a;
-        
         product2 p = new product2();
         p.name = 'test';
         insert p;
         ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
+        
+        
+        Test.startTest();
         Opportunity o = new Opportunity();
         o.name = 'test';
         o.AccountId = a.id;
@@ -95,7 +97,8 @@ Public class opportunityAPITest{
 		o.Planned_Qty_at_launch__c=40;
 		o.Planned_Year__c='2000'; 
         insert o;
-        /*Opportunity opt=new Opportunity();
+        
+        Opportunity opt=new Opportunity();
         opt.Id=o.Id;
         opt.StageName='ANDA Filed';
         update opt;
@@ -110,7 +113,47 @@ Public class opportunityAPITest{
         Opportunity opt3=new Opportunity();
         opt3.Id=o.Id;
         opt3.StageName='ANDA Approved';
-        update opt3;*/
+        update opt3;
+        
+        ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
+            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
+            indentRT.producttype = 'API';
+            //indentRT.MapRecordTypes = MapRecordTypestest;
+            indentRT.RedirectPages();
+       Test.stopTest();
+        
+      
+    
+    }
+    
+        public static testmethod void NewControllerTest3(){
+        Account a = new Account();
+        a.name = 'testaccount';
+        a.Geography__c = 'Europe';
+        insert a;
+        
+        product2 p = new product2();
+        p.name = 'test';
+        insert p;
+        ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
+            
+        Test.startTest();   
+        Opportunity o = new Opportunity();
+        o.name = 'test';
+        o.AccountId = a.id;
+        o.StageName = 'Discussion';
+        o.CloseDate = system.today()+1;
+        o.RecordTypeId=optyRecordTypeID;
+        o.Planned_Price_at_Launch__c=22;
+        o.Source_type__c='Primary Source';
+		o.Planned_Qty_at_launch__c=40;
+		o.Planned_Year__c='2000'; 
+        insert o;
+
+        Opportunity opt3=new Opportunity();
+        opt3.Id=o.Id;
+        opt3.StageName='ANDA Approved';
+        update opt3;
         Opportunity opt4=new Opportunity();
         opt4.Id=o.Id;
         opt4.StageName='MA (Marketing Authorization)';
@@ -131,6 +174,48 @@ Public class opportunityAPITest{
         opt6.Reason_for_Loss__c = 'Customer Related';
         opt6.Reason__c='test';
         update opt6;
+        
+        ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
+            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
+            indentRT.producttype = 'API';
+            //indentRT.MapRecordTypes = MapRecordTypestest;
+            indentRT.RedirectPages();
+       Test.stopTest();
+        
+      
+    
+    }
+        public static testmethod void NewControllerTest4(){
+        Account a = new Account();
+        a.name = 'testaccount';
+        a.Geography__c = 'Europe';
+        insert a;
+        product2 p = new product2();
+        p.name = 'test';
+        insert p;
+        ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
+        
+        
+        Test.startTest();
+        Opportunity o = new Opportunity();
+        o.name = 'test';
+        o.AccountId = a.id;
+        o.StageName = 'Discussion';
+        o.CloseDate = system.today()+1;
+        o.RecordTypeId=optyRecordTypeID;
+        o.Planned_Price_at_Launch__c=22;
+        o.Source_type__c='Primary Source';
+		o.Planned_Qty_at_launch__c=40;
+		o.Planned_Year__c='2000'; 
+        insert o;
+        
+            
+        Opportunity opt6=new Opportunity();
+        opt6.Id=o.Id;
+        opt6.StageName='Dropped';
+        opt6.Reason_for_Loss__c = 'Customer Related';
+        opt6.Reason__c='test';
+        update opt6;
         Opportunity opt7=new Opportunity();
         opt7.Id=o.Id;
         opt7.StageName='Bio Batches';
@@ -142,6 +227,12 @@ Public class opportunityAPITest{
         Opportunity opt9=new Opportunity();
         opt9.Id=o.Id;
         opt9.StageName='LOA / LOE';
+        opt9.Planned_Price_at_Launch__c=33;
+        opt9.Source_type__c='Primary Source';
+		opt9.Planned_Qty_at_launch__c=40;
+		opt9.Planned_Year__c='2000';
+        opt9.Price__c=20;
+        opt9.TotalOpportunityQuantity=4;
         update opt9;
         Opportunity opt10=new Opportunity();
         opt10.Id=o.Id;
@@ -153,10 +244,7 @@ Public class opportunityAPITest{
             indentRT.producttype = 'API';
             //indentRT.MapRecordTypes = MapRecordTypestest;
             indentRT.RedirectPages();
-       
-        
-      
-    
+       Test.stopTest();
     }
 
 
