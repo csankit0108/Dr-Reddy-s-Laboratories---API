@@ -9,9 +9,13 @@
 *******************************************************************************************************/
 @isTest
 public class DRL_OfflineOpportunityTest {
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to setup data for testing apex trigger 'OfflineOpportunity'
+    **/
     @TestSetup
     static void makeData(){
-
         Account objAccount = new Account();
         objAccount.Name='Raghu Enterprises';
         objAccount.Copy_Address__c=true;
@@ -30,7 +34,7 @@ public class DRL_OfflineOpportunityTest {
         objContact.Email='raghu@testmail.com';
         insert objContact;
 
-        Profile objProfile = [SELECT Id FROM profile WHERE name='Marketing User'];
+        Profile objProfile = [SELECT Id FROM Profile  WHERE Name = 'Marketing User'];
 
         User objUser = new User(
                         alias = 'raghu',
@@ -55,23 +59,26 @@ public class DRL_OfflineOpportunityTest {
         objMom.Mode_Of_Communication__c='Call';
         objMom.CurrencyIsoCode='USD';
         objMom.MOM_Date__c=System.Today();
-        insert objMom;
+        insert objMom;  
 
-        
-        
     }
+    
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to create opportunities and invoke apex trigger 'OfflineOpportunity'
+    **/
     @isTest
     public static void testCreateOfflineOpportunity() {
 
-        User objUser=[select Id from User where Email='raghu@testmail.com' limit 1];
+        User objUser=[SELECT Id FROM User WHERE Email = 'raghu@testmail.com' LIMIT 1];
 
-        Account objAccount = [select Id from Account where Name='Raghu Enterprises' limit 1];
+        Account objAccount = [SELECT Id FROM Account WHERE Name = 'Raghu Enterprises' LIMIT 1];
 
-        MOM__c objMom=[select Id from MOM__c where Account__c=:objAccount.Id limit 1];
+        MOM__c objMom=[SELECT Id FROM MOM__c WHERE Account__c =: objAccount.Id LIMIT 1];
 
-        Product2 objProduct = [select Id from Product2 where ProductCode='00000001' limit 1];
+        Product2 objProduct = [SELECT Id FROM Product2 WHERE ProductCode = '00000001' LIMIT 1];
 
-        Contact objContact = [select Id from Contact where AccountId=:objAccount.Id limit 1];           
+        Contact objContact = [SELECT Id FROM Contact WHERE AccountId =: objAccount.Id LIMIT 1];           
 
         Create_Opportunity__c objOfflineOpportunity = new Create_Opportunity__c();
         objOfflineOpportunity.MOM__c = objMom.Id;
