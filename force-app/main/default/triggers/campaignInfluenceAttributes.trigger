@@ -1,9 +1,11 @@
 trigger campaignInfluenceAttributes on CampaignInfluence (after insert,after update) {
-    if (caseStaticVars.allowInfluenceInTrigger) {
+    
+    if(caseStaticVars.allowInfluenceInTrigger)
+    {
         List<CampaignInfluence> camplist = new List<CampaignInfluence>();
         List<CampaignInfluence> camplist2 = new List<CampaignInfluence>();
         try
-        {
+        { 
             Map<Id,Id> campOptyMap = new Map<Id,Id>();
             Map<Id,Id> optyStageTrackerMap = new Map<Id,Id>();
             Map<Id,Opportunity_Stage_Tracker__c> optyStageTrackerMap2 = new Map<Id,Opportunity_Stage_Tracker__c>();
@@ -106,8 +108,7 @@ trigger campaignInfluenceAttributes on CampaignInfluence (after insert,after upd
         }
         
     }
-
     if (trigger.isAfter && (trigger.isInsert || trigger.isUpdate)) {
-        DRL_CampaignInfluenceTriggerHelper.calculateValueOfBioBatch(trigger.new);
+        DRL_CampaignInfluenceAttributesHelper.calculateValueOfBioBatch(trigger.new);
     }
 }
