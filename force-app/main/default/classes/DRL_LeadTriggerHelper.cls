@@ -125,10 +125,10 @@ public without sharing class DRL_LeadTriggerHelper {
                             //Check if the weightage of the new Prospect > current weightage of Prospect status
                             if (
                                 (intNewStatusWeightage > intOldStatusWeightage) &&
-                                (objProspectToUpdate.Status != map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c)
+                                (objProspectToUpdate.Status != map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c)
                             ) {
-                                objProspect.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
-                                list_ProspectsToUpdate.add(objProspect);
+                                objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
+                                list_ProspectsToUpdate.add(objProspectToUpdate);
                             }
                         }
 
