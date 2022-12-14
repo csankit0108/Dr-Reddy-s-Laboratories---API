@@ -2,8 +2,8 @@
 Company: Bodhtree Consulting Ltd  */
 
 @isTest
-Public class opportunityAPITest{
-    public static testmethod void APItest(){
+Public class opportunityAPITest {
+    public static testmethod void APItest() {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
@@ -22,7 +22,7 @@ Public class opportunityAPITest{
         o.Planned_Price_at_Launch__c=22;
         o.Source_type__c='Primary Source';
         o.Planned_Qty_at_launch__c=40;
-		o.Planned_Year__c='2000';        
+        o.Planned_Year__c='2000';
         insert o;
         Opportunity opt=new Opportunity();
         opt.Id=o.Id;
@@ -38,10 +38,9 @@ Public class opportunityAPITest{
         op.Cancel();
         op.save1();
         op.save2();
-        
-    
     }
-    public static testmethod void NewControllerTest1(){
+
+    public static testmethod void NewControllerTest1() {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
@@ -58,8 +57,8 @@ Public class opportunityAPITest{
         o.RecordTypeId=optyRecordTypeID;
         o.Planned_Price_at_Launch__c=22;
         o.Source_type__c='Primary Source';
-		o.Planned_Qty_at_launch__c=40;
-		o.Planned_Year__c='2000'; 
+        o.Planned_Qty_at_launch__c=40;
+        o.Planned_Year__c='2000';
         insert o;
         Opportunity opt=new Opportunity();
         opt.Id=o.Id;
@@ -67,14 +66,12 @@ Public class opportunityAPITest{
         update opt;
         
         ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
-            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
-            indentRT.producttype = 'APIPlus';
-           
-            indentRT.RedirectPages();
-       
-        }
+        OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
+        indentRT.producttype = 'APIPlus';
+        indentRT.RedirectPages();
+    }
     
-    public static testmethod void NewControllerTest2(){
+    public static testmethod void NewControllerTest2() {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
@@ -83,7 +80,6 @@ Public class opportunityAPITest{
         p.name = 'test';
         insert p;
         ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
-        
         
         Test.startTest();
         Opportunity o = new Opportunity();
@@ -94,8 +90,8 @@ Public class opportunityAPITest{
         o.RecordTypeId=optyRecordTypeID;
         o.Planned_Price_at_Launch__c=22;
         o.Source_type__c='Primary Source';
-		o.Planned_Qty_at_launch__c=40;
-		o.Planned_Year__c='2000'; 
+        o.Planned_Qty_at_launch__c=40;
+        o.Planned_Year__c='2000';
         insert o;
         
         Opportunity opt=new Opportunity();
@@ -116,136 +112,139 @@ Public class opportunityAPITest{
         update opt3;
         
         ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
-            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
-            indentRT.producttype = 'API';
-            //indentRT.MapRecordTypes = MapRecordTypestest;
-            indentRT.RedirectPages();
-       Test.stopTest();
-        
-      
-    
+        OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
+        indentRT.producttype = 'API';
+        indentRT.RedirectPages();
+        Test.stopTest();
     }
     
-        public static testmethod void NewControllerTest3(){
-        Account a = new Account();
-        a.name = 'testaccount';
-        a.Geography__c = 'Europe';
-        insert a;
+	/**
+    * @ author       :  Deeksha Suvarna
+    * @ description  :  Test method for updating Stages in Opportunity
+    **/  
+    public static testmethod void NewControllerTest3() {
+        Account objaccount = new Account();
+        objaccount.name = 'testaccount';
+        objaccount.Geography__c = 'Europe';
+        insert objaccount;
         
-        product2 p = new product2();
-        p.name = 'test';
-        insert p;
-        ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
+        product2 objproduct2 = new product2();
+        objproduct2.name = 'test';
+        insert objproduct2;
+        ID optyRecordTypeID = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
             
         Test.startTest();   
-        Opportunity o = new Opportunity();
-        o.name = 'test';
-        o.AccountId = a.id;
-        o.StageName = 'Discussion';
-        o.CloseDate = system.today()+1;
-        o.RecordTypeId=optyRecordTypeID;
-        o.Planned_Price_at_Launch__c=22;
-        o.Source_type__c='Primary Source';
-		o.Planned_Qty_at_launch__c=40;
-		o.Planned_Year__c='2000'; 
-        insert o;
+        Opportunity objOpportunity = new Opportunity();
+        objOpportunity.name = 'test';
+        objOpportunity.AccountId = objaccount.id;
+        objOpportunity.StageName = 'Discussion';
+        objOpportunity.CloseDate = system.today()+1;
+        objOpportunity.RecordTypeId = optyRecordTypeID;
+        objOpportunity.Planned_Price_at_Launch__c = 22;
+        objOpportunity.Source_type__c = 'Primary Source';
+        objOpportunity.Planned_Qty_at_launch__c = 40;
+        objOpportunity.Planned_Year__c = '2000'; 
+        insert objOpportunity;
 
-        Opportunity opt3=new Opportunity();
-        opt3.Id=o.Id;
-        opt3.StageName='ANDA Approved';
-        update opt3;
-        Opportunity opt4=new Opportunity();
-        opt4.Id=o.Id;
-        opt4.StageName='MA (Marketing Authorization)';
-        opt4.Planned_Price_at_Launch__c=32;
-        opt4.Source_type__c='Primary Source';
-        opt4.Planned_Qty_at_launch__c=45;
-        opt4.Planned_Year__c='2006';
-        opt4.Price__c=43;
-        opt4.TotalOpportunityQuantity=12;
-        update opt4;
-        Opportunity opt5=new Opportunity();
-        opt5.Id=o.Id;
-        opt5.StageName='Commercial';
-        update opt5;
-        Opportunity opt6=new Opportunity();
-        opt6.Id=o.Id;
-        opt6.StageName='Dropped';
-        opt6.Reason_for_Loss__c = 'Customer Related';
-        opt6.Reason__c='test';
-        update opt6;
+        Opportunity objOpportunity3 = new Opportunity();
+        objOpportunity3.Id = objOpportunity.Id;
+        objOpportunity3.StageName = 'ANDA Approved';
+        update objOpportunity3;
         
-        ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
-            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
-            indentRT.producttype = 'API';
-            //indentRT.MapRecordTypes = MapRecordTypestest;
-            indentRT.RedirectPages();
-       Test.stopTest();
+        Opportunity objOpportunity4 = new Opportunity();
+        objOpportunity4.Id = objOpportunity.Id;
+        objOpportunity4.StageName = 'MA (Marketing Authorization)';
+        objOpportunity4.Planned_Price_at_Launch__c = 32;
+        objOpportunity4.Source_type__c = 'Primary Source';
+        objOpportunity4.Planned_Qty_at_launch__c = 45;
+        objOpportunity4.Planned_Year__c = '2006';
+        objOpportunity4.Price__c = 43;
+        objOpportunity4.TotalOpportunityQuantity = 12;
+        update objOpportunity4;
         
-      
-    
+        Opportunity objOpportunity5 = new Opportunity();
+        objOpportunity5.Id = objOpportunity.Id;
+        objOpportunity5.StageName = 'Commercial';
+        update objOpportunity5;
+        
+        Opportunity objOpportunity6 = new Opportunity();
+        objOpportunity6.Id = objOpportunity.Id;
+        objOpportunity6.StageName = 'Dropped';
+        objOpportunity6.Reason_for_Loss__c = 'Customer Related';
+        objOpportunity6.Reason__c = 'test';
+        update objOpportunity6;
+        
+        ApexPages.currentPage().getParameters().put('RecordType',objOpportunity.RecordTypeId);
+        OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(objOpportunity));
+        indentRT.producttype = 'API';
+        indentRT.RedirectPages();
+        Test.stopTest();
     }
-        public static testmethod void NewControllerTest4(){
-        Account a = new Account();
-        a.name = 'testaccount';
-        a.Geography__c = 'Europe';
-        insert a;
-        product2 p = new product2();
-        p.name = 'test';
-        insert p;
-        ID optyRecordTypeID= Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
-        
+    
+	/**
+    * @ author       :  Deeksha Suvarna
+    * @ description  :  Test method for updating Stages in Opportunity
+    **/
+    public static testmethod void NewControllerTest4() {
+        Account objaccount = new Account();
+        objaccount.name = 'testaccount';
+        objaccount.Geography__c = 'Europe';
+        insert objaccount;
+        product2 objproduct2 = new product2();
+        objproduct2.name = 'test';
+        insert objproduct2;
+        ID optyRecordTypeID = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId();
         
         Test.startTest();
-        Opportunity o = new Opportunity();
-        o.name = 'test';
-        o.AccountId = a.id;
-        o.StageName = 'Discussion';
-        o.CloseDate = system.today()+1;
-        o.RecordTypeId=optyRecordTypeID;
-        o.Planned_Price_at_Launch__c=22;
-        o.Source_type__c='Primary Source';
-		o.Planned_Qty_at_launch__c=40;
-		o.Planned_Year__c='2000'; 
-        insert o;
+        Opportunity objOpportunity = new Opportunity();
+        objOpportunity.name = 'test';
+        objOpportunity.AccountId = objaccount.id;
+        objOpportunity.StageName = 'Discussion';
+        objOpportunity.CloseDate = system.today()+1;
+        objOpportunity.RecordTypeId = optyRecordTypeID;
+        objOpportunity.Planned_Price_at_Launch__c = 22;
+        objOpportunity.Source_type__c = 'Primary Source';
+        objOpportunity.Planned_Qty_at_launch__c = 40;
+        objOpportunity.Planned_Year__c = '2000'; 
+        insert objOpportunity;
         
-            
-        Opportunity opt6=new Opportunity();
-        opt6.Id=o.Id;
-        opt6.StageName='Dropped';
-        opt6.Reason_for_Loss__c = 'Customer Related';
-        opt6.Reason__c='test';
-        update opt6;
-        Opportunity opt7=new Opportunity();
-        opt7.Id=o.Id;
-        opt7.StageName='Bio Batches';
-        update opt7;
-        Opportunity opt8=new Opportunity();
-        opt8.Id=o.Id;
-        opt8.StageName='Exhibit Batches';
-        update opt8;
-        Opportunity opt9=new Opportunity();
-        opt9.Id=o.Id;
-        opt9.StageName='LOA / LOE';
-        opt9.Planned_Price_at_Launch__c=33;
-        opt9.Source_type__c='Primary Source';
-		opt9.Planned_Qty_at_launch__c=40;
-		opt9.Planned_Year__c='2000';
-        opt9.Price__c=20;
-        opt9.TotalOpportunityQuantity=4;
-        update opt9;
-        Opportunity opt10=new Opportunity();
-        opt10.Id=o.Id;
-        opt10.StageName='Postponed / Hold';
-        update opt10;
+        Opportunity objOpportunity6 = new Opportunity();
+        objOpportunity6.Id = objOpportunity.Id;
+        objOpportunity6.StageName = 'Dropped';
+        objOpportunity6.Reason_for_Loss__c = 'Customer Related';
+        objOpportunity6.Reason__c = 'test';
+        update objOpportunity6;
         
-        ApexPages.currentPage().getParameters().put('RecordType',o.RecordTypeId);
-            OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(o));
-            indentRT.producttype = 'API';
-            //indentRT.MapRecordTypes = MapRecordTypestest;
-            indentRT.RedirectPages();
-       Test.stopTest();
+        Opportunity objOpportunity7 = new Opportunity();
+        objOpportunity7.Id = objOpportunity.Id;
+        objOpportunity7.StageName = 'Bio Batches';
+        update objOpportunity7;
+        
+        Opportunity objOpportunity8 = new Opportunity();
+        objOpportunity8.Id = objOpportunity.Id;
+        objOpportunity8.StageName = 'Exhibit Batches';
+        update objOpportunity8;
+        
+        Opportunity objOpportunity9 = new Opportunity();
+        objOpportunity9.Id = objOpportunity.Id;
+        objOpportunity9.StageName = 'LOA / LOE';
+        objOpportunity9.Planned_Price_at_Launch__c = 33;
+        objOpportunity9.Source_type__c = 'Primary Source';
+        objOpportunity9.Planned_Qty_at_launch__c = 40;
+        objOpportunity9.Planned_Year__c = '2000';
+        objOpportunity9.Price__c = 20;
+        objOpportunity9.TotalOpportunityQuantity = 4;
+        update objOpportunity9;
+        
+        Opportunity objOpportunity10 = new Opportunity();
+        objOpportunity10.Id = objOpportunity.Id;
+        objOpportunity10.StageName = 'Postponed / Hold';
+        update objOpportunity10;
+        
+        ApexPages.currentPage().getParameters().put('RecordType',objOpportunity.RecordTypeId);
+        OpportunityNewController indentRT = new OpportunityNewController(new ApexPages.StandardController(objOpportunity));
+        indentRT.producttype = 'API';
+        indentRT.RedirectPages();
+        Test.stopTest();
     }
-
-
 }
