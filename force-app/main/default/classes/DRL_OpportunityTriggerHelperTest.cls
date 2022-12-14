@@ -502,6 +502,6 @@ public class DRL_OpportunityTriggerHelperTest {
         objLead2.Status = 'Unqualified';
         update objLead2;
         Test.stopTest();
-
+        
     }
 }
