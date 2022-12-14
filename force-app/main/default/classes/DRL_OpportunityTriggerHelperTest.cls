@@ -30,7 +30,11 @@ public class DRL_OpportunityTriggerHelperTest {
             .setLastName('Contact')
             .setAccountId(objAccount.Id)
             .createContact();
+        objContact.Email = 'testuser@yopmail.com';
         insert objContact;
+        
+
+
         
         Product2 objProduct = new DRL_TestUtility.ProductBuilder()
             .setName('Test Product')
@@ -70,7 +74,7 @@ public class DRL_OpportunityTriggerHelperTest {
             .createLead();
         insert objLead;
         
-        
+		
         CampaignMember objCampaignMember = new DRL_TestUtility.CampaignMemberBuilder()
             .setCampaignId(objCampaign.Id)
             .setContactId(objContact.Id)
@@ -373,9 +377,10 @@ public class DRL_OpportunityTriggerHelperTest {
     static void testCampaignInfluenceAttributes(){
         
         Lead objLead = [SELECT 
-                        ID 
+                        ID, Email
                         FROM Lead 
                         LIMIT 1];
+        
         
         Campaign objCampaign = [SELECT 
                                 Id 
@@ -384,9 +389,10 @@ public class DRL_OpportunityTriggerHelperTest {
         
         Contact objContact = [SELECT 
                               Id, 
-                              AccountId 
+                              AccountId,Email
                               FROM Contact 
                               LIMIT 1];
+        
         
         Product2 objProduct = [SELECT 
                                Id 
@@ -431,6 +437,71 @@ public class DRL_OpportunityTriggerHelperTest {
         update objCampaignInfluence;
 
 
+
+    }
+    
+     /**
+* @ author       :  Subhodeep Sarkar
+* @ description  :  This method is used to test  'leadContentUpdate.apxt'
+**/
+    
+     @isTest
+    static void testLeadContentUpdate(){
+
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        
+         Campaign objCampaign1 = [SELECT 
+                                Id 
+                                FROM Campaign 
+                                LIMIT 1];
+
+        Lead objLead1 = new DRL_TestUtility.LeadBuilder()
+            .setFirstName('Test')
+            .setLastName('User')
+            .setEmail('testuser2@yopmail.com')
+            .setCompany('Absyz')
+            .setStatus('Open')
+            .setCountry('India')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+            .setSouceCampaignId(objCampaign1.Id) 
+            .createLead();
+        insert objLead1;
+
+        Lead objLead2= new DRL_TestUtility.LeadBuilder()
+            .setFirstName('Test')
+            .setLastName('User')
+            .setEmail('testuser@yopmail.com')
+            .setCompany('Absyz')
+            .setStatus('Open')
+            .setCountry('India')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+            .setSouceCampaignId(objCampaign1.Id) 
+            .createLead();
+        insert objLead2;
+        
+        Contact objContact = [SELECT 
+                              Id, 
+                              AccountId,Email
+                              FROM Contact 
+                              LIMIT 1];
+        
+        Test.startTest();
+        Lead2Contact__c objLeadContact = new Lead2Contact__c();
+        objLeadContact.Lead__c = objLead1.Id;
+        objLeadContact.Contact__c = objContact.Id;
+        insert objLeadContact;
+        
+        Lead2Contact__c objLeadContact1 = new Lead2Contact__c();
+        objLeadContact1.Lead__c = objLead2.Id;
+        objLeadContact1.Contact__c = objContact.Id;
+        insert objLeadContact1;
+        
+        objLead1.Status = 'Unqualified';
+        update objLead1;
+        
+        objLead2.Status = 'Unqualified';
+        update objLead2;
+        Test.stopTest();
 
     }
 }
