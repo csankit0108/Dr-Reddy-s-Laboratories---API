@@ -9,7 +9,7 @@
 *   12-12-2022      |  dinesh.chandra@absyz.com            |  1.0          |  Initial Version
 *******************************************************************************************************/
 @isTest
-public with sharing class OpportunityJourneyHandler2Test {  
+public class OpportunityJourneyHandler2Test {  
     /**
     * @ author       :  Dinesh Chandra
     * @ description  :  This method is used to setup data for testing apex class 'OpportunityJourneyHandler2'
@@ -17,68 +17,68 @@ public with sharing class OpportunityJourneyHandler2Test {
     public static Boolean blnThrowException = false;
     @TestSetup
     static void createData() {  
-     
-    Account objAccount = new DRL_TestUtility.AccountBuilder()
-        .setName('Test Account')
-        .createAccount();
-    insert objAccount;
-
-    Contact objContact = new DRL_TestUtility.ContactBuilder()
-        .setFirstName('Test')
-        .setLastName('Contact')
-        .setAccountId(objAccount.Id)
-        .createContact();
-    insert objContact;
         
-    Product2 objProduct = new DRL_TestUtility.ProductBuilder()
-        .setName('Test Product')
-        .createProduct();
-    insert objProduct;
+        Account objAccount = new DRL_TestUtility.AccountBuilder()
+            .setName('Test Account')
+            .createAccount();
+        insert objAccount;
 
-    Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
-        .setCampaignName('Test Campaign')
-        .setAllowMassEmail('No')
-        .setDescription('Test Campaign Description')
-        .setCampaignCode('Campaign 1005')
-        .setIsActive(true)
-        .createCampaign();
-    insert objCampaign;
+        Contact objContact = new DRL_TestUtility.ContactBuilder()
+            .setFirstName('Test')
+            .setLastName('Contact')
+            .setAccountId(objAccount.Id)
+            .createContact();
+        insert objContact;
+            
+        Product2 objProduct = new DRL_TestUtility.ProductBuilder()
+            .setName('Test Product')
+            .createProduct();
+        insert objProduct;
 
-    Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
+            .setCampaignName('Test Campaign')
+            .setAllowMassEmail('No')
+            .setDescription('Test Campaign Description')
+            .setCampaignCode('Campaign 1005')
+            .setIsActive(true)
+            .createCampaign();
+        insert objCampaign;
 
-    Lead objLead = new DRL_TestUtility.LeadBuilder()
-        .setFirstName('Test')
-        .setLastName('User')
-        .setEmail('testuser5@yopmail.com')
-        .setCompany('Absyz')
-        .setUtmCampaign('Campaign 1005')
-        .setUtmSource('Test MDT 2')
-        .setStatus('Converted')
-        .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
-        .setCountry('India')
-        .setReasonForDecline('Product Issues')
-        .setUtmCampaign('Campaign 1005')
-        .setUtmSource('Test MDT 2')
-        .setSouceCampaignId(objCampaign.Id)
-        .createLead();
-    insert objLead;
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
 
-    Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
-        .setName('Test Opportunity')
-        .setAccountId(objAccount.Id)
-        .setContactId(objContact.Id)
-        .setProductId(objProduct.Id)
-        .setStageName('Development')
-        .setCloseDate(System.today())
-        .setPriceAtLaunch(1000)
-        .setQuantityAtLaunch(10)
-        .setLaunchYear('2000')
-        .setLeadId(objLead.Id)
-        .setSourceType('Primary Source')
-        .setConvertedContactId(objContact.Id)
-        .setOppJourneyContentIds2('testing;')
-        .createOpportunity();
-    insert objOpportunity;
+        Lead objLead = new DRL_TestUtility.LeadBuilder()
+            .setFirstName('Test')
+            .setLastName('User')
+            .setEmail('testuser5@yopmail.com')
+            .setCompany('Absyz')
+            .setUtmCampaign('Campaign 1005')
+            .setUtmSource('Test MDT 2')
+            .setStatus('Converted')
+            .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+            .setCountry('India')
+            .setReasonForDecline('Product Issues')
+            .setUtmCampaign('Campaign 1005')
+            .setUtmSource('Test MDT 2')
+            .setSouceCampaignId(objCampaign.Id)
+            .createLead();
+        insert objLead;
+
+        Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
+            .setName('Test Opportunity')
+            .setAccountId(objAccount.Id)
+            .setContactId(objContact.Id)
+            .setProductId(objProduct.Id)
+            .setStageName('Development')
+            .setCloseDate(System.today())
+            .setPriceAtLaunch(1000)
+            .setQuantityAtLaunch(10)
+            .setLaunchYear('2000')
+            .setLeadId(objLead.Id)
+            .setSourceType('Primary Source')
+            .setConvertedContactId(objContact.Id)
+            .setOppJourneyContentIds2('testing;')
+            .createOpportunity();
+        insert objOpportunity;
     }
 
     /**

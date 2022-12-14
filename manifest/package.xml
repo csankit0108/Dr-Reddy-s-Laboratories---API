@@ -21,7 +21,7 @@
 		<members>populateValuesInsertTest</members>
 		<members>AccountTeamAccessHelperTest</members>
 		<members>CampaignMemberStatusTest</members>
-		<members>OpportunityJourneyHandler2Test</members>
+		<members>OpportunityJourneyHandler2Test</members> 
 		<name>ApexClass</name>
 	</types>
 	<types>
