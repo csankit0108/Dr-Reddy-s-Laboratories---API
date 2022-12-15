@@ -69,8 +69,7 @@ public class AccountTeamAccessHelperTest {
             .setMomDate(System.today())
             .createMom();
         insert objMom;
-
-}
+    }
  
     /**
     * @ author       :  Dinesh Chandra

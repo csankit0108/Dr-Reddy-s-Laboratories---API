@@ -104,5 +104,4 @@ public class OpportunityJourneyHandler2Test {
         OpportunityJourneyHandler2.dummyTest();
         Test.stopTest();
     }
-
 }

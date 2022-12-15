@@ -24,10 +24,9 @@ public class CampaignMemberStatusTest {
         insert objAccount;
 
         Account objAccount2 = new DRL_TestUtility.AccountBuilder()
-        .setName('Test Account 2')
-        .createAccount();
+            .setName('Test Account 2')
+            .createAccount();
         insert objAccount2;
-
 
         Contact objContact = new DRL_TestUtility.ContactBuilder()
             .setFirstName('Test')
@@ -37,10 +36,10 @@ public class CampaignMemberStatusTest {
         insert objContact;
 
         Contact objContact2 = new DRL_TestUtility.ContactBuilder()
-        .setFirstName('Test2')
-        .setLastName('Contact2')
-        .setAccountId(objAccount2.Id)
-        .createContact();
+            .setFirstName('Test2')
+            .setLastName('Contact2')
+            .setAccountId(objAccount2.Id)
+            .createContact();
         insert objContact2;
             
         Product2 objProduct = new DRL_TestUtility.ProductBuilder()
@@ -108,7 +107,6 @@ public class CampaignMemberStatusTest {
             .setPardotStatus('Opened Mail')
             .createCampaignMember();
         insert objCampaignMember;
-
     }
     
     /**
@@ -123,5 +121,4 @@ public class CampaignMemberStatusTest {
         update objCampaignMember;
         Test.stopTest();
     }
-
 }
