@@ -26,6 +26,9 @@ public without sharing class DRL_LeadTriggerHelper {
         List<String> list_ConsolidatedDMLErrors = new List<String>();
         //Map of Lead Field Set by their Name
         Map<String, Schema.FieldSet> map_LeadFieldSetByName = objDescribeSObjectResult.fieldSets.getMap();
+        //map to get the weightage of Status value  
+        Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
+            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
         //List of Lead Field Set Members
         List<FieldSetMember> list_LeadFieldSetMembers = map_LeadFieldSetByName.containsKey('DRL_ProspectFields')
                                                             ? map_LeadFieldSetByName.get('DRL_ProspectFields').getFields()
@@ -38,6 +41,9 @@ public without sharing class DRL_LeadTriggerHelper {
         List<Lead> list_LeadsToUpdate = new List<Lead>();
         //List of Campaign Members to be created.
         List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();
+        //List of Prospects to be updated
+        List<Lead> list_ProspectsToUpdate = new List<Lead>();
+        Set<Id> set_ProspectIds = new Set<Id>();
 
         for (FieldSetMember objFieldSetMember : list_LeadFieldSetMembers) {
             list_LeadObjectFields.add(objFieldSetMember.getSObjectField()); 
@@ -45,7 +51,8 @@ public without sharing class DRL_LeadTriggerHelper {
 
         for (Lead objLead : [SELECT 
                              Id,
-                             Email
+                             Email,
+                             Status
                              FROM
                              Lead
                              WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')
@@ -57,6 +64,15 @@ public without sharing class DRL_LeadTriggerHelper {
         }
         
         try {
+            for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : DRL_ProspectLeadStatusMapping__mdt.getAll().values()) {
+                if (objProspectLeadStatusMapping.Active__c) {
+                    map_StatusMappingByLeadStatus.put(
+                        objProspectLeadStatusMapping.LeadStatus__c, 
+                        objProspectLeadStatusMapping
+                    );
+                }
+            }
+
             for (Lead objLead : list_Leads) {
                 if (
                     objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect') && 
@@ -79,6 +95,10 @@ public without sharing class DRL_LeadTriggerHelper {
                             objProspect.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Prospect'); 
                         }
 
+                        if (map_StatusMappingByLeadStatus.containsKey(objLead.Status)) {
+                            objProspect.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
+                        }
+
                         map_LeadByEmailToInsert.put(objProspect.Email, objProspect);
                         list_ChildLeads.add(objLead);
                     } else {
@@ -89,6 +109,27 @@ public without sharing class DRL_LeadTriggerHelper {
 
                         if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                             objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
+                        }
+
+                        Lead objProspectToUpdate = map_ExistingLeadByEmail.get(objLead.Email);
+                        if (map_StatusMappingByLeadStatus.containsKey(objLead.Status)) {
+                            String strNewStatus = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
+                            Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strNewStatus)
+                                ? (Integer)map_StatusMappingByLeadStatus.get(strNewStatus).Weightage__c
+                                : 0;
+                            //Weightage of the current status value of the Prospect
+                            Integer intOldStatusWeightage = (String.isNotBlank(objProspectToUpdate.Status) && map_StatusMappingByLeadStatus.containsKey(objProspectToUpdate.Status))
+                                ? (Integer)map_StatusMappingByLeadStatus.get(objProspectToUpdate.Status).Weightage__c
+                                : 0;
+            
+                            //Check if the weightage of the new Prospect > current weightage of Prospect status
+                            if (
+                                (intNewStatusWeightage > intOldStatusWeightage) &&
+                                (objProspectToUpdate.Status != map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c)
+                            ) {
+                                objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
+                                list_ProspectsToUpdate.add(objProspectToUpdate);
+                            }
                         }
 
                         list_LeadsToUpdate.add(objLeadToUpdate);
@@ -138,6 +179,12 @@ public without sharing class DRL_LeadTriggerHelper {
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
+            if (!list_ProspectsToUpdate.isEmpty()) {
+                //Update Status on Prospect
+                List<Database.SaveResult> list_UpdateResults = Database.update(list_ProspectsToUpdate, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
+            }
+
             /*
               * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
             */
@@ -149,6 +196,18 @@ public without sharing class DRL_LeadTriggerHelper {
                                   FROM Lead 
                                   WHERE Id IN :list_LeadsToUpdate];
             for (Lead objLead : list_LeadsToUpdate) {
+                if (String.isNotBlank(objLead.DRL_Prospect__c)) {
+                    set_ProspectIds.add(objLead.DRL_Prospect__c);
+                }
+            }
+
+            Map<Id, Lead> map_ProspectById = new Map<Id, Lead>([
+                SELECT Id, IsConverted, Converted_Contact__c 
+                FROM Lead 
+                WHERE Id IN :set_ProspectIds
+            ]);
+
+            for (Lead objLead : list_LeadsToUpdate) {
                 if ( 
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
                     objLead.DRL_SourceCampaign__c != null &&
@@ -156,7 +215,15 @@ public without sharing class DRL_LeadTriggerHelper {
                 ) {
                     CampaignMember objCampaignMember = new CampaignMember();
                     objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
-                    objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                    objCampaignMember.LeadId = objLead.DRL_Prospect__c;
+                    if (
+                        map_ProspectById.containsKey(objLead.DRL_Prospect__c) &&
+                        map_ProspectById.get(objLead.DRL_Prospect__c).IsConverted &&
+                        String.isNotBlank(map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c)
+                    ) {
+                        objCampaignMember.ContactId = map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c;
+                    } 
+
                     list_CampaignMembers.add(objCampaignMember);
                 }
             }
@@ -371,6 +438,25 @@ public without sharing class DRL_LeadTriggerHelper {
         /*
         * DRL-50:When a Source Campaign record is linked to the Child lead record, create a Campaign member record.
         */
+        Set<Id> set_ConvertedProspectIds = new Set<Id>();
+        Map<Id, Lead> map_ProspectById = new Map<Id, Lead>();
+        for (Lead objLead : map_NewMap.values()) {
+            if (
+                objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                String.isNotBlank(objLead.DRL_Prospect__c)
+            ) {
+                set_ConvertedProspectIds.add(objLead.DRL_Prospect__c);
+            }
+        }
+
+        if (!set_ConvertedProspectIds.isEmpty()) {
+            map_ProspectById = new Map<Id, Lead>([
+                SELECT Id, IsConverted, Converted_Contact__c 
+                FROM Lead 
+                WHERE Id IN :set_ConvertedProspectIds
+            ]);
+        }
+
         for (Lead objLead : map_NewMap.values()) {
             if ( 
                 objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
@@ -381,6 +467,14 @@ public without sharing class DRL_LeadTriggerHelper {
                 CampaignMember objCampaignMember = new CampaignMember();
                 objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
                 objCampaignMember.LeadId = objLead.DRL_Prospect__c; 
+                if (
+                    map_ProspectById.containsKey(objLead.DRL_Prospect__c) &&
+                    map_ProspectById.get(objLead.DRL_Prospect__c).IsConverted &&
+                    String.isNotBlank(map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c)
+                ) {
+                    objCampaignMember.ContactId = map_ProspectById.get(objLead.DRL_Prospect__c).Converted_Contact__c;
+                } 
+
                 list_CampaignMembers.add(objCampaignMember);
             }
         }

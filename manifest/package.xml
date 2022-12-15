@@ -14,6 +14,16 @@
 		<members>DRL_convertLeadProspectTest</members>
 		<members>DRL_OpportunityTriggerHelper</members>
 		<members>DRL_OpportunityTriggerHelperTest</members>
+		<members>LeadReminderEmailSchedulerTest</members>
+		<members>opportunityAPITest</members>
+		<members>OpportunityControllerTest</members>
+		<members>CampaignApproval_Test</members>
+		<members>DRL_OfflineOpportunityTest</members>
+		<members>OpportunityTriggerHandlerTest</members>
+		<members>populateValuesInsertTest</members>
+		<members>AccountTeamAccessHelperTest</members>
+		<members>CampaignMemberStatusTest</members>
+		<members>OpportunityJourneyHandler2Test</members> 
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -135,6 +145,7 @@
 		<members>Lead.Check_Country_Field</members>
 		<members>Lead.CheckRunAutomation</members>
 		<members>Opportunity.DRL_ContactChangeValidation</members>
+		<members>Lead.DRL_LeadShouldBeRelatedtoProspect</members>
 		<name>ValidationRule</name>
 	</types>
 	<types>
