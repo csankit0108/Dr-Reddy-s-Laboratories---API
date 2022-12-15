@@ -24,6 +24,7 @@
 		<members>AccountTeamAccessHelperTest</members>
 		<members>CampaignMemberStatusTest</members>
 		<members>OpportunityJourneyHandler2Test</members> 
+		<members>LeadTriggerHandlerTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
