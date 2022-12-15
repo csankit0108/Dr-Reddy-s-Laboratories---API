@@ -125,7 +125,7 @@
     <recordTypeVisibilities>
         <default>false</default>
         <recordType>Lead.DRL_Prospect</recordType>
-        <visible>true</visible>
+        <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
         <tab>DRL_ExceptionLog__c</tab>

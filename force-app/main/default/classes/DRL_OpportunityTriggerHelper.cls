@@ -60,7 +60,12 @@ public class DRL_OpportunityTriggerHelper {
         //Set of ProspectIds
         Set<Id> set_ProspectIds = new Set<Id>();
 
-        try{
+        map_OpportunityIdByListOfInfluences = new Map<Id, List<CampaignInfluence>>();
+        map_CampaignIdByContactId = new Map<Id, Id>();
+        list_ConsolidatedDMLErrors = new List<String>();
+        map_LeadsById = new Map<Id, Lead>();
+
+        try {
             for (DRL_CampaignInfluenceConfiguration__mdt objCampaignInfluenceConfiguration : DRL_CampaignInfluenceConfiguration__mdt.getAll().values()) {
                 map_CampaignInfluenceConfigurationByLabel.put(
                     objCampaignInfluenceConfiguration.Label, 
@@ -259,7 +264,7 @@ public class DRL_OpportunityTriggerHelper {
                     }
                 }
             }
-           
+        
             if (!map_CampaignInfluenceToInsert.isEmpty()) {
                 if (Test.isRunningTest() && DRL_OpportunityTriggerHelperTest.blnThrowException) {
                     throw new DMLException();
@@ -317,7 +322,7 @@ public class DRL_OpportunityTriggerHelper {
                     for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
                         //If Stage selected On Opportunity is present in Metadata(Lead Converted Opportunity & Source Campaign is Present on Lead)
                         if (objOpportunity.Lead_Converted_From__c!=null && 
-                           (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c)!= null && 
+                           (map_LeadsById.get(objOpportunity.Lead_Converted_From__c).DRL_SourceCampaign__c) != null && 
                             map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Label == 'Lead Generation' ) {                  
                             continue;
                         }
@@ -343,17 +348,21 @@ public class DRL_OpportunityTriggerHelper {
                     }
                 }
             }
-        }
-        else {
+        } else {
+            Integer intStartSortOrder;
+            if (!map_OpportunityIdByListOfInfluences.containsKey(objOpportunity.Id)) {
+                intStartSortOrder = 1;
+            } else {
+                intStartSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c) + 1;
+            }
 
             if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOldOpportunity.StageName)) {
                 if (map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)) {
-                    for (Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1 ; intSortOrder <= map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c; intSortOrder++) {
+                    for (Integer intSortOrder = intStartSortOrder; intSortOrder <= map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c; intSortOrder++) {
                         decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
                     }  
-                }
-                else {
-                    for ( Integer intSortOrder = Integer.valueOf(map_CampaignInfluenceConfigurationByLabel.get(objOldOpportunity.StageName).SortOrder__c)+1; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++ ) {
+                } else {
+                    for (Integer intSortOrder = intStartSortOrder; intSortOrder <= map_CampaignInfluenceConfigurationBySortOrder.size(); intSortOrder++ ) {
                         decTempInfluenceWeightage = decTempInfluenceWeightage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
                     }
                 }

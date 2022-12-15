@@ -5,6 +5,15 @@
     <description>DRL - To maintain hierarchical relationship and track multiple Lead records of same customer</description>
     <externalId>false</externalId>
     <label>Prospect</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Lead.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Prospect</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
     <referenceTo>Lead</referenceTo>
     <relationshipLabel>Leads</relationshipLabel>
     <relationshipName>Leads</relationshipName>

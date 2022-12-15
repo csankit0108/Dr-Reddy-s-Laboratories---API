@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>ProspectStatus__c</field>
-        <value xsi:type="xsd:string">Qualified</value>
+        <value xsi:type="xsd:string">Converted</value>
     </values>
     <values>
         <field>Weightage__c</field>
