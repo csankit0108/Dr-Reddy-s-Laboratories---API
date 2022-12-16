@@ -457,4 +457,301 @@ public class DRL_TestUtility {
             return objOpportunity;
         }
     }
+
+    /**
+    * @ Name     :  User Builder
+    * @ Purpose  :  To create User record
+    * @ Author   :  Wafa Shaikh
+    **/  
+    public class UserBuilder {
+        private String strFirstName;
+        private String strLastName;
+        private String strEmail;
+        private String strDefaultGroupNotificationFrequency;
+        private String strDigestFrequency;
+        private String strEmailEncodingKey;
+        private String strLanguageLocaleKey; 
+        private String strLocaleSidKey;
+        private String strProfileId;
+        private String strTimeZoneSidKey;
+        private String strUsername;
+        private Boolean blnUserPermissionsCallCenterAutoLogin;
+        private Boolean blnUserPermissionsMarketingUser;
+        private Boolean blnUserPermissionsOfflineUser;
+        private Boolean blnUserPermissionsWirelessUser;
+        private String strAlias; 
+        
+        public UserBuilder() {
+            this.strFirstName = '';
+            this.strLastName = '';
+            this.strEmail = '';
+            this.strDefaultGroupNotificationFrequency = '';
+            this.strDigestFrequency = '';
+            this.strEmailEncodingKey = '';
+            this.strLanguageLocaleKey = '';
+            this.strLocaleSidKey = '';
+            this.strProfileId = '';
+            this.strTimeZoneSidKey = '';
+            this.strUsername = '';
+            this.strAlias = '';
+        }
+
+        public UserBuilder setFirstName(String  strValue) {
+            this.strFirstName = strValue;
+            return this;
+        }
+
+        public UserBuilder setLastName(String strValue) {
+            this.strLastName = strValue;
+            return this;
+        }
+
+        public UserBuilder setEmail(String strValue) {
+            this.strEmail = strValue;
+            return this;
+        }
+        
+        public UserBuilder setDefaultGroupNotificationFrequency(String strValue) {
+            this.strDefaultGroupNotificationFrequency = strValue;
+            return this;
+        }
+        
+        public UserBuilder setDigestFrequency(String strValue) {
+            this.strDigestFrequency = strValue;
+            return this;
+        }
+
+        public UserBuilder setEmailEncodingKey(String strValue) {
+            this.strEmailEncodingKey = strValue;
+            return this;
+        } 
+
+        public UserBuilder setLanguageLocaleKey(String strValue) {
+            this.strLanguageLocaleKey  = strValue;
+            return this;
+        } 
+
+        public UserBuilder setLocaleSidKey(String strValue) {
+            this.strLocaleSidKey  = strValue;
+            return this;
+        } 
+        
+        public UserBuilder setProfileId(String strValue) {
+            this.strProfileId  = strValue;
+            return this;
+        } 
+        
+        public UserBuilder setTimeZoneSidKey(String strValue) {
+            this.strTimeZoneSidKey  = strValue;
+            return this;
+        }
+        
+        public UserBuilder setUsername(String strValue) {
+            this.strUsername = strValue;
+            return this;
+        }
+        
+        public UserBuilder setUserPermissionsCallCenterAutoLogin(Boolean blnValue) {
+            this.blnUserPermissionsCallCenterAutoLogin = blnValue;
+            return this;
+        }
+        
+        public UserBuilder setUserPermissionsMarketingUser(Boolean blnValue) {
+            this.blnUserPermissionsMarketingUser = blnValue;
+            return this;
+        }
+        
+        public UserBuilder setUserPermissionsOfflineUser(Boolean blnValue) {
+            this.blnUserPermissionsOfflineUser = blnValue;
+            return this;
+        }
+        
+        public UserBuilder setUserPermissionsWirelessUser(Boolean blnValue) {
+            this.blnUserPermissionsWirelessUser = blnValue;
+            return this;
+        }
+        
+        public UserBuilder setAlias(String strValue) {
+            this.strAlias = strValue;
+            return this;
+        }
+        
+        public User createUser() {
+            User objUser = new User(); 
+            objUser.FirstName = this.strFirstName;
+            objUser.LastName = this.strLastName;
+            objUser.Email = this.strEmail;
+            objUser.DefaultGroupNotificationFrequency = this.strDefaultGroupNotificationFrequency;
+            objUser.DigestFrequency = this.strDigestFrequency;
+            objUser.EmailEncodingKey = this.strEmailEncodingKey;
+            objUser.LanguageLocaleKey = this.strLanguageLocaleKey;
+            objUser.LocaleSidKey = this.strLocaleSidKey;
+            objUser.ProfileId = this.strProfileId;
+            objUser.TimeZoneSidKey = this.strTimeZoneSidKey;
+            objUser.Username = this.strUsername;
+            objUser.UserPermissionsCallCenterAutoLogin = this.blnUserPermissionsCallCenterAutoLogin;
+            objUser.UserPermissionsMarketingUser = this.blnUserPermissionsMarketingUser;
+            objUser.UserPermissionsOfflineUser = this.blnUserPermissionsOfflineUser;
+            objUser.Alias = this.strAlias;
+            return objUser;
+        }
+    }
+    
+    /**
+    * @ Name     :  ProfileBuilder
+    * @ Purpose  :  To create Profile record
+    * @ Author   :  Wafa Shaikh
+    **/ 
+    public class ProfileBuilder {
+        private String strName;
+        private String strUserType; 
+        
+        public ProfileBuilder() {
+            this.strName = '';
+            this.strUserType = '';
+        }
+
+        public ProfileBuilder setName(String  strValue) {
+            this.strName = strValue;
+            return this;
+        } 
+
+        public ProfileBuilder setUserType(String  strValue) {
+            this.strUserType = strValue;
+            return this;
+        } 
+        
+        public Profile createProfile() {
+            Profile objProfile = new Profile();
+            objProfile.Name =  this.strName;
+            return objProfile;
+        }
+    }
+    
+    /**
+    * @ Name     :  PQTQuotationBuilder
+    * @ Purpose  :  To create PQT_Quotation__c record
+    * @ Author   :  Wafa Shaikh
+    **/ 
+    public class PQTQuotationBuilder{
+        private Id idCustomerId;
+        private Id idContactId;
+        private String strRegion;
+        private String strCurrency;
+        private Id idOwnerId;
+        
+        public  PQTQuotationBuilder() {
+            this.strRegion = '';
+            this.strCurrency = '';
+        }
+
+        public PQTQuotationBuilder setCustomerId(Id idValue) {
+            this.idCustomerId = idValue;
+            return this;
+        }
+
+        public PQTQuotationBuilder setContactId(Id idValue) {
+            this.idContactId = idValue;
+            return this;
+        } 
+
+        public PQTQuotationBuilder setRegion(String strValue) {
+            this.strRegion = strValue;
+            return this;
+        }  
+
+        public PQTQuotationBuilder setCurrency(String strValue) {
+            this.strCurrency = strValue;
+            return this;
+        }  
+
+        public PQTQuotationBuilder setOwerId(Id idValue) {
+            this.idOwnerId = idValue;
+            return this;
+        }
+
+        public PQT_Quotation__c createPQTQuotation() { 
+            PQT_Quotation__c objPQTQuote = new PQT_Quotation__c();
+            objPQTQuote.PQT_Contact__c = this.idContactId;
+            objPQTQuote.PQT_Customer__c = this.idCustomerId;
+            objPQTQuote.PQT_Price_Book__c = this.strRegion;
+            objPQTQuote.CurrencyIsoCode = this.strCurrency;
+            objPQTQuote.OwnerId = this.idOwnerId;
+            return objPQTQuote;
+        }
+    }
+
+    /**
+    * @ Name     :  PQTMasterDataBuilder
+    * @ Purpose  :  To create PQT_Master_Data__c record
+    * @ Author   :  Wafa Shaikh
+    **/ 
+    public class PQTMasterDataBuilder {
+        private String idRecordTypeId;
+        private String idPQTL1ApproverName;
+        private String idPQTL1BApproverName;
+        private String idPQTL2ApproverName;
+        private String idPQTL3ApproverName; 
+        private String idPQTL4ApproverName;
+        private String idPQTL3BFinanceBUHeadName;
+        private String strPQTPlantName;
+        
+        public PQTMasterDataBuilder() {
+            this.strPQTPlantName = '';
+            this.idRecordTypeId = '';
+        }
+
+        public PQTMasterDataBuilder setRecordTypeId(String strValue) {
+            this.idRecordTypeId = strValue;
+            return this;
+        } 
+
+        public PQTMasterDataBuilder setPQTL1ApproverName(String strValue) {
+            this.idPQTL1ApproverName = strValue;
+            return this;
+        }
+        
+        public PQTMasterDataBuilder setPQTL1BApproverName(String strValue) {
+            this.idPQTL1BApproverName = strValue;
+            return this;
+        }
+
+        public PQTMasterDataBuilder setPQTL2ApproverName(String strValue) {
+            this.idPQTL2ApproverName = strValue;
+            return this;
+        }
+
+        public PQTMasterDataBuilder setPQTL3ApproverName(String strValue) {
+            this.idPQTL3ApproverName = strValue;
+            return this;
+        }
+        
+        public PQTMasterDataBuilder setPQTL4ApproverName(String strValue) {
+            this.idPQTL4ApproverName = strValue;
+            return this;
+        }
+        
+        public PQTMasterDataBuilder setPQTL3BFinanceBUHeadName(String strValue) {
+            this.idPQTL3BFinanceBUHeadName = strValue;
+            return this;
+        }
+        
+        public PQTMasterDataBuilder setPQTPlantName(String strValue) {
+            this.strPQTPlantName = strValue;
+            return this;
+        }
+        
+        public PQT_Master_Data__c createPQTMasterData() {
+            PQT_Master_Data__c objPQTMasterData = new PQT_Master_Data__c();
+            objPQTMasterData.RecordTypeId = this.idRecordTypeId;
+            objPQTMasterData.PQT_L1_Approver__c = this.idPQTL1ApproverName;
+            objPQTMasterData.PQT_L1_B_Approver__c = this.idPQTL1BApproverName;
+            objPQTMasterData.PQT_L2_Approver__c = this.idPQTL2ApproverName;
+            objPQTMasterData.PQT_L3_Approver__c = this.idPQTL3ApproverName;
+            objPQTMasterData.PQT_L4_Approver__c = this.IdPQTL4ApproverName;
+            objPQTMasterData.PQT_L3B_Finance_BU_Head__c = this.idPQTL3BFinanceBUHeadName;
+            objPQTMasterData.PQT_Plant_Name__c = this.strPQTPlantName;
+            return  objPQTMasterData;
+        }
+    }
 }

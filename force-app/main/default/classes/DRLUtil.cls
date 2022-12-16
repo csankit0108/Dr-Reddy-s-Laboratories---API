@@ -56,7 +56,7 @@ public class DRLUtil{
         Id quoteOwner = quotation.OwnerId;
         
         String query = 'SELECT ' + DRLUtil.getsObjectFieds('PQT_Master_Data__c')+',RecordType.Name,PQT_L1_Approver__r.Name,PQT_L1_B_Approver__r.Name,PQT_L1_B_Approver__r.Email,'+
-            +'PQT_L2_Approver__r.Name,PQT_L3_Approver__r.Name,PQT_L4_Approver__r.Name,PQT_L3B_Finance_BU_Head__r.Name,PQT_L1_Approver__r.Email,PQT_L1_Approver__r.Manager.Email,PQT_L1_B_Approver__r.Manager.Email '+
+            +'PQT_L2_Approver__r.Name,PQT_L3_Approver__r.Name,PQT_L4_Approver__r.Name,PQT_L3B_Finance_BU_Head__r.Name,PQT_L1_Approver__r.Email,PQT_L1_Approver__r.Manager.Email,PQT_L1_B_Approver__r.Manager.Email, PQT_Master_Data__c.PQT_User_Approval_Matrix_User__c, PQT_Master_Data__c.PQT_Region__c '+
             +''+
             +' FROM PQT_Master_Data__c LIMIT 10000';
         List<PQT_Master_Data__c> masterApprovalMatrix = Database.query(query);

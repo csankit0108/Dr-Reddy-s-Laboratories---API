@@ -21,6 +21,7 @@
 		<members>DRL_OfflineOpportunityTest</members>
 		<members>OpportunityTriggerHandlerTest</members>
 		<members>populateValuesInsertTest</members>
+		<members>DRLUtilTest</members>
 		<members>AccountTeamAccessHelperTest</members>
 		<members>CampaignMemberStatusTest</members>
 		<members>OpportunityJourneyHandler2Test</members> 
