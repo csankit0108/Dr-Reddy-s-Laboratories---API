@@ -30,7 +30,9 @@ public class OppClassTrigger {
                         
         Product2 prod = new Product2();
         prod.Name='Test Product';
-        insert prod;        
+        insert prod;     
+        
+        List<Opportunity> list_Opportunities = new List<Opportunity>();
            
         Opportunity opt = new Opportunity();
         opt.AccountId=acct.ID;
@@ -44,7 +46,7 @@ public class OppClassTrigger {
         opt.Planned_Qty_at_launch__c = 8.0;
         opt.Planned_Year__c = '2002';
         opt.Source_type__c = 'Primary Source';
-        insert opt;   
+        list_Opportunities.add(opt);   
             
         Opportunity opt1 = new Opportunity();
         opt1.AccountId=acct1.ID;
@@ -54,7 +56,7 @@ public class OppClassTrigger {
         opt1.End_Date__c = opt1.Start_Date__c + 1; 
         opt1.CloseDate = System.Today()+2;        
         opt1.StageName ='Postponed / Hold';
-        insert opt1;
+        list_Opportunities.add(opt1); 
         
         Opportunity opt2 = new Opportunity();
         opt2.AccountId=acct2.ID;
@@ -64,7 +66,7 @@ public class OppClassTrigger {
         opt2.End_Date__c = opt.Start_Date__c + 1; 
         opt2.CloseDate = System.Today()+2;        
         opt2.StageName ='ANDA Approved';  
-        insert opt2;      
+        list_Opportunities.add(opt2);      
 
         Opportunity opt3 = new Opportunity();
         opt3.AccountId=acct3.ID;
@@ -73,8 +75,12 @@ public class OppClassTrigger {
         opt3.StageName ='Development';
         opt3.Start_Date__c = System.Today();
         opt3.End_Date__c = opt.Start_Date__c + 1;   
-        opt3.CloseDate = System.Today()+2;      
-        insert opt3;   
+        opt3.CloseDate = System.Today()+2;
+        opt3.Planned_Price_at_Launch__c = 100.00;
+        opt3.Planned_Qty_at_launch__c = 8.0;
+        opt3.Planned_Year__c = '2002';
+        opt3.Source_type__c = 'Primary Source';      
+        list_Opportunities.add(opt3);    
             
         Opportunity opt4 = new Opportunity();
         opt4.AccountId=acct4.ID;
@@ -84,21 +90,17 @@ public class OppClassTrigger {
         opt4.End_Date__c = opt1.Start_Date__c + 1; 
         opt4.CloseDate = System.Today()+2;        
         opt4.StageName ='Dossier Filed';
-        insert opt4;
+        opt4.Planned_Price_at_Launch__c = 100.00;
+        opt4.Planned_Qty_at_launch__c = 8.0;
+        opt4.Planned_Year__c = '2002';
+        opt4.Source_type__c = 'Primary Source';
+        list_Opportunities.add(opt4); 
+        Test.startTest();
+        insert list_Opportunities;
         
         opt4.StageName='Development';
-        update opt4;
-        
-/*        Opportunity opt5 = new Opportunity();
-        opt5.AccountId=acct5.ID;
-        opt5.Product__c=prod.ID;
-        opt5.Name=acct5.Name+prod.Name;
-        opt5.Start_Date__c = System.Today();
-        opt5.End_Date__c = opt.Start_Date__c + 1; 
-        opt5.CloseDate = System.Today()+2;        
-        opt5.StageName ='Marketing License';  
-        insert opt5;  
-*/                 
+        update opt4;     
+        Test.stopTest();            
     }
    
 	public static testMethod void optyCoverage()
@@ -109,10 +111,22 @@ public class OppClassTrigger {
         Contact conTest=new Contact(FirstName='Y',LastName='Ram',Email='ramanji123@dhruvsoft.com');
         insert conTest;
         Id optyRecTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API Plus').getRecordTypeId();
-        Opportunity opty=new Opportunity(Name='Testing in TST Class_V',AccountId=acc.Id,Contact__c=conTest.Id,Customer_Type__c='Final Seller',API_Plus_Territory__c='Test Territory',Remarks__c='Testing Remarks',CloseDate=system.today(),StageName='New Opportunity',RecordTypeId=optyRecTypeId);
+        Opportunity opty = new Opportunity(
+            Name='Testing in TST Class_V',
+            AccountId=acc.Id,
+            Contact__c=conTest.Id,
+            Customer_Type__c='Final Seller',
+            API_Plus_Territory__c='Test Territory',
+            Remarks__c='Testing Remarks',
+            CloseDate=system.today(),
+            StageName='New Opportunity',
+            RecordTypeId=optyRecTypeId
+        );
+        Test.startTest();
         insert opty;
         opty.Customer_Type__c='Agent';
         update opty; 
+        Test.stopTest();
         // added on 6th Mat 2021
     }
     public static testMethod void  populateValuesInsertTrigger02(){
@@ -135,11 +149,12 @@ public class OppClassTrigger {
         opt.Planned_Qty_at_launch__c = 8.0;
         opt.Planned_Year__c = '2002';
         opt.Source_type__c = 'Primary Source';
+        Test.startTest();
         insert opt;
-    
-    
+        Test.stopTest();
     }
-    public static testMethod void  populateValuesInsertTrigger03(){
+
+    public static testMethod void populateValuesInsertTrigger03(){
         Account acct = new Account();
         acct.Name='Test Account';
         insert acct;
@@ -154,10 +169,10 @@ public class OppClassTrigger {
         opt.StageName ='Bio Batches';
         opt.Start_Date__c = System.Today();
         opt.End_Date__c = opt.Start_Date__c + 1;   
-        opt.CloseDate = System.Today()+2;      
+        opt.CloseDate = System.Today()+2;    
+        Test.startTest();  
         insert opt;
-    
-    
+        Test.stopTest();
     }
 
 
@@ -177,10 +192,10 @@ public class OppClassTrigger {
         opt.StageName ='Exhibit Batches';
         opt.Start_Date__c = System.Today();
         opt.End_Date__c = opt.Start_Date__c + 1;   
-        opt.CloseDate = System.Today()+2;      
+        opt.CloseDate = System.Today() + 2; 
+        Test.startTest();     
         insert opt;
-    
-    
+        Test.stopTest();
     }
 
     public static testMethod void  populateValuesInsertTrigger05(){
@@ -202,12 +217,15 @@ public class OppClassTrigger {
 		opt.Planned_Price_at_Launch__c = 100.00;
         opt.Planned_Qty_at_launch__c = 8.0;
         opt.Planned_Year__c = '2002';
-        opt.Source_type__c = 'Primary Source';        
+        opt.Source_type__c = 'Primary Source'; 
+        opt.TotalOpportunityQuantity = 10;
+        opt.Price__c = 100.00;     
+        Test.startTest();  
         insert opt;
-    
-    
+        Test.stopTest();
     }
-    public static testMethod void  populateValuesInsertTrigger06(){
+
+    public static testMethod void populateValuesInsertTrigger06(){
         Account acct = new Account();
         acct.Name='Test Account';
         insert acct;
@@ -222,10 +240,10 @@ public class OppClassTrigger {
         opt.StageName ='ANDA Filed';
         opt.Start_Date__c = System.Today();
         opt.End_Date__c = opt.Start_Date__c + 1;   
-        opt.CloseDate = System.Today()+2;      
+        opt.CloseDate = System.Today() + 2;  
+        Test.startTest();    
         insert opt;
-    
-    
+        Test.stopTest();
     }
 
     public static testMethod void  populateValuesInsertTrigger07(){
@@ -243,9 +261,9 @@ public class OppClassTrigger {
         opt.StageName = 'DCP/MRP';
         opt.Start_Date__c = System.Today();
         opt.End_Date__c = opt.Start_Date__c + 1; 
-        opt.CloseDate = System.Today()+2;        
+        opt.CloseDate = System.Today() + 2; 
+        Test.startTest();       
         insert opt;
-    
-    
+        Test.stopTest();
     }    
 }

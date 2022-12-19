@@ -55,6 +55,7 @@ public class DRL_convertLeadProspectTest {
         ldChild.Select_Country__c = 'India';
         ldChild.IsConverted = false;
         ldChild.Status = 'Open';
+        ldChild.Email = 'testProspect@drl.com';
         ldChild.recordTypeId =map_RecordTypeIdByDeveloperName.get('DRL_Lead');
         insert ldChild;
 
