@@ -10,25 +10,19 @@
 *******************************************************************************************************/
 @isTest
 public class DRL_convertLeadProspectTest {
-    
-    
     /**
     * @ author       :  Subhodeep Sarkar
     * @ description  :  This method is used to setup data for testing apex class 'DRL_ConvertLeadProspectController'
     **/    
     @TestSetup
-    public static void createData(){
-        
+    public static void createData() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         Map<String, Id> map_OppRecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Opportunity');
-        
-        
-        
         //create Account
-        Account testExistingAccount = new Account();
-        testExistingAccount.Name = 'Test Existing Account';
-        testExistingAccount.Industry__c = 'Generics';
-        insert testExistingAccount;
+        Account objExistingAccount = new Account();
+        objExistingAccount.Name = 'Test Existing Account';
+        objExistingAccount.Industry__c = 'Generics';
+        insert objExistingAccount;
         
         //Create Contact
         Contact testExistingContact = new Contact();
@@ -109,7 +103,6 @@ public class DRL_convertLeadProspectTest {
     **/
     @isTest
     public static void testStaticMethods(){
-        
         Test.startTest();
         
         Account obj_Account = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1 ] ;
@@ -129,18 +122,16 @@ public class DRL_convertLeadProspectTest {
     * @ description  :  This method is used to test the condition - Open Prospect with Open child lead is converted,.  
     **/    
     @isTest
-    public static void testProspectwithChild(){
-        
-        
+    public static void testProspectwithChild() {
         Map<String, Id> map_OppRecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Opportunity');
         
         Lead obj_leadProspect = [SELECT Id FROM Lead WHERE LastName = 'testProspectLead' and RecordType.DeveloperName='DRL_Prospect' LIMIT 1 ];
         List<Lead> list_Lead =  new List<Lead>{[SELECT Id FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ]};
         Test.startTest();
 
-        Account testExistingAccount = new Account();
-        testExistingAccount.Name = 'Test Existing Account';
-        testExistingAccount.Industry__c = 'Generics';
+        Account objExistingAccount = new Account();
+        objExistingAccount.Name = 'Test Existing Account';
+        objExistingAccount.Industry__c = 'Generics';
         
         Contact testExistingContact = new Contact();
         testExistingContact.LastName = 'testExistingContact';
@@ -183,7 +174,7 @@ public class DRL_convertLeadProspectTest {
         objResponse.objLead = obj_leadProspect;
         objResponse.listProspectChildLeads = list_Lead;
         
-        DRL_ConvertLeadProspectController.convertLead(str_leadId,testExistingAccount,testExistingContact,obj_Opportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
+        DRL_ConvertLeadProspectController.convertLead(str_leadId,objExistingAccount,testExistingContact,obj_Opportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
 
         Test.stopTest();
     }
@@ -197,9 +188,9 @@ public class DRL_convertLeadProspectTest {
         Map<String, Id> map_OppRecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Opportunity');
         
         Test.startTest();
-        Account testExistingAccount1 = new Account();
-        testExistingAccount1.Name = 'Test Account';
-        testExistingAccount1.Industry__c = 'Generics';
+        Account objExistingAccount1 = new Account();
+        objExistingAccount1.Name = 'Test Account';
+        objExistingAccount1.Industry__c = 'Generics';
         
         Contact testExistingContact1 = new Contact();
         testExistingContact1.LastName = 'test Contact';
@@ -207,9 +198,9 @@ public class DRL_convertLeadProspectTest {
         testExistingContact1.Job_Level__c = 'Manager';
         testExistingContact1.Department__c = 'Quality';
         
-        Account testExistingAccount2 = new Account();
-        testExistingAccount2.Name = 'Test Account';
-        testExistingAccount2.Industry__c = 'Generics';
+        Account objExistingAccount2 = new Account();
+        objExistingAccount2.Name = 'Test Account';
+        objExistingAccount2.Industry__c = 'Generics';
         
         Contact testExistingContact2 = new Contact();
         testExistingContact2.LastName = 'test Contact';
@@ -234,7 +225,6 @@ public class DRL_convertLeadProspectTest {
         testOpportunity2.StageName = 'Lead Generation';
         Lead test_Lead =  [SELECT Id FROM Lead WHERE LastName = 'testLead3' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
         
-        
         List<DRL_ConvertLeadProspectController.contentCatalog> list_parentContentCatalog = new List<DRL_ConvertLeadProspectController.contentCatalog>();
         Map<String, String> map_strrunAfter = new Map<String, String>();
         Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> > map_listContentCatalogs = new  Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> >();
@@ -242,11 +232,10 @@ public class DRL_convertLeadProspectTest {
         List<Lead> list_Lead = new List<Lead>{test_Lead};
                 
         DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(obj_leadProspect.Id));
-        DRL_ConvertLeadProspectController.convertLead(String.valueOf(obj_leadProspect.Id),testExistingAccount1,testExistingContact1,testOpportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
+        DRL_ConvertLeadProspectController.convertLead(String.valueOf(obj_leadProspect.Id),objExistingAccount1,testExistingContact1,testOpportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
         DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(test_Lead.Id));
-        DRL_ConvertLeadProspectController.convertLead(String.valueOf(test_Lead.Id),testExistingAccount2,testExistingContact2,testOpportunity2,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
+        DRL_ConvertLeadProspectController.convertLead(String.valueOf(test_Lead.Id),objExistingAccount2,testExistingContact2,testOpportunity2,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
         Test.stopTest();   
-        
     }
 
     /**
@@ -254,11 +243,12 @@ public class DRL_convertLeadProspectTest {
     * @ description  : This method is used to test the method getErroMessage -
     **/
     @isTest
-    public static void testGetErroMessage(){
+    public static void testGetErroMessage() {
         Database.SaveResult objSaveResult=Database.insert(new Account(),false);
-        if(objSaveResult.getErrors().size()>0){
+        if(objSaveResult.getErrors().size()>0) {
             DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
         }
+
         objSaveResult=Database.insert(new Lead(
                                                 Company='Test Enterrises',
                                                 LastName='testLead',
@@ -283,7 +273,7 @@ public class DRL_convertLeadProspectTest {
     * @ description  : This method is used to test the convert functionality if Lead related parent prospect is not converted
     **/
     @isTest
-    public static void testConvertLeadIfProspectNotConverted(){
+    public static void testConvertLeadIfProspectNotConverted() {
         Product2 objProduct = new Product2();
         objProduct.Name = 'APREPITANT';
         objProduct.ProductCode = '00001';
@@ -347,7 +337,6 @@ public class DRL_convertLeadProspectTest {
                                                                         );
             test.stopTest();
         }        
-
     }    
     
     /**
@@ -370,8 +359,6 @@ public class DRL_convertLeadProspectTest {
         objContentCatalog.Document_Category__c = 'IP advantage';
         objContentCatalog.Active_Document__c = true;
         insert objContentCatalog;
-
-        
 
         User objUser=[SELECT Id FROM User WHERE Id=:UserInfo.getUserId()];
         Id opportunityRecordTypeId=Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
