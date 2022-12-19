@@ -27,7 +27,7 @@
 		<members>OpportunityJourneyHandler2Test</members> 
 		<members>LeadTriggerHandlerTest</members>
 		<members>Testmomedit</members>
-		<members>momedit</members>
+		<members>OppClassTrigger</members>
 		<name>ApexClass</name>
 	</types>
 	<version>55.0</version>
