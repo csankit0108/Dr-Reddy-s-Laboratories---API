@@ -212,25 +212,35 @@ public class DRL_TestUtility {
     public class CampaignMemberBuilder {
         private Id idContactId;
         private Id idCampaignId;
+        private String strPardotStatus;
 
-    public CampaignMemberBuilder setCampaignId(Id idValue) {
-        this.idCampaignId = idValue;
-        return this;
+        public CampaignMemberBuilder() {
+            this.strPardotStatus = '';
+        }
+
+        public CampaignMemberBuilder setCampaignId(Id idValue) {
+            this.idCampaignId = idValue;
+            return this;
+        }
+
+        public CampaignMemberBuilder setContactId(Id idValue) {
+            this.idContactId = idValue;
+            return this;
+        }
+
+        public CampaignMemberBuilder setPardotStatus(String strValue) {
+            this.strPardotStatus = strValue;
+            return this;
+        }
+
+        public CampaignMember createCampaignMember() {
+            CampaignMember objCampaignMember = new CampaignMember();
+            objCampaignMember.CampaignId = this.idCampaignId;
+            objCampaignMember.ContactId = this.idContactId;
+            objCampaignMember.Pardot_Campaign_Status__c = this.strPardotStatus;
+            return objCampaignMember;
+        }
     }
-
-    public CampaignMemberBuilder setContactId(Id idValue) {
-        this.idContactId = idValue;
-        return this;
-    }
-
-    public CampaignMember createCampaignMember() {
-        CampaignMember objCampaignMember = new CampaignMember();
-        objCampaignMember.CampaignId = this.idCampaignId;
-        objCampaignMember.ContactId = this.idContactId;
-        return objCampaignMember;
-    }
-
-}
 
     
     /**
@@ -378,12 +388,15 @@ public class DRL_TestUtility {
         private Id idProductId;
         private Id idLeadId;
         private Id idRecordTypeId;
+        private Id idConvertedContactId;
+        private String strOppJourneyContentIds2;
         
         public OpportunityBuilder() {
             this.strName = '';
             this.strStageName = '';
             this.strLaunchYear = '';
             this.strSourceType = '';
+            this.strOppJourneyContentIds2 = '';
         }
         
         public OpportunityBuilder setName(String strValue) {
@@ -441,6 +454,16 @@ public class DRL_TestUtility {
             return this;
         }
 
+        public OpportunityBuilder setConvertedContactId(Id idValue) {
+            this.idConvertedContactId = idValue;
+            return this;
+        }
+
+        public OpportunityBuilder setOppJourneyContentIds2(String strValue) {
+            this.strOppJourneyContentIds2 = strValue;
+            return this;
+        }
+
         public Opportunity createOpportunity() {
             Opportunity objOpportunity = new Opportunity();
             objOpportunity.Name = this.strName;
@@ -454,6 +477,8 @@ public class DRL_TestUtility {
             objOpportunity.Contact__c = this.idContactId;
             objOpportunity.Product__c = this.idProductId;
             objOpportunity.Lead_Converted_From__c = this.idLeadId;
+            objOpportunity.Converted_Contact__c = this.idConvertedContactId;
+            objOpportunity.Opp_Journey_Content_Ids2__c = this.strOppJourneyContentIds2;
             return objOpportunity;
         }
     }
@@ -752,6 +777,90 @@ public class DRL_TestUtility {
             objPQTMasterData.PQT_L3B_Finance_BU_Head__c = this.idPQTL3BFinanceBUHeadName;
             objPQTMasterData.PQT_Plant_Name__c = this.strPQTPlantName;
             return  objPQTMasterData;
+        }
+    }
+
+    /**
+    * @ Name     :  AccountTeam Builder
+    * @ Purpose  :  To create Account_Team__c record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class AccountTeamBuilder {
+        private String strMomAccess;
+        private String strOpportunityAccess;
+        private String strAccountAccess;
+        private Id idUserId;
+        private Id idAccountId;
+        
+        public AccountTeamBuilder() {
+            this.strMomAccess = '';
+            this.strOpportunityAccess = '';
+            this.strAccountAccess = '';
+        }
+        
+        
+        public AccountTeamBuilder setUserId(Id idValue) {
+            this.idUserId = idValue;
+            return this;
+        }
+
+        public AccountTeamBuilder setAccountId(Id idValue) {
+            this.idAccountId = idValue;
+            return this;
+        }
+
+
+        public AccountTeamBuilder setMomAccess(String strValue) {
+            this.strMomAccess = strValue;
+            return this;
+        }
+
+        public AccountTeamBuilder setOpportunityAccess(String strValue) {
+            this.strOpportunityAccess = strValue;
+            return this;
+        }
+
+        public AccountTeamBuilder setAccountAccess(String strValue) {
+            this.strAccountAccess = strValue;
+            return this;
+        }
+
+
+        public Account_Team__c createAccountTeam() {
+            Account_Team__c objAccountTeam = new Account_Team__c();
+            objAccountTeam.User__c = this.idUserId;
+            objAccountTeam.Account__c = this.idAccountId;
+            objAccountTeam.Account_Access__c = this.strAccountAccess;
+            objAccountTeam.Opportunity_Access__c = this.strOpportunityAccess;
+            objAccountTeam.Minutes_Of_Meeting_Access__c = this.strMomAccess;
+            return objAccountTeam;
+        }
+    }
+
+    /**
+    * @ Name     :  MoMBuilder
+    * @ Purpose  :  To create Minutes_Of_Meeting__c record
+    * @ Author   :  Dinesh Chandra
+    **/
+    public class MomBuilder {
+        private date dtMomDate;
+        private Id idAccountId;
+        
+        public MomBuilder setMomDate(Date dtValue) {
+            this.dtMomDate = dtValue;
+            return this;
+        }
+
+        public MomBuilder setAccountId(Id idValue) {
+            this.idAccountId = idValue;
+            return this;
+        }
+        
+        public Minutes_Of_Meeting__c createMom() {
+            Minutes_Of_Meeting__c objMom = new Minutes_Of_Meeting__c();
+            objMom.MOM_Date__c = dtMomDate;
+            objMom.Account__c = this.idAccountId;
+            return objMom;
         }
     }
 }
