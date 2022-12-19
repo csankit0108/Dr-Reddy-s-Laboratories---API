@@ -1,4 +1,4 @@
-@IsTest(SeeAllData=true)
+@IsTest
 
 private class Testmomedit{
 
