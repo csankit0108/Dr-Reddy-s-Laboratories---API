@@ -26,6 +26,8 @@
 		<members>CampaignMemberStatusTest</members>
 		<members>OpportunityJourneyHandler2Test</members> 
 		<members>LeadTriggerHandlerTest</members>
+		<members>Testmomedit</members>
+		<members>OppClassTrigger</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
