@@ -14,7 +14,9 @@
 *  27-12-2022       |  kishore.pedireddy@absyz.com          |  1.2          |    Populate Prospect on Lead on Email update and create Campaign member        
 *******************************************************************************************************/
 public without sharing class DRL_LeadTriggerHelper {
-    public static Boolean blnSkipTrigger = false;
+    public static Boolean blnSkipTrigger = false;   
+    //map to get the weightage of Status value  
+    public static Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
     public static void processAfterInsert(List<Lead> list_Leads) {
         addProspectOnLead(list_Leads,null);
         addProspectAsCampaignMember(list_Leads,null,null);        
@@ -243,9 +245,6 @@ public without sharing class DRL_LeadTriggerHelper {
             Map<String, Lead> map_ExistingLeadByEmail = new Map<String, Lead>();
             // Map of existing Leads by Id
             Map<String, Lead> map_ExistingLeadById = new Map<String, Lead>();
-            //map to get the weightage of Status value  
-            Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
-            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
             //Map of Lead(Prospect) by their Email to be inserted
             Map<String, Lead> map_LeadByEmailToInsert = new Map<String, Lead>();
             //List of Prospects to be updated
@@ -345,23 +344,9 @@ public without sharing class DRL_LeadTriggerHelper {
                         }
 
                         Lead objProspectToUpdate = map_ExistingLeadByEmail.get(objLead.Email);
-                        if (map_StatusMappingByLeadStatus.containsKey(objLead.Status)) {
-                            String strNewStatus = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
-                            Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strNewStatus)
-                                ? (Integer)map_StatusMappingByLeadStatus.get(strNewStatus).Weightage__c
-                                : 0;
-                            //Weightage of the current status value of the Prospect
-                            Integer intOldStatusWeightage = (String.isNotBlank(objProspectToUpdate.Status) && map_StatusMappingByLeadStatus.containsKey(objProspectToUpdate.Status))
-                                ? (Integer)map_StatusMappingByLeadStatus.get(objProspectToUpdate.Status).Weightage__c
-                                : 0;            
-                            //Check if the weightage of the new Prospect > current weightage of Prospect status
-                            if (
-                                (intNewStatusWeightage > intOldStatusWeightage) &&
-                                (objProspectToUpdate.Status != map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c)
-                            ) {
-                                objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
-                                list_ProspectsToUpdate.add(objProspectToUpdate);
-                            }
+                        if ( isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status) ) {
+                            objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
+                            list_ProspectsToUpdate.add(objProspectToUpdate);
                         }
                     }                    
                     list_LeadsToUpdate.add(objLeadToUpdate);
@@ -372,21 +357,9 @@ public without sharing class DRL_LeadTriggerHelper {
                         objLead.DRL_Prospect__c != null &&
                         map_ExistingLeadById.get(objLead.DRL_Prospect__c) != null
                 ) {
-                    Lead objProspectToUpdate = map_ExistingLeadById.get(objLead.DRL_Prospect__c);
-                    String strNewStatus = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
-                    Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strNewStatus)
-                        ? (Integer)map_StatusMappingByLeadStatus.get(strNewStatus).Weightage__c
-                        : 0;
-                    //Weightage of the current status value of the Prospect
-                    Integer intOldStatusWeightage = (String.isNotBlank(objProspectToUpdate.Status) && map_StatusMappingByLeadStatus.containsKey(objProspectToUpdate.Status))
-                        ? (Integer)map_StatusMappingByLeadStatus.get(objProspectToUpdate.Status).Weightage__c
-                        : 0;
-    
+                    Lead objProspectToUpdate = map_ExistingLeadById.get(objLead.DRL_Prospect__c);    
                     //Check if the weightage of the new Prospect > current weightage of Prospect status
-                    if (
-                        (intNewStatusWeightage > intOldStatusWeightage) &&
-                        (objProspectToUpdate.Status != map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c)
-                    ) {
+                    if ( isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status) ) {
                         objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
                         list_ProspectsToUpdate.add(objProspectToUpdate);
                     }                    
@@ -435,6 +408,35 @@ public without sharing class DRL_LeadTriggerHelper {
                 true
             );            
         }
+    }
+
+    /*
+    * @ author       : Kishore Pedireddy
+    * @ description  : Add Prospect on Lead
+    * @ params       : strProspectStatus - String Status of Prospect
+                       strLeadStatus     - String Status of Child Lead
+    * @ return       : Boolean value true if Prospect Status is lower than child Status
+    */
+    public static Boolean isProspectHasLowerWeightage(String strProspectStatus, String strLeadStatus) {
+
+        String strNewStatus = map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c;
+        Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strNewStatus)
+                                      ? (Integer)map_StatusMappingByLeadStatus.get(strNewStatus).Weightage__c
+                                      : 0;
+        //Weightage of the current status value of the Prospect
+        Integer intOldStatusWeightage = (String.isNotBlank(strProspectStatus) && map_StatusMappingByLeadStatus.containsKey(strProspectStatus))
+                                      ? (Integer)map_StatusMappingByLeadStatus.get(strProspectStatus).Weightage__c
+                                      : 0;
+        
+        if (
+            (intNewStatusWeightage > intOldStatusWeightage) &&
+            (strProspectStatus != strNewStatus) 
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }
