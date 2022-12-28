@@ -17,9 +17,18 @@ public without sharing class DRL_LeadTriggerHelper {
     public static Boolean blnSkipTrigger = false;   
     //map to get the weightage of Status value  
     public static Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();
+    //Map of Record Type Id by Developer Name
+    public static Map<String, Id> map_RecordTypeIdByDeveloperName = new Map<String, Id>();
+    /**
+    * @ author       :  Ankit C
+    * @ description  :  This method handles all the logic that needs to be performed in the afterInsert context
+    * @ params       :  list_Leads - List of Leads from trigger.new
+    * @ return       :  N/A
+    **/
     public static void processAfterInsert(List<Lead> list_Leads) {
-        addProspectOnLead(list_Leads,null);
-        addProspectAsCampaignMember(list_Leads,null,null);        
+        map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        addProspectOnLead(list_Leads, null);
+        addProspectAsCampaignMember(list_Leads, null, null);        
     } 
 
     /**
@@ -43,8 +52,6 @@ public without sharing class DRL_LeadTriggerHelper {
         Set<String> set_SourceCodes = new Set<String>();
         //Map of UTM source lable with Lead source
         Map<String, String> map_LeadSourceByUtmSource = new Map<String, String>();
-        //Map of Record Type Id by Developer Name
-        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         
         //Fetch campaign codes from Lead records in a SET(set_CampaignCodes)
         for (Lead objLead : list_Leads) {
@@ -107,33 +114,35 @@ public without sharing class DRL_LeadTriggerHelper {
 
     /*
     * @ author       : Wafa Shaikh
-    * @ description  : Updating the prosepct record with the Status value based on the Lead records status value
-    * @ params       : list_Leads - List of Lead records
+    * @ description  : This method handles all the logic that needs to performed in the afterUpdate context.
+    * @ params       : map_NewMap - Map of Leads from trigger.newMap
+    *                  map_OldMap - map_NewMap - Map of Leads from trigger.oldMap
     * @ return       : N/A
     */
     public static void processAfterUpdate(Map<Id, Lead> map_NewMap, Map<Id, Lead> map_OldMap) {
-        addProspectOnLead(map_NewMap.values(),map_OldMap);
-        addProspectAsCampaignMember(map_NewMap.values(),map_NewMap,map_OldMap);        
+        map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        addProspectOnLead(map_NewMap.values(), map_OldMap);
+        addProspectAsCampaignMember(map_NewMap.values(), map_NewMap, map_OldMap);        
     }
     
     /*
     * @ author       : Kishore Pedireddy
-    * @ description  : Add Prospect on Lead
+    * @ description  : This method creates a CampaignMember for the Prospect of a Lead
     * @ params       : list_Leads - List of Lead records
-                       map_OldMap - Map of Id to Old Lead
+                       map_NewMap - Map of leads from trigger.newMap
+                       map_OldMap - Map of leads from trigger.oldMap
     * @ return       : N/A
     */
     public static void addProspectAsCampaignMember(List<Lead> list_Leads, Map<Id, Lead> map_NewMap, Map<Id, Lead> map_OldMap) {
-        try{
+        try {
             if (Test.isRunningTest() && DRL_LeadTriggerHelperTest.blnThrowExceptionWhileAddingCampaignMember) {
                 throw new DMLException();
             }
+
             //Set to store the Prospect Ids
             Set<Id> set_ProspectIds = new Set<Id>();
             //List of Campaign Members to be created.
-            List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();   
-            //Map of Record Type Id by Developer Name
-            Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');      
+            List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();         
             //List of all the Errors occurred during DML operation
             List<String> list_ConsolidatedDMLErrors = new List<String>();   
 
@@ -144,7 +153,7 @@ public without sharing class DRL_LeadTriggerHelper {
                                              DRL_SourceCampaign__c ,
                                              Email
                                              FROM Lead 
-                                             WHERE Id IN :list_Leads ];
+                                             WHERE Id IN :list_Leads];
 
             for (Lead objLead : list_LeadsToUpdate) {
                 if (String.isNotBlank(objLead.DRL_Prospect__c)) {
@@ -165,7 +174,8 @@ public without sharing class DRL_LeadTriggerHelper {
                     (                        
                         objLead.DRL_SourceCampaign__c != null &&
                         map_OldMap == null 
-                    ) || (
+                    ) || 
+                    (
                         map_OldMap != null &&
                         objLead.DRL_SourceCampaign__c != null && (
                             (
@@ -199,9 +209,7 @@ public without sharing class DRL_LeadTriggerHelper {
 
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'addProspectAsCampaignMember', list_ConsolidatedDMLErrors);
-            }
-            
-            DRL_LeadTriggerHelper.blnSkipTrigger = false;
+            }            
         } catch(Exception objException) {
             DRLUtil.logException(
                 'DRL_LeadTriggerHelper',
@@ -210,22 +218,21 @@ public without sharing class DRL_LeadTriggerHelper {
                 true
             );
         }
-
     }
 
     /*
     * @ author       : Kishore Pedireddy
     * @ description  : Add Prospect on Lead
-    * @ params       : list_Leads - List of Lead records
-                       map_OldMap - Map of Id to Old Lead
+    * @ params       : list_Leads - List of Leads from trigger.new
+                       map_OldMap - Map of leads from trigger.oldMap
     * @ return       : N/A
     */
-
     public static void addProspectOnLead(List<Lead> list_Leads, Map<Id, Lead> map_OldMap){
         try {
             if (Test.isRunningTest() && DRL_LeadTriggerHelperTest.blnThrowExceptionWhileAddingProspect) {
                 throw new DMLException();
             }
+
             Schema.DescribeSObjectResult objDescribeSObjectResult = Lead.sObjectType.getDescribe();
             //Map of Lead Field Set by their Name
             Map<String, Schema.FieldSet> map_LeadFieldSetByName = objDescribeSObjectResult.fieldSets.getMap();
@@ -239,8 +246,6 @@ public without sharing class DRL_LeadTriggerHelper {
             Set<String> set_LeadEmails = new Set<String>();
             //Set of Lead Emails
             Set<Id> set_Prospects = new Set<Id>();
-            //Map of Record Type Id by Developer Name
-            Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
             // Map of existing Leads by Email
             Map<String, Lead> map_ExistingLeadByEmail = new Map<String, Lead>();
             // Map of existing Leads by Id
@@ -262,29 +267,27 @@ public without sharing class DRL_LeadTriggerHelper {
                 if (objLead.Email != null) {
                     set_LeadEmails.add(objLead.Email);                                            
                 }
+
                 if (objLead.DRL_Prospect__c != null) {
                     set_Prospects.add(objLead.DRL_Prospect__c);
                 }
             }
-            System.debug(set_Prospects);
 
             for (Lead objLead : [SELECT 
-                                Id,
-                                Email,
-                                Status
-                                FROM
-                                Lead
-                                WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')
-                                AND (
+                                 Id,
+                                 Email,
+                                 Status
+                                 FROM
+                                 Lead
+                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')
+                                 AND (
                                      Email IN :set_LeadEmails 
-                                    OR Id IN :set_Prospects 
-                                    ) 
-                                ]
+                                     OR Id IN :set_Prospects 
+                                )]
             ) {
                 map_ExistingLeadByEmail.put(objLead.Email, objLead);                    
                 map_ExistingLeadById.put(objLead.Id, objLead);  
             }
-            System.debug(map_ExistingLeadByEmail);
 
             for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : DRL_ProspectLeadStatusMapping__mdt.getAll().values()) {
                 if (objProspectLeadStatusMapping.Active__c) {
@@ -296,7 +299,7 @@ public without sharing class DRL_LeadTriggerHelper {
             }
 
             for (Lead objLead : list_Leads) {
-                if(
+                if (
                     objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect') && 
                     (                        
                         String.isBlank(objLead.DRL_Prospect__c) && 
@@ -315,6 +318,7 @@ public without sharing class DRL_LeadTriggerHelper {
                     if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
                         objLeadToUpdate.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
                     }
+
                     if (!map_ExistingLeadByEmail.containsKey(objLead.Email)) {
                         //Creating Prospect if it's not existing in the system
                         Map<String, Object> map_LeadFieldByName = objLead.getPopulatedFieldsAsMap();
@@ -336,7 +340,6 @@ public without sharing class DRL_LeadTriggerHelper {
                         }
 
                         map_LeadByEmailToInsert.put(objProspect.Email, objProspect);
-
                     } else {                        
                         objLeadToUpdate.DRL_Prospect__c = map_ExistingLeadByEmail.get(objLead.Email).Id;                        
                         if (map_RecordTypeIdByDeveloperName.containsKey('DRL_Lead')) {
@@ -344,22 +347,23 @@ public without sharing class DRL_LeadTriggerHelper {
                         }
 
                         Lead objProspectToUpdate = map_ExistingLeadByEmail.get(objLead.Email);
-                        if ( isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status) ) {
+                        if (isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status)) {
                             objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
                             list_ProspectsToUpdate.add(objProspectToUpdate);
                         }
-                    }                    
+                    }   
+
                     list_LeadsToUpdate.add(objLeadToUpdate);
                 } else if (
-                        map_OldMap != null && 
-                        objLead.Status != map_OldMap.get(objLead.Id).Status &&
-                        objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
-                        objLead.DRL_Prospect__c != null &&
-                        map_ExistingLeadById.get(objLead.DRL_Prospect__c) != null
+                    map_OldMap != null && 
+                    objLead.Status != map_OldMap.get(objLead.Id).Status &&
+                    objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
+                    objLead.DRL_Prospect__c != null &&
+                    map_ExistingLeadById.get(objLead.DRL_Prospect__c) != null
                 ) {
                     Lead objProspectToUpdate = map_ExistingLeadById.get(objLead.DRL_Prospect__c);    
                     //Check if the weightage of the new Prospect > current weightage of Prospect status
-                    if ( isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status) ) {
+                    if (isProspectHasLowerWeightage(objProspectToUpdate.Status, objLead.Status)) {
                         objProspectToUpdate.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
                         list_ProspectsToUpdate.add(objProspectToUpdate);
                     }                    
@@ -399,7 +403,6 @@ public without sharing class DRL_LeadTriggerHelper {
             }
 
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
-
         } catch (Exception objException) {
             DRLUtil.logException(
                 'DRL_LeadTriggerHelper',
@@ -412,13 +415,12 @@ public without sharing class DRL_LeadTriggerHelper {
 
     /*
     * @ author       : Kishore Pedireddy
-    * @ description  : Add Prospect on Lead
+    * @ description  : Method to check if the weightage of the new Lead status is greater than the weightage of the status of the Prospect.
     * @ params       : strProspectStatus - String Status of Prospect
                        strLeadStatus     - String Status of Child Lead
     * @ return       : Boolean value true if Prospect Status is lower than child Status
     */
     public static Boolean isProspectHasLowerWeightage(String strProspectStatus, String strLeadStatus) {
-
         String strNewStatus = map_StatusMappingByLeadStatus.get(strLeadStatus).ProspectStatus__c;
         Integer intNewStatusWeightage = map_StatusMappingByLeadStatus.containsKey(strNewStatus)
                                       ? (Integer)map_StatusMappingByLeadStatus.get(strNewStatus).Weightage__c
@@ -436,7 +438,5 @@ public without sharing class DRL_LeadTriggerHelper {
         } else {
             return false;
         }
-
     }
-
 }
