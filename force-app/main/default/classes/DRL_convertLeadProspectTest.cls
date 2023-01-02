@@ -25,77 +25,78 @@ public class DRL_convertLeadProspectTest {
         insert objExistingAccount;
         
         //Create Contact
-        Contact testExistingContact = new Contact();
-        testExistingContact.LastName = 'testExistingContact';
-        testExistingContact.Email = 'testExistingContact@email.com';
-        testExistingContact.Job_Level__c = 'Manager';
-        testExistingContact.Department__c = 'Quality';
-        insert testExistingContact;
+        Contact objExistingContact = new Contact();
+        objExistingContact.LastName = 'testExistingContact';
+        objExistingContact.Email = 'testExistingContact@email.com';
+        objExistingContact.Job_Level__c = 'Manager';
+        objExistingContact.Department__c = 'Quality';
+        insert objExistingContact;
         
-        Product2 obj_product = new Product2();
-        obj_product.name = 'Abacavir';
-        obj_product.ProductCode = '12345';
-        obj_product.PQT_Product_Cluster__c = 'Abacavir Base';
-        insert obj_product;
+        Product2 objProduct = new Product2();
+        objProduct.Name = 'Abacavir';
+        objProduct.ProductCode = '12345';
+        objProduct.PQT_Product_Cluster__c = 'Abacavir Base';
+        insert objProduct;
         
-        Content_Catalog__c obj_contentCatalog = new Content_Catalog__c();
-        obj_contentCatalog.name= 'contenCatalog';
-        obj_contentCatalog.product__c = obj_product.Id;
-        obj_contentCatalog.product_cluster__c = 'Abacavir Base';
-        obj_contentCatalog.Document_URL__c	 = 'abacavir.test.com11';
-        obj_contentCatalog.Document_Category__c = 'IP advantage';
-        obj_contentCatalog.Active_Document__c = true;
-        insert obj_contentCatalog;
+        Content_Catalog__c objContentCatalog = new Content_Catalog__c();
+        objContentCatalog.name= 'contenCatalog';
+        objContentCatalog.product__c = objProduct.Id;
+        objContentCatalog.product_cluster__c = 'Abacavir Base';
+        objContentCatalog.Document_URL__c = 'abacavir.test.com11';
+        objContentCatalog.Document_Category__c = 'IP advantage';
+        objContentCatalog.Active_Document__c = true;
+        insert objContentCatalog;
         
         //child lead of prospect record
-        Lead ldChild = new Lead();
-        ldChild.FirstName = '';
-        ldChild.LastName = 'testChildLead';
-        ldChild.Company = 'Absyz'; 
-        ldChild.Select_Country__c = 'India';
-        ldChild.IsConverted = false;
-        ldChild.Status = 'Open';
-        ldChild.Email = 'testProspect@drl.com';
-        ldChild.recordTypeId =map_RecordTypeIdByDeveloperName.get('DRL_Lead');
-        insert ldChild;
+        Lead objChildLead = new Lead();
+        objChildLead.FirstName = '';
+        objChildLead.LastName = 'testChildLead';
+        objChildLead.Company = 'Absyz'; 
+        objChildLead.Select_Country__c = 'India';
+        objChildLead.IsConverted = false;
+        objChildLead.Status = 'Open';
+        objChildLead.Email = 'testProspect@drl.com';
+        objChildLead.recordTypeId =map_RecordTypeIdByDeveloperName.get('DRL_Lead');
+        insert objChildLead;
 
         //update name on prospect record 
-        ldChild = [SELECT DRL_Prospect__c FROM Lead WHERE Id =: ldChild.Id];
-        Lead objProspect = [SELECT Id FROM Lead WHERE Id =: ldChild.DRL_Prospect__c ];
+        objChildLead = [SELECT DRL_Prospect__c FROM Lead WHERE Id =: objChildLead.Id];
+        Lead objProspect = [SELECT Id FROM Lead WHERE Id =: objChildLead.DRL_Prospect__c ];
         objProspect.LastName = 'testProspectLead';
         update objProspect;
         
         //lead record
-        Lead lead_Record = new Lead();
-        lead_Record.FirstName = '';
-        lead_Record.LastName = 'testLead3';
-        lead_Record.Company = 'Absyz'; 
-        lead_Record.Select_Country__c = 'India';
-        lead_Record.IsConverted = false;
-        lead_Record.Status = 'Open';
-        lead_Record.product_lookup__c = obj_product.Id;
-        lead_Record.DRL_Prospect__c = objProspect.Id;
-        lead_Record.recordTypeId =map_RecordTypeIdByDeveloperName.get('DRL_Lead');
-        insert lead_Record;
+        Lead objLead = new Lead();
+        objLead.FirstName = '';
+        objLead.LastName = 'testLead3';
+        objLead.Company = 'Absyz'; 
+        objLead.Select_Country__c = 'India';
+        objLead.IsConverted = false;
+        objLead.Status = 'Open';
+        objLead.product_lookup__c = objProduct.Id;
+        objLead.DRL_Prospect__c = objProspect.Id;
+        objLead.recordTypeId =map_RecordTypeIdByDeveloperName.get('DRL_Lead');
+        insert objLead;
+
+        List<Opportunity> list_Opportunities = new List<Opportunity>();
         
-        Opportunity testChildOpportunity = new Opportunity();
-        testChildOpportunity.Name = 'testChildOpportunity';
-        testChildOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
-        testChildOpportunity.Target_Markets__c = 'North America';
-        testChildOpportunity.CloseDate = System.today() + 5;
-        testChildOpportunity.StageName = 'Lead Generation';
-        testChildOpportunity.Lead_Converted_From__c = ldChild.Id;
-        List<Opportunity> list_opportunity = new List<Opportunity>();
-        list_opportunity.add(testChildOpportunity);
+        Opportunity objChildOpportunity = new Opportunity();
+        objChildOpportunity.Name = 'testChildOpportunity';
+        objChildOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
+        objChildOpportunity.Target_Markets__c = 'North America';
+        objChildOpportunity.CloseDate = System.today() + 5;
+        objChildOpportunity.StageName = 'Lead Generation';
+        objChildOpportunity.Lead_Converted_From__c = objChildLead.Id;
+        list_Opportunities.add(objChildOpportunity);
      
-        Opportunity testOpportunity = new Opportunity();
-        testOpportunity.Name = 'testProspectLead';
-        testOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
-        testOpportunity.Target_Markets__c = 'North America';
-        testOpportunity.CloseDate = System.today() + 5;
-        testOpportunity.StageName = 'Lead Generation';
-        list_opportunity.add(testOpportunity);
-        insert list_opportunity;
+        Opportunity objOpportunity = new Opportunity();
+        objOpportunity.Name = 'testProspectLead';
+        objOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
+        objOpportunity.Target_Markets__c = 'North America';
+        objOpportunity.CloseDate = System.today() + 5;
+        objOpportunity.StageName = 'Lead Generation';
+        list_Opportunities.add(objOpportunity);
+        insert list_Opportunities;
     }
     
     /**
@@ -106,15 +107,15 @@ public class DRL_convertLeadProspectTest {
     public static void testStaticMethods(){
         Test.startTest();
         
-        Account obj_Account = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1 ] ;
-        Contact obj_Contact = [SELECT Id, Email FROM Contact WHERE LastName = 'testExistingContact' LIMIT 1 ] ;
+        Account objAccount = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1];
+        Contact objContact = [SELECT Id, Email FROM Contact WHERE LastName = 'testExistingContact' LIMIT 1];
         
-        DRL_ConvertLeadProspectController.getAccount(obj_Account.Id);
-        DRL_ConvertLeadProspectController.getContact(obj_Contact.Id);
+        DRL_ConvertLeadProspectController.getAccount(objAccount.Id);
+        DRL_ConvertLeadProspectController.getContact(objContact.Id);
         DRL_ConvertLeadProspectController.getQueryFields('Account', 'LeadConvertFields');
         DRL_ConvertLeadProspectController.getDataTableColumns('Account', 'LeadConvertFields');
         DRL_ConvertLeadProspectController.getDataTableColumns('Opportunity', 'convertLeadSuccessScreenList');
-        DRL_ConvertLeadProspectController.checkEmail(obj_Contact.Email);
+        DRL_ConvertLeadProspectController.checkEmail(objContact.Email);
         Test.stopTest();
     }
     
@@ -126,56 +127,77 @@ public class DRL_convertLeadProspectTest {
     public static void testProspectwithChild() {
         Map<String, Id> map_OppRecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Opportunity');
         
-        Lead obj_leadProspect = [SELECT Id FROM Lead WHERE LastName = 'testProspectLead' and RecordType.DeveloperName='DRL_Prospect' LIMIT 1 ];
-        List<Lead> list_Lead =  new List<Lead>{[SELECT Id FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ]};
+        Lead objLeadProspect = [SELECT Id FROM Lead WHERE LastName = 'testProspectLead' and RecordType.DeveloperName='DRL_Prospect' LIMIT 1 ];
+        List<Lead> list_Leads = new List<Lead>{[SELECT Id FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ]};
         Test.startTest();
 
         Account objExistingAccount = new Account();
         objExistingAccount.Name = 'Test Existing Account';
         objExistingAccount.Industry__c = 'Generics';
         
-        Contact testExistingContact = new Contact();
-        testExistingContact.LastName = 'testExistingContact';
-        testExistingContact.Email = 'testExistingContact@email.com';
-        testExistingContact.Job_Level__c = 'Manager';
-        testExistingContact.Department__c = 'Quality';
+        Contact objExistingContact = new Contact();
+        objExistingContact.LastName = 'testExistingContact';
+        objExistingContact.Email = 'testExistingContact@email.com';
+        objExistingContact.Job_Level__c = 'Manager';
+        objExistingContact.Department__c = 'Quality';
         
-        Opportunity testOpportunity = new Opportunity();
-        testOpportunity.Name = 'testProspectLead';
-        testOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
-        testOpportunity.Target_Markets__c = 'North America';
-        testOpportunity.CloseDate = System.today() + 5;
-        testOpportunity.StageName = 'Lead Generation';
-        List<Opportunity> list_opportunities = new List<Opportunity>{testOpportunity};
+        Opportunity objOpportunity = new Opportunity();
+        objOpportunity.Name = 'testProspectLead';
+        objOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
+        objOpportunity.Target_Markets__c = 'North America';
+        objOpportunity.CloseDate = System.today() + 5;
+        objOpportunity.StageName = 'Lead Generation';
+        List<Opportunity> list_Opportunities = new List<Opportunity>{ objOpportunity };
    
-        Opportunity obj_Opportunity =  [SELECT Id FROM Opportunity WHERE Name = 'testProspectLead' LIMIT 1 ] ;
-        List<DRL_ConvertLeadProspectController.contentCatalog> list_parentContentCatalog = new List<DRL_ConvertLeadProspectController.contentCatalog>();
-        List<Content_Catalog__c> list_ChildcontentCatalog = new List<Content_Catalog__c>([SELECT Id FROM Content_Catalog__c WHERE name = 'contenCatalog' LIMIT 1]);
+        Opportunity objOpportunity2 = [SELECT Id FROM Opportunity WHERE Name = 'testProspectLead' LIMIT 1] ;
+        List<DRL_ConvertLeadProspectController.contentCatalog> list_ParentContentCatalogs = 
+            new List<DRL_ConvertLeadProspectController.contentCatalog>();
+        List<Content_Catalog__c> list_ChildcontentCatalogs = new List<Content_Catalog__c>([
+            SELECT Id 
+            FROM Content_Catalog__c 
+            WHERE Name = 'contenCatalog' 
+            LIMIT 1
+        ]);
         
-        Map<String, String> map_strrunAfter = new Map<String, String>{String.valueOf(list_Lead[0].Id) => 'Immediately'};
-        String str_leadId = obj_leadProspect.Id;
-        System.AssertEquals([SELECT RecordType.DeveloperName FROM Lead WHERE Id=:str_leadId].RecordType.DeveloperName,'DRL_Prospect');
-        List<DRL_ConvertLeadProspectController.contentCatalog> list_ContentCatalog = new List<DRL_ConvertLeadProspectController.contentCatalog>();
+        Map<String, String> map_strrunAfter = new Map<String, String>{ String.valueOf(list_Leads[0].Id) => 'Immediately' };
+        String strLeadId = objLeadProspect.Id;
+        System.AssertEquals([SELECT RecordType.DeveloperName FROM Lead WHERE Id = :strLeadId].RecordType.DeveloperName, 'DRL_Prospect');
+        List<DRL_ConvertLeadProspectController.contentCatalog> list_ContentCatalogs = 
+            new List<DRL_ConvertLeadProspectController.contentCatalog>();
         
-        DRL_ConvertLeadProspectController.getLeadDetails(str_leadId);
-        DRL_ConvertLeadProspectController.contentCatalog objCustomContentCatalog = new DRL_ConvertLeadProspectController.contentCatalog();
+        DRL_ConvertLeadProspectController.getLeadDetails(strLeadId);
+        DRL_ConvertLeadProspectController.contentCatalog objCustomContentCatalog = 
+            new DRL_ConvertLeadProspectController.contentCatalog();
         objCustomContentCatalog.label = 'test Catalog';
         objCustomContentCatalog.value = 'test Catalog';
-        objCustomContentCatalog.catalogId = list_ChildcontentCatalog[0].Id;
+        objCustomContentCatalog.catalogId = list_ChildcontentCatalogs[0].Id;
         objCustomContentCatalog.categoryValue = 'IP advantage - test Catalog';
         objCustomContentCatalog.categoryCount = 'IP advantage(1)';
-        list_ContentCatalog.add(objCustomContentCatalog);
+        list_ContentCatalogs.add(objCustomContentCatalog);
         
-        Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> > map_listContentCatalogs = new  Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> >();
-        map_listContentCatalogs.put(String.valueOf(list_Lead[0].Id),list_ContentCatalog);
-        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(obj_leadProspect.Id));
-        DRL_ConvertLeadProspectController.getChildLeads(String.valueOf(list_Lead[0].Id));
-        DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse = new DRL_ConvertLeadProspectController.ConvertLeadDataWrapper();
+        Map<String, List<DRL_ConvertLeadProspectController.ContentCatalog>> map_ListContentCatalogsByLeadId = 
+            new Map<String, List<DRL_ConvertLeadProspectController.ContentCatalog>>();
+        map_ListContentCatalogsByLeadId.put(String.valueOf(list_Leads[0].Id), list_ContentCatalogs);
+        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLeadProspect.Id));
+        DRL_ConvertLeadProspectController.getChildLeads(String.valueOf(list_Leads[0].Id));
+        DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse = 
+            new DRL_ConvertLeadProspectController.ConvertLeadDataWrapper();
         objResponse.strstatus = 'Open';
-        objResponse.objLead = obj_leadProspect;
-        objResponse.listProspectChildLeads = list_Lead;
+        objResponse.objLead = objLeadProspect;
+        objResponse.listProspectChildLeads = list_Leads;
         
-        DRL_ConvertLeadProspectController.convertLead(str_leadId,objExistingAccount,testExistingContact,obj_Opportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
+        DRL_ConvertLeadProspectController.convertLead(
+            strLeadId,
+            objExistingAccount,
+            objExistingContact,
+            objOpportunity2,
+            list_Opportunities,
+            list_Leads, 
+            list_ParentContentCatalogs,
+            'Immediately',
+            map_ListContentCatalogsByLeadId,
+            map_strrunAfter
+        );
 
         Test.stopTest();
     }
@@ -193,49 +215,78 @@ public class DRL_convertLeadProspectTest {
         objExistingAccount1.Name = 'Test Account';
         objExistingAccount1.Industry__c = 'Generics';
         
-        Contact testExistingContact1 = new Contact();
-        testExistingContact1.LastName = 'test Contact';
-        testExistingContact1.Email = 'testExistingContact123@email.com';
-        testExistingContact1.Job_Level__c = 'Manager';
-        testExistingContact1.Department__c = 'Quality';
+        Contact objExistingContact1 = new Contact();
+        objExistingContact1.LastName = 'test Contact';
+        objExistingContact1.Email = 'testExistingContact123@email.com';
+        objExistingContact1.Job_Level__c = 'Manager';
+        objExistingContact1.Department__c = 'Quality';
         
         Account objExistingAccount2 = new Account();
         objExistingAccount2.Name = 'Test Account';
         objExistingAccount2.Industry__c = 'Generics';
         
-        Contact testExistingContact2 = new Contact();
-        testExistingContact2.LastName = 'test Contact';
-        testExistingContact2.Email = 'testExistingContact23@email.com';
-        testExistingContact2.Job_Level__c = 'Manager';
-        testExistingContact2.Department__c = 'Quality';
+        Contact objExistingContact2 = new Contact();
+        objExistingContact2.LastName = 'test Contact';
+        objExistingContact2.Email = 'testExistingContact23@email.com';
+        objExistingContact2.Job_Level__c = 'Manager';
+        objExistingContact2.Department__c = 'Quality';
         
-        Lead obj_leadProspect = [SELECT Id FROM Lead WHERE LastName = 'testProspectLead' and RecordType.DeveloperName='DRL_Prospect' LIMIT 1 ];
+        Lead objLeadProspect = [SELECT 
+                                Id 
+                                FROM Lead 
+                                WHERE LastName = 'testProspectLead' 
+                                AND RecordType.DeveloperName = 'DRL_Prospect' 
+                                LIMIT 1];
         
-        Opportunity testOpportunity = new Opportunity();
-        testOpportunity.Name = 'testProspectLead';
-        testOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
-        testOpportunity.Target_Markets__c = 'North America';
-        testOpportunity.CloseDate = System.today() + 5;
-        testOpportunity.StageName = 'Lead Generation';
+        Opportunity objOpportunity = new Opportunity();
+        objOpportunity.Name = 'testProspectLead';
+        objOpportunity.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
+        objOpportunity.Target_Markets__c = 'North America';
+        objOpportunity.CloseDate = System.today() + 5;
+        objOpportunity.StageName = 'Lead Generation';
         
-        Opportunity testOpportunity2 = new Opportunity();
-        testOpportunity2.Name = 'testProspectLead';
-        testOpportunity2.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
-        testOpportunity2.Target_Markets__c = 'North America';
-        testOpportunity2.CloseDate = System.today() + 5;
-        testOpportunity2.StageName = 'Lead Generation';
-        Lead test_Lead =  [SELECT Id FROM Lead WHERE LastName = 'testLead3' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
+        Opportunity objOpportunity2 = new Opportunity();
+        objOpportunity2.Name = 'testProspectLead';
+        objOpportunity2.recordTypeId = map_OppRecordTypeIdByDeveloperName.get('API');
+        objOpportunity2.Target_Markets__c = 'North America';
+        objOpportunity2.CloseDate = System.today() + 5;
+        objOpportunity2.StageName = 'Lead Generation';
+        Lead objLead = [SELECT Id FROM Lead WHERE LastName = 'testLead3' AND RecordType.DeveloperName = 'DRL_Lead' LIMIT 1];
         
-        List<DRL_ConvertLeadProspectController.contentCatalog> list_parentContentCatalog = new List<DRL_ConvertLeadProspectController.contentCatalog>();
+        List<DRL_ConvertLeadProspectController.contentCatalog> list_ParentContentCatalogs = 
+            new List<DRL_ConvertLeadProspectController.contentCatalog>();
         Map<String, String> map_strrunAfter = new Map<String, String>();
-        Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> > map_listContentCatalogs = new  Map< String,List<DRL_ConvertLeadProspectController.ContentCatalog> >();
-        List<Opportunity> list_opportunities = new List<Opportunity>{testOpportunity2};
-        List<Lead> list_Lead = new List<Lead>{test_Lead};
+        Map<String, List<DRL_ConvertLeadProspectController.ContentCatalog>> map_ListContentCatalogs = 
+            new Map<String, List<DRL_ConvertLeadProspectController.ContentCatalog>>();
+        List<Opportunity> list_Opportunities = new List<Opportunity>{objOpportunity2};
+        List<Lead> list_Leads = new List<Lead>{ objLead };
                 
-        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(obj_leadProspect.Id));
-        DRL_ConvertLeadProspectController.convertLead(String.valueOf(obj_leadProspect.Id),objExistingAccount1,testExistingContact1,testOpportunity,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
-        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(test_Lead.Id));
-        DRL_ConvertLeadProspectController.convertLead(String.valueOf(test_Lead.Id),objExistingAccount2,testExistingContact2,testOpportunity2,list_opportunities,list_Lead, list_parentContentCatalog,'Immediately',map_listContentCatalogs,map_strrunAfter);
+        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLeadProspect.Id));
+        DRL_ConvertLeadProspectController.convertLead(
+            String.valueOf(objLeadProspect.Id),
+            objExistingAccount1,
+            objExistingContact1,
+            objOpportunity,
+            list_Opportunities,
+            list_Leads, 
+            list_ParentContentCatalogs,
+            'Immediately',
+            map_ListContentCatalogs,
+            map_strrunAfter
+        );
+        DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
+        DRL_ConvertLeadProspectController.convertLead(
+            String.valueOf(objLead.Id),
+            objExistingAccount2,
+            objExistingContact2,
+            objOpportunity2,
+            list_Opportunities,
+            list_Leads, 
+            list_ParentContentCatalogs,
+            'Immediately',
+            map_ListContentCatalogs,
+            map_strrunAfter
+        );
         Test.stopTest();   
     }
 
@@ -245,26 +296,32 @@ public class DRL_convertLeadProspectTest {
     **/
     @isTest
     public static void testGetErroMessage() {
-        Database.SaveResult objSaveResult=Database.insert(new Account(),false);
-        if(objSaveResult.getErrors().size()>0) {
-            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+        Database.SaveResult objSaveResult = Database.insert(new Account(), false);
+        if (!objSaveResult.getErrors().isEmpty()) {
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0], 'Account', 'Insertion');
         }
 
-        objSaveResult=Database.insert(new Lead(
-                                                Company='Test Enterrises',
-                                                LastName='testLead',
-                                                Status='Contacted')
-                                                ,false);
-        if(objSaveResult.getErrors().size()>0){
-            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Lead','Insertion');
+        objSaveResult = Database.insert(
+            new Lead(
+                Company='Test Enterrises',
+                LastName='testLead',
+                Status='Contacted'
+            )
+            ,
+            false
+        );
+        if (!objSaveResult.getErrors().isEmpty()) {
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0], 'Lead', 'Insertion');
         }
-       objSaveResult=Database.insert(new Account(Name='Test Error Account'),false);
-        if(objSaveResult.getErrors().size()>0){
-            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+
+        objSaveResult = Database.insert(new Account(Name = 'Test Error Account'), false);
+        if (!objSaveResult.getErrors().isEmpty()) {
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0], 'Account', 'Insertion');
         }
-       objSaveResult=Database.insert(new Account(Name='Test Error Account'),false);
-        if(objSaveResult.getErrors().size()>0){
-            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Account','Insertion');
+
+        objSaveResult = Database.insert(new Account(Name = 'Test Error Account'), false);
+        if (!objSaveResult.getErrors().isEmpty()) {
+            DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0], 'Account', 'Insertion');
         }        
     }
 
@@ -281,19 +338,19 @@ public class DRL_convertLeadProspectTest {
         insert objProduct;
 
         Content_Catalog__c objContentCatalog = new Content_Catalog__c();
-        objContentCatalog.Name= 'APREPITANT';
+        objContentCatalog.Name = 'APREPITANT';
         objContentCatalog.product__c = objProduct.Id;
         objContentCatalog.product_cluster__c = 'APREPITANT';
-        objContentCatalog.Document_URL__c	 = 'antoxidptablet.test.com';
+        objContentCatalog.Document_URL__c = 'antoxidptablet.test.com';
         objContentCatalog.Document_Category__c = 'IP advantage';
         objContentCatalog.Active_Document__c = true;
         insert objContentCatalog;        
 
-        User objUser=[SELECT Id FROM User WHERE Id=:UserInfo.getUserId()];
-        Id opportunityRecordTypeId=Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
+        User objUser = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId()];
+        Id idAPIRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
 
-        System.runAs(objUser){   
-            test.startTest();
+        System.runAs(objUser) {   
+            Test.startTest();
             Lead objLead = new Lead();
             objLead.Company = 'Raghu Ram Enterprises';
             objLead.Select_Country__c = 'India';
@@ -303,7 +360,8 @@ public class DRL_convertLeadProspectTest {
             objLead.Product_Lookup__c = objProduct.Id;
             insert objLead;    
             
-            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
+            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse = 
+                DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
 
             Account objAccount = new Account();
             objAccount.Name = objLead.Company;
@@ -316,26 +374,26 @@ public class DRL_convertLeadProspectTest {
             objContact.Department__c = 'Regulatory';
 
             Opportunity objOpportunity = new Opportunity();
-            objOpportunity.Name = objLead.Company+' '+ objProduct.Name;
-            objOpportunity.RecordTypeId = opportunityRecordTypeId;
+            objOpportunity.Name = objLead.Company + ' ' + objProduct.Name;
+            objOpportunity.RecordTypeId = idAPIRecordTypeId;
             objOpportunity.CurrencyIsoCode = 'EUR';
             objOpportunity.Target_Markets__c = 'North Asia';
             objOpportunity.CloseDate = System.today().addDays(2);
             objOpportunity.StageName = 'Lead Generation';
 
-            
-            objResponse=DRL_ConvertLeadProspectController.convertLead(  String.valueOf(objLead.Id),
-                                                                        objAccount,
-                                                                        objContact,
-                                                                        objOpportunity,
-                                                                        null,
-                                                                        null,
-                                                                        objResponse.catList, 
-                                                                        'Immediately',
-                                                                        null,
-                                                                        null
-                                                                        );
-            test.stopTest();
+            objResponse = DRL_ConvertLeadProspectController.convertLead(
+                String.valueOf(objLead.Id),
+                objAccount,
+                objContact,
+                objOpportunity,
+                null,
+                null,
+                objResponse.catList, 
+                'Immediately',
+                null,
+                null
+            );
+            Test.stopTest();
         }        
     }    
     
@@ -344,11 +402,11 @@ public class DRL_convertLeadProspectTest {
     * @ description  : This method is used to test the convert functionality if Lead related parent prospect is converted
     **/
     @isTest
-    public static void testConvertLeadIfProspectConverted(){
-        Product2 objProduct = [SELECT Id,Name FROM Product2 WHERE ProductCode = '12345' LIMIT 1];
+    public static void testConvertLeadIfProspectConverted() {
+        Product2 objProduct = [SELECT Id, Name FROM Product2 WHERE ProductCode = '12345' LIMIT 1];
 
-        User objUser=[SELECT Id FROM User WHERE Id=:UserInfo.getUserId()];
-        Id opportunityRecordTypeId=Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
+        User objUser = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId()];
+        Id idAPIRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
 
         System.runAs(objUser){   
             Lead objLead = new Lead();
@@ -360,8 +418,11 @@ public class DRL_convertLeadProspectTest {
             objLead.Product_Lookup__c = objProduct.Id;
             insert objLead;    
 
-            Lead objProspect=[SELECT Id FROM Lead WHERE email='raghuram@email.test.com' and RecordType.DeveloperName='DRL_Prospect' limit 1];          
-            
+            Lead objProspect = [SELECT 
+                                Id 
+                                FROM Lead 
+                                WHERE Email = 'raghuram@email.test.com' 
+                                AND RecordType.DeveloperName = 'DRL_Prospect' LIMIT 1];          
 
             Account objAccount = new Account();
             objAccount.Name = objLead.Company;
@@ -373,47 +434,49 @@ public class DRL_convertLeadProspectTest {
             objContact.Job_Level__c = 'CXO/Head';
             objContact.Department__c = 'Regulatory'; 
             
-            test.startTest();
+            Test.startTest();
             //Convert Prospect
-            DRL_ConvertLeadProspectController.convertLead(String.valueOf(objProspect.Id),
-                                                            objAccount,
-                                                            objContact,
-                                                            null,
-                                                            null,
-                                                            null,
-                                                            null, 
-                                                            null,
-                                                            null,
-                                                            null
-                                                            );
+            DRL_ConvertLeadProspectController.convertLead(
+                String.valueOf(objProspect.Id),
+                objAccount,
+                objContact,
+                null,
+                null,
+                null,
+                null, 
+                null,
+                null,
+                null
+            );
 
-            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objProspect.Id));
+            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse = 
+                DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objProspect.Id));
             
-            objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
+            objResponse = DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
 
             Opportunity objOpportunity = new Opportunity();
             objOpportunity.Name = objLead.Company+' '+ objProduct.Name;
-            objOpportunity.RecordTypeId = opportunityRecordTypeId;
+            objOpportunity.RecordTypeId = idAPIRecordTypeId;
             objOpportunity.CurrencyIsoCode = 'EUR';
             objOpportunity.Target_Markets__c = 'North Asia';
             objOpportunity.CloseDate = System.today().addDays(2);
             objOpportunity.StageName = 'Lead Generation';
 
             //Convert Lead
-            objResponse=DRL_ConvertLeadProspectController.convertLead(  String.valueOf(objLead.Id),
-                                                                        objResponse.objparentProspectAccount,
-                                                                        objResponse.objparentProspectContact,
-                                                                        objOpportunity,
-                                                                        null,
-                                                                        null,
-                                                                        objResponse.catList, 
-                                                                        'Immediately',
-                                                                        null,
-                                                                        null
-                                                                        );
-            test.stopTest();
+            objResponse = DRL_ConvertLeadProspectController.convertLead(
+                String.valueOf(objLead.Id),
+                objResponse.objparentProspectAccount,
+                objResponse.objparentProspectContact,
+                objOpportunity,
+                null,
+                null,
+                objResponse.catList, 
+                'Immediately',
+                null,
+                null
+            );
+            Test.stopTest();
         }        
-
     }    
 
     /**
@@ -421,7 +484,7 @@ public class DRL_convertLeadProspectTest {
     * @ description  : This method is used to test the convert functionality to convert prospect and child lead together
     **/
     @isTest
-    public static void testConvertLeadIfProspectAlreadyConverted(){
+    public static void testConvertLeadIfProspectAlreadyConverted() {
         Product2 objProduct = new Product2();
         objProduct.Name = 'APREPITANT';
         objProduct.ProductCode = '00001';
@@ -432,28 +495,34 @@ public class DRL_convertLeadProspectTest {
         objContentCatalog.Name= 'APREPITANT';
         objContentCatalog.product__c = objProduct.Id;
         objContentCatalog.product_cluster__c = 'APREPITANT';
-        objContentCatalog.Document_URL__c	 = 'antoxidptablet.test.com';
+        objContentCatalog.Document_URL__c = 'antoxidptablet.test.com';
         objContentCatalog.Document_Category__c = 'IP advantage';
         objContentCatalog.Active_Document__c = true;
         insert objContentCatalog;       
 
-        User objUser=[SELECT Id FROM User WHERE Id=:UserInfo.getUserId()];
-        Id opportunityRecordTypeId=Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
+        User objUser = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId()];
+        Id idAPIRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
 
         System.runAs(objUser){   
-            test.startTest();
+            Test.startTest();
             Lead objLead = new Lead();
             objLead.Company = 'Raghu Ram Enterprises';
             objLead.Select_Country__c = 'India';
             objLead.LastName = 'Raghu Ram';
-            objLead.email = 'raghuram@email.test.com';
+            objLead.Email = 'raghuram@email.test.com';
             objLead.Status = 'Open';
             objLead.Product_Lookup__c = objProduct.Id;
             insert objLead;    
 
-            Lead objProspect=[SELECT Id FROM Lead WHERE email='raghuram@email.test.com' and RecordType.DeveloperName='DRL_Prospect' limit 1];          
+            Lead objProspect = [SELECT 
+                                Id 
+                                FROM Lead 
+                                WHERE Email = 'raghuram@email.test.com' 
+                                AND RecordType.DeveloperName = 'DRL_Prospect' 
+                                LIMIT 1];          
 
-            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objProspect.Id));            
+            DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse = 
+                DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objProspect.Id));            
 
             Account objAccount = new Account();
             objAccount.Name = objLead.Company;
@@ -461,34 +530,35 @@ public class DRL_convertLeadProspectTest {
 
             Contact objContact = new Contact();
             objContact.LastName = objLead.LastName;
-            objContact.email = objLead.email;
+            objContact.Email = objLead.email;
             objContact.Job_Level__c = 'CXO/Head';
             objContact.Department__c = 'Regulatory';   
 
             Opportunity objOpportunity = new Opportunity();
-            objOpportunity.Name = objLead.Company+' '+ objProduct.Name;
-            objOpportunity.RecordTypeId = opportunityRecordTypeId;
+            objOpportunity.Name = objLead.Company + ' ' + objProduct.Name;
+            objOpportunity.RecordTypeId = idAPIRecordTypeId;
             objOpportunity.CurrencyIsoCode = 'EUR';
             objOpportunity.Target_Markets__c = 'North Asia';
             objOpportunity.CloseDate = System.today().addDays(2);
             objOpportunity.StageName = 'Lead Generation';
             objOpportunity.Lead_Converted_From__c = objLead.Id;
 
-            Map<String,String> map_strrunAfter=new Map<String,String>();
-            map_strrunAfter.put(String.valueOf(objLead.Id),'Immediately');
+            Map<String, String> map_strrunAfter = new Map<String, String>();
+            map_strrunAfter.put(String.valueOf(objLead.Id), 'Immediately');
 
-            objResponse=DRL_ConvertLeadProspectController.convertLead(  String.valueOf(objProspect.Id),
-                                                                        objAccount,
-                                                                        objContact,
-                                                                        null,
-                                                                        new List<Opportunity>{objOpportunity},
-                                                                        objResponse.listProspectChildLeads,
-                                                                        null, 
-                                                                        null,
-                                                                        objResponse.map_catList,
-                                                                        map_strrunAfter
-                                                                        );
-            test.stopTest();
+            objResponse=DRL_ConvertLeadProspectController.convertLead(  
+                String.valueOf(objProspect.Id),
+                objAccount,
+                objContact,
+                null,
+                new List<Opportunity>{ objOpportunity },
+                objResponse.listProspectChildLeads,
+                null, 
+                null,
+                objResponse.map_catList,
+                 map_strrunAfter
+            );
+            Test.stopTest();
         } 
     }
 }
