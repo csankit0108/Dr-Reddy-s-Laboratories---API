@@ -11,7 +11,8 @@
 *******************************************************************************************************/
 @isTest
 public class DRL_LeadTriggerHelperTest {
-    public static Boolean blnThrowException = false;
+    public static Boolean blnThrowExceptionWhileAddingCampaignMember = false;
+    public static Boolean blnThrowExceptionWhileAddingProspect = false;
     /**
     * @ author       :  Deeksha Suvarna
     * @ description  :  This method is used to setup data for testing apex class 'DRL_LeadTriggerHelper'
@@ -91,11 +92,14 @@ public class DRL_LeadTriggerHelperTest {
         Lead objNewLead = new DRL_TestUtility.LeadBuilder()
                 .setFirstName('Test')
                 .setLastName('User1')
-                .setEmail('testuser@yopmail.com')
+                .setEmail('testuser5@yopmail.com')
                 .setCompany('Absyz')
                 .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+                .setStatus('Qualified')
                 .createLead();    
         Test.startTest();
+        objNewLead.Run_Automation__c='Yes';
+        objNewLead.Prospect_Customer__c='Customer';
         insert objNewLead;
         Test.stopTest();
 
@@ -106,7 +110,7 @@ public class DRL_LeadTriggerHelperTest {
                                 WHERE RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Lead') 
                                 AND DRL_Email__c = 'testuser5@yopmail.com'
                                 AND DRL_Prospect__c = :objLead.Id];
-        System.assert(!list_leads.isEmpty(), 'Lead failed to get linked to existing Prospect!');
+        System.assert(list_leads.size()==2, 'Lead failed to get linked to existing Prospect!');
     }
 
     /**
@@ -116,17 +120,29 @@ public class DRL_LeadTriggerHelperTest {
     @isTest
     static void testExceptions() {
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
-        Lead objLead = new DRL_TestUtility.LeadBuilder()
+        Lead objChildLead1 = new DRL_TestUtility.LeadBuilder()
                 .setFirstName('Test')
                 .setLastName('User')
                 .setEmail('testuser1@yopmail.com')
                 .setCompany('Absyz')
                 .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
                 .createLead();
+
+        Lead objChildLead2 = new DRL_TestUtility.LeadBuilder()
+                        .setFirstName('Test')
+                        .setLastName('User')
+                        .setEmail('testuser1@yopmail.com')
+                        .setCompany('Absyz')
+                        .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+                        .createLead();
+
         Test.startTest();
-        blnThrowException = true;
-        insert objLead;
-        blnThrowException = false;
+        blnThrowExceptionWhileAddingProspect = true;
+        insert objChildLead1;
+        blnThrowExceptionWhileAddingProspect = false;
+        blnThrowExceptionWhileAddingCampaignMember = true;
+        insert objChildLead2;
+        blnThrowExceptionWhileAddingCampaignMember = false;
         Test.stopTest();
     }
 
@@ -152,4 +168,30 @@ public class DRL_LeadTriggerHelperTest {
         update objLead;        
         Test.stopTest();
     } 
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to test the scenario updating Prospect Status based on Lead status
+    **/
+    @isTest
+    private static void testAddProspectOnLeadOnEmailUpdate() {
+
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        Lead objLead = new DRL_TestUtility.LeadBuilder()
+                .setFirstName('Test')
+                .setLastName('User')
+                .setCompany('Absyz')
+                .setEmail('testuser5@yopmail.com')
+                .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+                .createLead();
+        
+        Test.startTest();
+        insert objLead;
+        objLead = new Lead(Id = objLead.Id);
+        objLead.Status = 'Unqualified';
+        update objLead;
+        Test.stopTest();  
+        objLead = [SELECT Status,DRL_Prospect__r.Status FROM Lead WHERE Id =:objLead.Id] ;
+        System.assert(objLead.DRL_Prospect__r.Status == objLead.Status, 'Prospect Status Update Failed');    
+    }
 }
