@@ -253,8 +253,7 @@ public class DRL_convertLeadProspectTest {
         objSaveResult=Database.insert(new Lead(
                                                 Company='Test Enterrises',
                                                 LastName='testLead',
-                                                Status='Qualified',
-                                                RecordTypeId=Schema.SObjectType.Lead.getRecordTypeInfosByDeveloperName().get('DRL_Prospect').getRecordTypeId())
+                                                Status='Contacted')
                                                 ,false);
         if(objSaveResult.getErrors().size()>0){
             DRL_ConvertLeadProspectController.getErroMessage(objSaveResult.getErrors()[0],'Lead','Insertion');
@@ -346,26 +345,12 @@ public class DRL_convertLeadProspectTest {
     **/
     @isTest
     public static void testConvertLeadIfProspectConverted(){
-        Product2 objProduct = new Product2();
-        objProduct.Name = 'APREPITANT';
-        objProduct.ProductCode = '00001';
-        objProduct.PQT_Product_Cluster__c = 'APREPITANT';
-        insert objProduct;
-
-        Content_Catalog__c objContentCatalog = new Content_Catalog__c();
-        objContentCatalog.Name= 'APREPITANT';
-        objContentCatalog.product__c = objProduct.Id;
-        objContentCatalog.product_cluster__c = 'APREPITANT';
-        objContentCatalog.Document_URL__c	 = 'antoxidptablet.test.com';
-        objContentCatalog.Document_Category__c = 'IP advantage';
-        objContentCatalog.Active_Document__c = true;
-        insert objContentCatalog;
+        Product2 objProduct = [SELECT Id,Name FROM Product2 WHERE ProductCode = '12345' LIMIT 1];
 
         User objUser=[SELECT Id FROM User WHERE Id=:UserInfo.getUserId()];
         Id opportunityRecordTypeId=Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('API').getRecordTypeId();
 
         System.runAs(objUser){   
-            test.startTest();
             Lead objLead = new Lead();
             objLead.Company = 'Raghu Ram Enterprises';
             objLead.Select_Country__c = 'India';
@@ -386,8 +371,9 @@ public class DRL_convertLeadProspectTest {
             objContact.LastName = objLead.LastName;
             objContact.email = objLead.email;
             objContact.Job_Level__c = 'CXO/Head';
-            objContact.Department__c = 'Regulatory';          
-
+            objContact.Department__c = 'Regulatory'; 
+            
+            test.startTest();
             //Convert Prospect
             DRL_ConvertLeadProspectController.convertLead(String.valueOf(objProspect.Id),
                                                             objAccount,
@@ -402,6 +388,7 @@ public class DRL_convertLeadProspectTest {
                                                             );
 
             DRL_ConvertLeadProspectController.ConvertLeadDataWrapper objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objProspect.Id));
+            
             objResponse=DRL_ConvertLeadProspectController.getLeadDetails(String.valueOf(objLead.Id));
 
             Opportunity objOpportunity = new Opportunity();
