@@ -373,16 +373,17 @@ public without sharing class DRL_LeadTriggerHelper {
                         list_ProspectsToUpdate.add(objProspectToUpdate);
                     }                    
                 }
+
                 if (
                     String.isNotBlank(objLead.DRL_Prospect__c) &&
                     map_OldMap != null &&
                     String.isNotBlank(objLead.Email) &&
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') && 
                     objLead.Email != map_OldMap.get(objLead.Id).Email
-                    ) {
-                        Lead objLeadToUpdate = new Lead(Id = objLead.Id);
-                        objLeadToUpdate.Email = null;
-                        list_LeadsToUpdate.add(objLeadToUpdate);
+                ) {
+                    Lead objLeadToUpdate = new Lead(Id = objLead.Id);
+                    objLeadToUpdate.Email = null;
+                    list_LeadsToUpdate.add(objLeadToUpdate);
                 } 
             }
 
