@@ -97,6 +97,11 @@
         <field>Lead.DRL_UTMSource__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.DRL_IsProspect__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <layoutAssignments>
         <layout>DRL_ExceptionLog__c-Exception Log Layout</layout>
     </layoutAssignments>

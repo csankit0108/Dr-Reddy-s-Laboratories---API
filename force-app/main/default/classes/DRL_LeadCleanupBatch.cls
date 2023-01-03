@@ -90,14 +90,14 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_CreateResults, 'Insert'));
             }
 
-            List <Lead> list_Prospects = [ SELECT 
-                                           Id,
-                                           Email,
-                                           Status 
-                                           FROM Lead 
-                                           WHERE Email IN :set_LeadEmails 
-                                           AND RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
-            for (Lead objProspect : list_Prospects) {
+            for (Lead objProspect : [SELECT 
+                                     Id,
+                                     Email,
+                                     Status 
+                                     FROM Lead 
+                                     WHERE Email IN :set_LeadEmails 
+                                     AND RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')]
+            ) {
                 map_ProspectsByEmail.put(objProspect.Email, objProspect);
             }
             
@@ -125,7 +125,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 }                
             }
 
-            if ( !list_ProspectsToUpdate.isEmpty() ) {
+            if (!list_ProspectsToUpdate.isEmpty()) {
                 list_LeadsToUpdate.addAll(list_ProspectsToUpdate);
             }
 
@@ -136,12 +136,11 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException(
-                        'DRL_LeadCleanupBatch',
-                        'execute',
-                        list_ConsolidatedDMLErrors
-                    );
+                    'DRL_LeadCleanupBatch',
+                    'execute',
+                    list_ConsolidatedDMLErrors
+                );
             }
-            
         } catch (Exception objException) {
             DRLUtil.logException(
                 'DRL_LeadCleanupBatch',
@@ -150,10 +149,8 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 true
             );
         }
-
     }
        
     public void finish(Database.BatchableContext objBatchableContext) {
-
     }
 }
