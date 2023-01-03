@@ -3,7 +3,7 @@
     <fullName>DRL_Email__c</fullName>
     <description>DRL - To track email of Lead RecordType records</description>
     <externalId>false</externalId>
-    <inlineHelpText>This email is for the lead.</inlineHelpText>
+    <inlineHelpText>This shows the Email for the Lead.</inlineHelpText>
     <label>Lead Email</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
