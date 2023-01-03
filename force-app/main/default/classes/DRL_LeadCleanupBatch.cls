@@ -23,7 +23,8 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                                          DRL_IsProspect__c,
                                          Status,
                                          Product_Lookup__c,
-                                         Product__c
+                                         Product__c,
+                                         LeadSource
                                          FROM Lead
                                          ORDER BY DRL_IsProspect__c DESC]);
 
