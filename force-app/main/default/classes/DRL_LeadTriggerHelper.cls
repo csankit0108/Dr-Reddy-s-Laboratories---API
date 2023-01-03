@@ -171,21 +171,24 @@ public without sharing class DRL_LeadTriggerHelper {
                 if (
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') &&
                     objLead.DRL_Prospect__c != null &&
-                    (                        
-                        objLead.DRL_SourceCampaign__c != null &&
-                        map_OldMap == null 
-                    ) || 
                     (
-                        map_OldMap != null &&
-                        objLead.DRL_SourceCampaign__c != null && (
-                            (
-                                map_OldMap.get(objLead.Id).DRL_SourceCampaign__c == null || (
-                                map_NewMap.get(objLead.Id).Email != null &&
-                                map_OldMap.get(objLead.Id).Email == null
+                        (                        
+                            objLead.DRL_SourceCampaign__c != null &&
+                            map_OldMap == null 
+                        ) || 
+                        (
+                            map_OldMap != null &&
+                            objLead.DRL_SourceCampaign__c != null && (
+                                (
+                                    map_OldMap.get(objLead.Id).DRL_SourceCampaign__c == null || (
+                                    map_NewMap.get(objLead.Id).Email != null &&
+                                    map_OldMap.get(objLead.Id).Email == null &&
+                                    map_OldMap.get(objLead.Id).DRL_Prospect__c == null
+                                    )
                                 )
                             )
-                        )
-                    )                   
+                        ) 
+                    )                  
                 ) {
                     CampaignMember objCampaignMember = new CampaignMember();
                     objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
@@ -297,19 +300,21 @@ public without sharing class DRL_LeadTriggerHelper {
                     );
                 }
             }
+            
 
             for (Lead objLead : list_Leads) {
                 if (
                     objLead.RecordTypeId != map_RecordTypeIdByDeveloperName.get('DRL_Prospect') && 
-                    (                        
-                        String.isBlank(objLead.DRL_Prospect__c) && 
-                        String.isNotBlank(objLead.Email) &&
-                        map_OldMap == null
+                    String.isBlank(objLead.DRL_Prospect__c) && (
+                        (                        
+                            String.isNotBlank(objLead.Email) &&
+                            map_OldMap == null
 
-                    ) || (
-                        map_OldMap != null &&
-                        String.isNotBlank(objLead.Email) &&
-                        String.isBlank(map_OldMap.get(objLead.Id).Email) 
+                        ) || (
+                            map_OldMap != null &&
+                            String.isNotBlank(objLead.Email) &&
+                            String.isBlank(map_OldMap.get(objLead.Id).Email) 
+                        )
                     )                    
                 ) {
                     Lead objLeadToUpdate = new Lead(Id = objLead.Id);
@@ -368,6 +373,17 @@ public without sharing class DRL_LeadTriggerHelper {
                         list_ProspectsToUpdate.add(objProspectToUpdate);
                     }                    
                 }
+                if (
+                    String.isNotBlank(objLead.DRL_Prospect__c) &&
+                    map_OldMap != null &&
+                    String.isNotBlank(objLead.Email) &&
+                    objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') && 
+                    objLead.Email != map_OldMap.get(objLead.Id).Email
+                    ) {
+                        Lead objLeadToUpdate = new Lead(Id = objLead.Id);
+                        objLeadToUpdate.Email = null;
+                        list_LeadsToUpdate.add(objLeadToUpdate);
+                } 
             }
 
             DRL_LeadTriggerHelper.blnSkipTrigger = true;
