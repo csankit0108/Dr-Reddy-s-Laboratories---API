@@ -27,7 +27,9 @@
 		<members>OpportunityJourneyHandler2Test</members> 
 		<members>LeadTriggerHandlerTest</members>
 		<members>Testmomedit</members>
-		<members>OppClassTrigger</members>
+		<members>OppClassTrigger</members>		
+		<members>DRL_LeadCleanupBatchTest</members>
+		<members>DRL_LeadCleanupBatch</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
