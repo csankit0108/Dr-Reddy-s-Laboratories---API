@@ -17,7 +17,6 @@ public class DRL_LeadCleanupBatchTest {
     **/
     @TestSetup
     static void createData() {
-
         Account objAccount = new DRL_TestUtility.AccountBuilder()
             .setName('Test Account')
             .createAccount();
@@ -36,7 +35,7 @@ public class DRL_LeadCleanupBatchTest {
         objProduct.ProductCode='PROD0001';
         insert objProduct;
 
-        Profile objProfile = [SELECT Id FROM Profile where Name='Copy System Admin'];
+        Profile objProfile = [SELECT Id FROM Profile where Name = 'Copy System Admin'];
 
         User objUser = new DRL_TestUtility.UserBuilder()
             .setFirstName('Test')
@@ -51,7 +50,6 @@ public class DRL_LeadCleanupBatchTest {
             .setLanguageLocaleKey('en_US')
             .createUser();
         insert objUser;
-
     }
 
     /**
@@ -60,11 +58,11 @@ public class DRL_LeadCleanupBatchTest {
     **/
     @isTest
     private static void testLeadRecordTypeUpdate() {
-        User objUser = [SELECT Id FROM User WHERE Email='testuser@email.com' LIMIT 1];
-        System.runAs(objuser){
+        User objUser = [SELECT Id FROM User WHERE Email = 'testuser@email.com' LIMIT 1];
+        System.runAs(objuser) {
             Product2 objProduct = [SELECT Id FROM Product2 LIMIT 1];
             DRL_LeadTriggerHelper.blnSkipTrigger = true;
-            List<Lead> list_Leads = new List<Lead> ();
+            List<Lead> list_Leads = new List<Lead>();
             Lead objLead = new Lead();
             objLead.FirstName = 'Test';
             objLead.LastName = 'Lead1';
@@ -89,20 +87,17 @@ public class DRL_LeadCleanupBatchTest {
     
             Test.startTest();
             insert list_Leads;
-            list_Leads = [select Id from Lead where RecordTypeId =null];
-            System.assert( list_Leads.size() == 3, 'Master Lead record Creation Failed!');
+            list_Leads = [SELECT Id FROM Lead WHERE RecordTypeId = null];
+            System.assert(list_Leads.size() == 3, 'Master Lead record Creation Failed!');
 
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
             Database.executeBatch(new DRL_LeadCleanupBatch());
             Test.stopTest();
-            List<Lead> list_Prospects = [select Id from Lead where Recordtype.Developername = 'DRL_Prospect' ];
-            System.assert( list_Prospects.size() == 1, 'Prospect Creation for Leads with Email Failed!');
-            list_Leads = [select Id from Lead where Recordtype.Developername = 'DRL_Lead' ];
-            System.assert( list_Leads.size() == 3, 'Lead Update Successful');
-
+            List<Lead> list_Prospects = [SELECT Id FROM Lead WHERE Recordtype.Developername = 'DRL_Prospect' ];
+            System.assert(list_Prospects.size() == 1, 'Prospect Creation for Leads with Email Failed!');
+            list_Leads = [SELECT Id FROM Lead WHERE Recordtype.Developername = 'DRL_Lead' ];
+            System.assert(list_Leads.size() == 3, 'Lead Update Successful');
         }
-
-
     }
 
     /**
@@ -111,8 +106,8 @@ public class DRL_LeadCleanupBatchTest {
     **/
     @isTest
     private static void testExceptions() {
-        User objUser = [SELECT Id from User WHERE Email='testuser@email.com' LIMIT 1];
-        System.runAs(objuser){
+        User objUser = [SELECT Id FROM User WHERE Email='testuser@email.com' LIMIT 1];
+        System.runAs(objuser) {
             DRL_LeadTriggerHelper.blnSkipTrigger = true;
             Lead objLead = new Lead();
             objLead.FirstName = 'Test';
@@ -129,6 +124,5 @@ public class DRL_LeadCleanupBatchTest {
             Test.stopTest();
             blnThrowException = false;
         }
-    }
-    
+    }    
 }

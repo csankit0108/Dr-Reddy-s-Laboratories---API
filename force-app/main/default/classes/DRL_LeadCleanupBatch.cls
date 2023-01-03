@@ -10,10 +10,8 @@
 * ======================================================================================================        
 *  29-12-2022       |  kishore.pedireddy@absyz.com   |  1.0        |    Initial Version   
 *******************************************************************************************************/
-public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {
-    
-    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {
-        
+public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
+    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {        
         return Database.getQueryLocator([SELECT 
                                          FirstName,
                                          LastName,
@@ -27,12 +25,10 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                                          LeadSource
                                          FROM Lead
                                          ORDER BY DRL_IsProspect__c DESC]);
-
     }
 
     public void execute(Database.BatchableContext objBatchableContext, List<Lead> list_Leads) {
         try {
-
             if (Test.isRunningTest() && DRL_LeadCleanupBatchTest.blnThrowException) {
                 throw new DMLException();
             }
@@ -43,7 +39,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             List<String> list_ConsolidatedDMLErrors = new List<String>();
             List<Lead> list_LeadsToUpdate = new List<Lead>();
             Set<String> set_LeadEmails = new Set<String>();
-            Map<String, Lead> map_EmailToProspect = new Map<String, Lead>();      
+            Map<String, Lead> map_ProspectsByEmail = new Map<String, Lead>();      
             //map to get the led to prospect status mapping
             Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
                                                             = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();             
@@ -58,8 +54,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             }
 
             for (Lead objLead : list_Leads) {
-                if (objLead.DRL_IsProspect__c && objLead.Email != null) {
-                    
+                if (objLead.DRL_IsProspect__c && objLead.Email != null) {                    
                     //Create Lead    
                     Lead objClonedLead = objLead.clone(false, true, true, false);
                     objClonedLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
@@ -75,42 +70,41 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                     objLead.Product_Lookup__c = null;
                     objLead.Product__c = null;
                     list_ProspectsToUpdate.add(objLead); 
-
                 } else {
                     if (objLead.Email != null) {
                         set_LeadEmails.add(objLead.Email);
                     }
+
                     objLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Lead');
                     list_LeadsToUpdate.add(objLead);
                 }
             }
     
-            if (list_ProspectsToUpdate.size() > 0) {
+            if (!list_ProspectsToUpdate.isEmpty()) {
                 List<Database.SaveResult> list_UpdateResults = Database.update(list_ProspectsToUpdate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
-            if (list_LeadsToCreate.size() > 0) {
+            if (!list_LeadsToCreate.isEmpty()) {
                 List<Database.SaveResult> list_CreateResults = Database.insert(list_LeadsToCreate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_CreateResults, 'Insert'));
             }
 
-            list <Lead> list_Prospects = [ SELECT 
+            List <Lead> list_Prospects = [ SELECT 
                                            Id,
                                            Email,
                                            Status 
                                            FROM Lead 
-                                           WHERE Email in :set_LeadEmails 
-                                           AND RecordTypeId =:map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
+                                           WHERE Email IN :set_LeadEmails 
+                                           AND RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect')];
             for (Lead objProspect : list_Prospects) {
-                map_EmailToProspect.put(objProspect.Email, objProspect);
+                map_ProspectsByEmail.put(objProspect.Email, objProspect);
             }
             
             list_ProspectsToUpdate = new List<Lead>();
             for (Lead objLead : list_LeadsToUpdate) {
-                if (objLead.Email != null && map_EmailToProspect.get(objLead.Email) != null) {
-
-                    Lead objProspect = map_EmailToProspect.get(objLead.Email);
+                if (objLead.Email != null && map_ProspectsByEmail.containsKey(objLead.Email)) {
+                    Lead objProspect = map_ProspectsByEmail.get(objLead.Email);
                     objLead.DRL_Prospect__c = objProspect.Id;
                     objLead.DRL_Email__c = objLead.Email;
                     objLead.Email = null;
@@ -131,16 +125,16 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 }                
             }
 
-            if ( list_ProspectsToUpdate.size() > 0 ) {
+            if ( !list_ProspectsToUpdate.isEmpty() ) {
                 list_LeadsToUpdate.addAll(list_ProspectsToUpdate);
             }
 
-            if (list_LeadsToUpdate.size() > 0) {
+            if (!list_LeadsToUpdate.isEmpty()) {
                 List<Database.SaveResult> list_UpdateResults = Database.update(list_LeadsToUpdate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }              
             
-            if (list_ConsolidatedDMLErrors.size() > 0) {
+            if (!list_ConsolidatedDMLErrors.isEmpty()) {
                 DRLUtil.logDMLException(
                         'DRL_LeadCleanupBatch',
                         'execute',

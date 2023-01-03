@@ -66,6 +66,7 @@
 		<members>DRL_LeadConvertFormController__mdt.FieldSetAPIName__c</members>
 		<members>DRL_ConvertLeadSuccessConfiguration__mdt.FieldAPINames__c</members>
 		<members>Disable_Trigger__c.DisableOpportunityTrigger__c</members>
+		<members>Lead.DRL_IsProspect__c</members>
 		<name>CustomField</name>
 	</types> 
 	<types>
