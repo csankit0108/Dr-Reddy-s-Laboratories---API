@@ -101,7 +101,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 map_ProspectsByEmail.put(objProspect.Email, objProspect);
             }
             
-            list_ProspectsToUpdate = new List<Lead>();
+            Map <String,Lead> map_ProspectsToUpdate = new Map<String,Lead>();
             for (Lead objLead : list_LeadsToUpdate) {
                 if (objLead.Email != null && map_ProspectsByEmail.containsKey(objLead.Email)) {
                     Lead objProspect = map_ProspectsByEmail.get(objLead.Email);
@@ -120,13 +120,13 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                         map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c != objProspect.Status
                     ) {
                         objProspect.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
-                        list_ProspectsToUpdate.add(objProspect);
+                        map_ProspectsToUpdate.put(objLead.Email,objProspect);
                     } 
                 }                
             }
 
-            if (!list_ProspectsToUpdate.isEmpty()) {
-                list_LeadsToUpdate.addAll(list_ProspectsToUpdate);
+            if ( !map_ProspectsToUpdate.values().isEmpty() ) {
+                list_LeadsToUpdate.addAll(map_ProspectsToUpdate.values());
             }
 
             if (!list_LeadsToUpdate.isEmpty()) {

@@ -69,6 +69,7 @@ public class DRL_LeadCleanupBatchTest {
             objLead.Email = 'testlead1@yopmail.com';
             objLead.Company = 'Test Lead 1';
             objLead.Product_Lookup__c = objProduct.Id;
+            objLead.Select_Country__c = 'India';
             objLead.DRL_IsProspect__c = true;
             list_Leads.add(objLead);
             objLead = new Lead();
@@ -81,6 +82,16 @@ public class DRL_LeadCleanupBatchTest {
             list_Leads.add(objLead);
             objLead = new Lead();
             objLead.FirstName = 'Test';
+            objLead.LastName = 'Lead4';
+            objLead.Email = 'testlead1@yopmail.com';
+            objLead.Company = 'Test Lead 1';
+            objLead.Status = 'Qualified';
+            objLead.Run_Automation__c='Yes';
+            objLead.Prospect_Customer__c='Prospect';
+            objLead.Product_Lookup__c = objProduct.Id;
+            list_Leads.add(objLead);
+            objLead = new Lead();
+            objLead.FirstName = 'Test';
             objLead.LastName = 'Lead3';
             objLead.Company = 'Absyz';                      
             list_Leads.add(objLead);
@@ -88,7 +99,7 @@ public class DRL_LeadCleanupBatchTest {
             Test.startTest();
             insert list_Leads;
             list_Leads = [SELECT Id FROM Lead WHERE RecordTypeId = null];
-            System.assert(list_Leads.size() == 3, 'Master Lead record Creation Failed!');
+            System.assert(list_Leads.size() == 4, 'Master Lead record Creation Failed!');
 
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
             Database.executeBatch(new DRL_LeadCleanupBatch());
@@ -96,7 +107,7 @@ public class DRL_LeadCleanupBatchTest {
             List<Lead> list_Prospects = [SELECT Id FROM Lead WHERE Recordtype.Developername = 'DRL_Prospect' ];
             System.assert(list_Prospects.size() == 1, 'Prospect Creation for Leads with Email Failed!');
             list_Leads = [SELECT Id FROM Lead WHERE Recordtype.Developername = 'DRL_Lead' ];
-            System.assert(list_Leads.size() == 3, 'Lead Update Successful');
+            System.assert(list_Leads.size() == 4, 'Lead Update Successful');
         }
     }
 
