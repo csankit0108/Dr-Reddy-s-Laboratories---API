@@ -15,16 +15,18 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
         List<Schema.SObjectField> list_AllFields = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
         Integer intIndex = 1;
         String strAllFields;
-        for(Schema.SObjectField objField : list_AllFields){
+        for (Schema.SObjectField objField : list_AllFields) {
             if (intIndex == 1) {
                 strAllFields = ' ' + String.valueOf(objField) + ',';
-            } else if (intIndex != list_AllFields.size()){
+            } else if (intIndex != list_AllFields.size()) {
                 strAllFields = strAllFields + String.valueOf(objField) + ',';        
             } else {
                 strAllFields = strAllFields + String.valueOf(objField) + ' ';
             }
+
             intIndex++;
         }
+
         String strQuery = 'SELECT ' + strAllFields + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
         return Database.getQueryLocator(strQuery);
     }
