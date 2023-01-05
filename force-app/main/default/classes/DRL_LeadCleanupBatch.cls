@@ -11,8 +11,21 @@
 *  29-12-2022       |  kishore.pedireddy@absyz.com   |  1.0        |    Initial Version   
 *******************************************************************************************************/
 public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
-    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {    
-        String Query = 'SELECT ' + DRLUtil.getsObjectFieds('Lead') + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
+    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {  
+        List<Schema.SObjectField> allFieldsList = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
+        Integer i =1;
+        String allFieldsStr;
+        for(Schema.SObjectField objField :allFieldsList){
+            if(i==1){
+                allFieldsStr = ' ' + String.valueOf(objField) + ',';
+            } else if (i!=allFieldsList.size()){
+                allFieldsStr = allFieldsStr + String.valueOf(objField) + ',';        
+            } else{
+                allFieldsStr = allFieldsStr + String.valueOf(objField) + ' ';
+            }
+            i++;
+        }
+        String Query = 'SELECT ' + allFieldsStr + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
         return Database.getQueryLocator(Query);
     }
 
