@@ -3,6 +3,7 @@
 -- PRE-DEPLOYMENT STEPS --
 
 1. Take backup.
+2. Turn off Email Deliverablity.
 
 -- DEPLOYMENT --
 
@@ -28,3 +29,5 @@
     - Marketing Manager User with Account Creation Permissions
 4. Assign the "Pardot Permission" permission set to the System Admin.
 5. Make Country Field Mandatory on Lead Layout
+6. Execute the DRL_LeadCleanupBatch batch job.
+7. Turn on Email Deliverablity.
