@@ -12,7 +12,7 @@
 *******************************************************************************************************/
 public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
     public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {    
-        String Query = 'SELECT ' + DRLUtil.getsObjectFieds('Lead') + ' FROM Lead WHERE RecordTypeId = Null ORDER BY DRL_IsProspect__c DESC';
+        String Query = 'SELECT ' + DRLUtil.getsObjectFieds('Lead') + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
         return Database.getQueryLocator(Query);
     }
 
