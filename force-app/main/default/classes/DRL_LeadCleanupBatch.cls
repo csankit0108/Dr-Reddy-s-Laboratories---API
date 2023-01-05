@@ -12,21 +12,21 @@
 *******************************************************************************************************/
 public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
     public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {  
-        List<Schema.SObjectField> allFieldsList = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
-        Integer i =1;
-        String allFieldsStr;
-        for(Schema.SObjectField objField :allFieldsList){
-            if(i==1){
-                allFieldsStr = ' ' + String.valueOf(objField) + ',';
-            } else if (i!=allFieldsList.size()){
-                allFieldsStr = allFieldsStr + String.valueOf(objField) + ',';        
-            } else{
-                allFieldsStr = allFieldsStr + String.valueOf(objField) + ' ';
+        List<Schema.SObjectField> list_AllFields = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
+        Integer intIndex = 1;
+        String strAllFields;
+        for(Schema.SObjectField objField : list_AllFields){
+            if (intIndex == 1) {
+                strAllFields = ' ' + String.valueOf(objField) + ',';
+            } else if (intIndex != list_AllFields.size()){
+                strAllFields = strAllFields + String.valueOf(objField) + ',';        
+            } else {
+                strAllFields = strAllFields + String.valueOf(objField) + ' ';
             }
-            i++;
+            intIndex++;
         }
-        String Query = 'SELECT ' + allFieldsStr + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
-        return Database.getQueryLocator(Query);
+        String strQuery = 'SELECT ' + strAllFields + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
+        return Database.getQueryLocator(strQuery);
     }
 
     public void execute(Database.BatchableContext objBatchableContext, List<Lead> list_Leads) {
