@@ -11,20 +11,24 @@
 *  29-12-2022       |  kishore.pedireddy@absyz.com   |  1.0        |    Initial Version   
 *******************************************************************************************************/
 public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
-    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {        
-        return Database.getQueryLocator([SELECT 
-                                         FirstName,
-                                         LastName,
-                                         Email,
-                                         Select_Country__c,
-                                         Company,
-                                         DRL_IsProspect__c,
-                                         Status,
-                                         Product_Lookup__c,
-                                         Product__c,
-                                         LeadSource
-                                         FROM Lead
-                                         ORDER BY DRL_IsProspect__c DESC]);
+    public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {  
+        List<Schema.SObjectField> list_AllFields = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
+        Integer intIndex = 1;
+        String strAllFields;
+        for (Schema.SObjectField objField : list_AllFields) {
+            if (intIndex == 1) {
+                strAllFields = ' ' + String.valueOf(objField) + ',';
+            } else if (intIndex != list_AllFields.size()) {
+                strAllFields = strAllFields + String.valueOf(objField) + ',';        
+            } else {
+                strAllFields = strAllFields + String.valueOf(objField) + ' ';
+            }
+
+            intIndex++;
+        }
+
+        String strQuery = 'SELECT ' + strAllFields + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
+        return Database.getQueryLocator(strQuery);
     }
 
     public void execute(Database.BatchableContext objBatchableContext, List<Lead> list_Leads) {
