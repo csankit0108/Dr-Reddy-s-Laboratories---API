@@ -375,13 +375,21 @@ public without sharing class DRL_LeadTriggerHelper {
                 }
 
                 if (
-                    String.isNotBlank(objLead.DRL_Prospect__c) &&
-                    map_OldMap != null &&
-                    String.isNotBlank(objLead.Email) &&
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') && 
-                    objLead.Email != map_OldMap.get(objLead.Id).Email
+                    String.isNotBlank(objLead.Email) &&
+                    String.isNotBlank(objLead.DRL_Prospect__c) && (
+                        (
+                        map_OldMap == null 
+                        ) || (
+                            map_OldMap != null &&
+                            objLead.Email != map_OldMap.get(objLead.Id).Email
+                        )
+                    )
                 ) {
-                    Lead objLeadToUpdate = new Lead(Id = objLead.Id);
+                    Lead objLeadToUpdate = new Lead(Id = objLead.Id);                    
+                    if (map_OldMap == null) {
+                        objLeadToUpdate.DRL_Email__c = objLead.Email;
+                    }
                     objLeadToUpdate.Email = null;
                     list_LeadsToUpdate.add(objLeadToUpdate);
                 } 
@@ -417,6 +425,10 @@ public without sharing class DRL_LeadTriggerHelper {
                 //Update Status on Prospect
                 List<Database.SaveResult> list_UpdateResults = Database.update(list_ProspectsToUpdate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
+            }
+
+            if (!list_ConsolidatedDMLErrors.isEmpty()) {
+                DRLUtil.logDMLException('DRL_LeadTriggerHelper', 'addProspectOnLead', list_ConsolidatedDMLErrors);
             }
 
             DRL_LeadTriggerHelper.blnSkipTrigger = false;
