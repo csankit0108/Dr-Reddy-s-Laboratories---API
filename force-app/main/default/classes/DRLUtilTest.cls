@@ -25,7 +25,7 @@ public class DRLUtilTest {
             .setLocaleSidKey('en_US')
             .setProfileId(objProfile.Id)
             .setTimeZoneSidKey('America/Los_Angeles')
-            .setUsername('test2023@gmail.com')
+            .setUsername('test2023@test.drl.com')
             .setUserPermissionsCallCenterAutoLogin(False)
             .setUserPermissionsMarketingUser(True)
             .setUserPermissionsOfflineUser(False)
