@@ -377,10 +377,10 @@ public without sharing class DRL_LeadTriggerHelper {
                 if (
                     objLead.RecordTypeId == map_RecordTypeIdByDeveloperName.get('DRL_Lead') && 
                     String.isNotBlank(objLead.Email) &&
-                    String.isNotBlank(objLead.DRL_Prospect__c) && (
+                    String.isNotBlank(objLead.DRL_Prospect__c) && 
+                    (
+                        map_OldMap == null || 
                         (
-                        map_OldMap == null 
-                        ) || (
                             map_OldMap != null &&
                             objLead.Email != map_OldMap.get(objLead.Id).Email
                         )
@@ -390,6 +390,7 @@ public without sharing class DRL_LeadTriggerHelper {
                     if (map_OldMap == null) {
                         objLeadToUpdate.DRL_Email__c = objLead.Email;
                     }
+                    
                     objLeadToUpdate.Email = null;
                     list_LeadsToUpdate.add(objLeadToUpdate);
                 } 

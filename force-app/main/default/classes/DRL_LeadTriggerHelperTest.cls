@@ -203,14 +203,13 @@ public class DRL_LeadTriggerHelperTest {
     **/
     @isTest
     private static void testInsertLeadWithProspectSelected() {
-
         Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
         Lead objProspect = [SELECT 
-                        Id
-                        FROM Lead
-                        WHERE Email = 'testuser5@yopmail.com' AND 
-                        RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
-                       ];
+                            Id
+                            FROM Lead
+                            WHERE Email = 'testuser5@yopmail.com' AND 
+                            RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
+                           ];
         Lead objLead = new DRL_TestUtility.LeadBuilder()
                 .setFirstName('Test')
                 .setLastName('User')
@@ -223,8 +222,8 @@ public class DRL_LeadTriggerHelperTest {
         objLead.DRL_Prospect__c = objProspect.Id;
         insert objLead;
         Test.stopTest();  
-        objLead = [SELECT Email,DRL_Email__c FROM Lead WHERE Id =:objLead.Id] ;
-        System.assert(objLead.DRL_Email__c == 'testuser5@yopmail.com' , 'Lead Email Update Failed');    
-        System.assert(objLead.Email == null , 'Standard Email Update Failed'); 
+        objLead = [SELECT Email, DRL_Email__c FROM Lead WHERE Id =:objLead.Id] ;
+        System.assert(objLead.DRL_Email__c == 'testuser5@yopmail.com', 'Lead Email Update Failed');    
+        System.assert(objLead.Email == null, 'Standard Email Update Failed'); 
     }
 }
