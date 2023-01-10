@@ -47,6 +47,7 @@ public class DRL_LeadTriggerHelperTest {
             .setUtmSource('Test_Source_1')
             .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
             .createLead();
+        objLead.Select_Country__c = 'India';
         insert objLead;
     }
 
@@ -94,6 +95,7 @@ public class DRL_LeadTriggerHelperTest {
                 .setLastName('User1')
                 .setEmail('testuser5@yopmail.com')
                 .setCompany('Absyz')
+                .setCountry('India')
                 .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
                 .setStatus('Qualified')
                 .createLead();    
@@ -193,5 +195,35 @@ public class DRL_LeadTriggerHelperTest {
         Test.stopTest();  
         objLead = [SELECT Status,DRL_Prospect__r.Status FROM Lead WHERE Id =:objLead.Id] ;
         System.assert(objLead.DRL_Prospect__r.Status == objLead.Status, 'Prospect Status Update Failed');    
+    }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to test the scenario insert Lead with Prospect selected
+    **/
+    @isTest
+    private static void testInsertLeadWithProspectSelected() {
+        Map<String, Id> map_RecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Lead');
+        Lead objProspect = [SELECT 
+                            Id
+                            FROM Lead
+                            WHERE Email = 'testuser5@yopmail.com' AND 
+                            RecordTypeId = :map_RecordTypeIdByDeveloperName.get('DRL_Prospect') 
+                           ];
+        Lead objLead = new DRL_TestUtility.LeadBuilder()
+                .setFirstName('Test')
+                .setLastName('User')
+                .setCompany('Absyz')
+                .setEmail('testuser5@yopmail.com')
+                .setRecordTypeId(map_RecordTypeIdByDeveloperName.get('DRL_Lead'))
+                .createLead();
+        
+        Test.startTest();
+        objLead.DRL_Prospect__c = objProspect.Id;
+        insert objLead;
+        Test.stopTest();  
+        objLead = [SELECT Email, DRL_Email__c FROM Lead WHERE Id =:objLead.Id] ;
+        System.assert(objLead.DRL_Email__c == 'testuser5@yopmail.com', 'Lead Email Update Failed');    
+        System.assert(objLead.Email == null, 'Standard Email Update Failed'); 
     }
 }
