@@ -31,3 +31,30 @@
 5. Make Country Field Mandatory on Lead Layout
 6. Execute the DRL_LeadCleanupBatch batch job.
 7. Turn on Email Deliverablity.
+8. Add following fields on Campaign-Campaign Layout (Layout)
+    *DRL_CampaignCode__c
+    *DRL_ValueBioBatchOrderedOpportunities__c
+9. Add following changes on Opportunity-Opportunity API (Layout)
+    *Add RelatedCampaignInfluence2List related list
+    *remove RelatedContactRoleList related list 
+10. Add following changes on Lead-Lead Layout (Layout)
+    *Add Lead.DRL_Prospect__c related list
+    *Add Following fields
+        -DRL_Email__c - Lead Email
+        -DRL_ValueBioBatchOrderedOpportunities__c
+        -RecordTypeId - Lead Record Type
+        -DRL_SourceCampaign__c
+        -DRL_Prospect__c -Prospect
+        -UTM Source add in system information section
+        -UTM Campaign add in system information section
+    *make country(Select_Country__c) - required
+    *remove old convert quick action and add new convert quick action
+
+
+
+
+
+
+
+
+
