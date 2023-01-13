@@ -51,13 +51,3 @@
     *Make country(Select_Country__c) - required
     *Remove existing convert(Lead.Convert) quick action and add new convert(Lead.DRL_Convert) quick Action
     *Remove Mobile & Lightning Quick Action Email(SendEmail) and add Email(DRL_Email)
-
-
-
-
-
-
-
-
-
-
