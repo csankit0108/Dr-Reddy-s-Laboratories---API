@@ -4,6 +4,17 @@
 
 1. Take backup.
 2. Turn off Email Deliverablity.
+3. Deactivate the look up filter on Lead.Product_Lookup__c field.
+4. Deactivate all the active validation rules on Lead.
+    -checkLeadName
+    -CheckRunAutomation
+    -Check_Country_Field
+    -LeadContactedValidation
+    -Reason_for_decline
+    -SKIP_ZAP_Account
+5. Deactivate the "leadContentUpdate" trigger on Lead.
+6. Perform the data update for Leads & Contacts.
+7. Reactivate the Lookup filter,validation rules & triggers that had been deactivated.
 
 -- DEPLOYMENT --
 
