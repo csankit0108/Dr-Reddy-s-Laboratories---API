@@ -32,23 +32,26 @@
 6. Execute the DRL_LeadCleanupBatch batch job.
 7. Turn on Email Deliverablity.
 8. Add following fields on Campaign-Campaign Layout (Layout)
-    *DRL_CampaignCode__c
-    *DRL_ValueBioBatchOrderedOpportunities__c
+    *DRL_CampaignCode__c - Campaign Code
+    *DRL_ValueBioBatchOrderedOpportunities__c - Value Bio Batch Ordered Opportunities
 9. Add following changes on Opportunity-Opportunity API (Layout)
     *Add RelatedCampaignInfluence2List related list
     *remove RelatedContactRoleList related list 
 10. Add following changes on Lead-Lead Layout (Layout)
-    *Add Lead.DRL_Prospect__c related list
+    *Add Lead.DRL_Prospect__c(Leads) related list
     *Add Following fields
-        -DRL_Email__c - Lead Email
-        -DRL_ValueBioBatchOrderedOpportunities__c
-        -RecordTypeId - Lead Record Type
-        -DRL_SourceCampaign__c
-        -DRL_Prospect__c -Prospect
-        -UTM Source add in system information section
-        -UTM Campaign add in system information section
+        +Lead Information Section
+            -RecordTypeId - Lead Record Type
+            -DRL_SourceCampaign__c - Source Campaign
+            -DRL_Prospect__c -Prospect
+        +Contact Information Section 
+            -DRL_Email__c - Lead Email
+        +system information section
+            -DRL_UTMSource__c - UTM Source 
+            -DRL_UTMCampaign__c - UTM Campaign 
     *make country(Select_Country__c) - required
-    *remove old convert quick action and add new convert quick action
+    *remove old convert(Lead.Convert) quick action and add new convert(Lead.DRL_Convert) quick Action
+
 
 
 
