@@ -3,7 +3,7 @@ public class populateValuesInsertTest {
     @TestSetup
     static void makeData(){
 
-        Account objAccount = new Account(Name='Raghu Ram Enterprises');
+        Account objAccount = new Account(Name='Raghu Ram Enterprises', Is_Parent__c = true);
         insert objAccount;
 
         Contact objContact = new Contact(
