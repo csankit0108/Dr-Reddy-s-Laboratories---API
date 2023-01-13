@@ -51,6 +51,7 @@
             -DRL_UTMCampaign__c - UTM Campaign 
     *make country(Select_Country__c) - required
     *remove old convert(Lead.Convert) quick action and add new convert(Lead.DRL_Convert) quick Action
+    *remove Mobile & Lightning Quick Action Email(SendEmail) and add Email(DRL_Email)
 
 
 
