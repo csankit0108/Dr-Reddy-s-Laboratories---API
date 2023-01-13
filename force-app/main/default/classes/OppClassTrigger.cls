@@ -4,7 +4,7 @@ public class OppClassTrigger {
 
     public static testMethod void  populateValuesInsertTrigger01(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account Parent';
         acct.Is_Parent__c = true;
         insert acct;
 

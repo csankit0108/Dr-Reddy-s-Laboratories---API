@@ -311,7 +311,7 @@ public class populateValuesInsertTest {
                                                             StageName = 'New Opportunity');
         insert objAPIPlusOpportunity;
 
-        Account objAccount2=new Account(Name='Raja Lakshman Corporation');
+        Account objAccount2=new Account(Name='Raja Lakshman Corporation', Is_Parent__c = true);
         insert objAccount2;
         
         objAPIPlusOpportunity.AccountId = objAccount2.Id;
