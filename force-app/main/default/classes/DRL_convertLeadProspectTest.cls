@@ -22,6 +22,7 @@ public class DRL_convertLeadProspectTest {
         Account objExistingAccount = new Account();
         objExistingAccount.Name = 'Test Existing Account';
         objExistingAccount.Industry__c = 'Generics';
+        objExistingAccount.Is_Parent__c = true;
         insert objExistingAccount;
         
         //Create Contact

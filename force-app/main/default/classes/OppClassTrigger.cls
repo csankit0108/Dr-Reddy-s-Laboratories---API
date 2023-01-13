@@ -5,22 +5,27 @@ public class OppClassTrigger {
     public static testMethod void  populateValuesInsertTrigger01(){
         Account acct = new Account();
         acct.Name='Test Account';
+        acct.Is_Parent__c = true;
         insert acct;
 
         Account acct1 = new Account();
         acct1.Name='Test Account1';
+        acct1.Is_Parent__c = true;
         insert acct1;
         
         Account acct2 = new Account();
         acct2.Name='Test Account2';
+        acct2.Is_Parent__c = true;
         insert acct2;        
 
         Account acct3 = new Account();
         acct3.Name='Test Account3';
+        acct3.Is_Parent__c = true;
         insert acct3;
 
         Account acct4 = new Account();
         acct4.Name='Test Account4';
+        acct4.Is_Parent__c = true;
         insert acct4;
         
 /*        Account acct5 = new Account();
