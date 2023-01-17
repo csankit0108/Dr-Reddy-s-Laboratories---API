@@ -37,6 +37,7 @@
 		<members>OpportunityTrigger</members>
 		<members>campaignInfluenceAttributes</members>
 		<members>Populate_Opportunity_stage_tracker</members>
+		<members>leadContentUpdate</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
