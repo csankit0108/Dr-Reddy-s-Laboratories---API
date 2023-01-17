@@ -291,6 +291,7 @@ public class DRL_TestUtility {
     **/
     public class AccountBuilder {
         private String strName;
+
         public AccountBuilder() {
             this.strName = '';
         }
@@ -302,7 +303,8 @@ public class DRL_TestUtility {
 
         public Account createAccount() {
             Account objAccount = new Account();
-            objAccount.Name = this.strName; 
+            objAccount.Name = this.strName;
+            objAccount.Is_Parent__c = true;
             return objAccount;
         }
     }

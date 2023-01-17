@@ -4,6 +4,18 @@
 
 1. Take backup.
 2. Turn off Email Deliverablity.
+3. Deactivate the look up filter on Lead.Product_Lookup__c field.
+4. Deactivate all the active validation rules on Lead.
+    -checkLeadName
+    -CheckRunAutomation
+    -Check_Country_Field
+    -LeadContactedValidation
+    -Reason_for_decline
+    -SKIP_ZAP_Account
+    -DRL_ConvertedLeadStatusCannotbeUpdated
+5. Deactivate the "leadContentUpdate" trigger on Lead.
+6. Perform the data update for Leads & Contacts.
+7. Reactivate the Lookup filter,validation rules & triggers that had been deactivated.
 
 -- DEPLOYMENT --
 
@@ -27,16 +39,14 @@
     - Marketing Manager User
     - Marketing Manager User with Account Creation Permissions
 3. Assign the "Pardot Permission" permission set to the System Admin.
-4. Make Country Field Mandatory on Lead Layout
-5. Execute the DRL_LeadCleanupBatch batch job.
-6. Turn on Email Deliverablity.
-7. Add following fields on Campaign-Campaign Layout (Layout)
+6. Add following fields on Campaign-Campaign Layout (Layout)
     *DRL_CampaignCode__c - Campaign Code
     *DRL_ValueBioBatchOrderedOpportunities__c - Value Bio Batch Ordered Opportunities
-8. Add following changes on Opportunity-Opportunity API (Layout)
-    *Add RelatedCampaignInfluence2List related list
+    *Add Influenced Opportunities related list
+7. Add following changes on Opportunity-Opportunity API (Layout)
+    *Add Campaign Influence related list
     *remove RelatedContactRoleList related list 
-9. Add following changes on Lead-Lead Layout (Layout)
+8. Add following changes on Lead-Lead Layout (Layout)
     *Add Lead.DRL_Prospect__c(Leads) related list
     *Add Following fields
         +Lead Information Section
@@ -51,3 +61,16 @@
     *Make country(Select_Country__c) - required
     *Remove existing convert(Lead.Convert) quick action and add new convert(Lead.DRL_Convert) quick Action
     *Remove Mobile & Lightning Quick Action Email(SendEmail) and add Email(DRL_Email)
+9. Deactivate the look up filter on Lead.Product_Lookup__c field.
+10. Deactivate all the active validation rules on Lead.
+    -checkLeadName
+    -CheckRunAutomation
+    -Check_Country_Field
+    -LeadContactedValidation
+    -Reason_for_decline
+    -SKIP_ZAP_Account
+    -DRL_ConvertedLeadStatusCannotbeUpdated
+11. Deactivate the "leadContentUpdate" trigger on Lead.
+12. Deactivate the "DRL_LeadProspectDuplicationRule" duplicate rule
+12. Execute the DRL_LeadCleanupBatch batch job.
+13. Turn on Email Deliverablity.

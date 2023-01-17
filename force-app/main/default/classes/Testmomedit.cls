@@ -8,6 +8,7 @@ private class Testmomedit{
         
         Account acc= new Account();
         acc.Name='My account';
+        acc.Is_Parent__c = true;
         insert acc;
         
         

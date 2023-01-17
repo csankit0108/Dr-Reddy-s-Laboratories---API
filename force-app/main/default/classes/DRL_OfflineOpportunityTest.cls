@@ -25,7 +25,8 @@ public class DRL_OfflineOpportunityTest {
         objAccount.Billing_State1__c='Hyderabad';
         objAccount.Billing_City__c='A.p';
         objAccount.Billing_Country__c='India';
-        objAccount.Postal_Code__c='500016';       
+        objAccount.Postal_Code__c='500016';     
+        objAccount.Is_Parent__c = true;
         insert objAccount;
 
         Contact objContact = new Contact();
