@@ -23,7 +23,6 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             } else {
                 strAllFields = strAllFields + String.valueOf(objField) + ' ';
             }
-
             intIndex++;
         }
 
@@ -46,7 +45,10 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             Map<String, Lead> map_ProspectsByEmail = new Map<String, Lead>();      
             //map to get the led to prospect status mapping
             Map<String, DRL_ProspectLeadStatusMapping__mdt> map_StatusMappingByLeadStatus 
-                                                            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();             
+                                                            = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();    
+            Map<String, Lead> map_ConvertedProspects = new Map<String, Lead>();
+            List<Lead> list_LeadsToConvert = new List<Lead>();
+            List<Database.LeadConvert> list_LeadConvert = new List<Database.LeadConvert>();         
 
             for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : DRL_ProspectLeadStatusMapping__mdt.getAll().values()) {
                 if (objProspectLeadStatusMapping.Active__c) {
@@ -56,7 +58,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                     );
                 }
             }
-
+            
             for (Lead objLead : list_Leads) {
                 if (objLead.DRL_IsProspect__c && objLead.Email != null) {                    
                     //Create Lead    
@@ -66,8 +68,12 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                     objClonedLead.Email = null;
                     objClonedLead.DRL_Prospect__c = objLead.Id;
                     objClonedLead.DRL_IsProspect__c = false;
-                    list_LeadsToCreate.add(objClonedLead);    
-                    
+                    objClonedLead.IsConverted = false;
+                    list_LeadsToCreate.add(objClonedLead);                     
+                    if ( objLead.IsConverted && objLead.ConvertedAccountId != null && objLead.ConvertedContactId != null ) {
+                        map_ConvertedProspects.put( objLead.Email , objLead);   
+                        list_LeadsToConvert.add(objClonedLead);                  
+                    }                       
                     //Convert Lead to Prospect 
                     objLead.Status = map_StatusMappingByLeadStatus.get(objLead.Status).ProspectStatus__c;
                     objLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Prospect');
@@ -92,6 +98,40 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             if (!list_LeadsToCreate.isEmpty()) {
                 List<Database.SaveResult> list_CreateResults = Database.insert(list_LeadsToCreate, false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_CreateResults, 'Insert'));
+            }
+
+            LeadStatus objConvertStatus = [SELECT Id, MasterLabel, IsConverted
+                                            FROM LeadStatus
+                                            WHERE IsConverted = true
+                                            limit 1]; 
+
+            for (Lead objLead : list_LeadsToConvert) {
+                if (objLead.Id != null && map_ConvertedProspects.containsKey(objLead.DRL_Email__c)) {
+                    Lead objProspect = map_ConvertedProspects.get(objLead.DRL_Email__c);
+                    Database.LeadConvert objLeadConvert = new Database.LeadConvert();
+                    objLeadConvert.setLeadId(objLead.Id);
+                    objLeadConvert.setAccountId(objProspect.ConvertedAccountId);
+                    objLeadConvert.setContactId(objProspect.ConvertedAccountId);
+                    objLeadConvert.setDoNotCreateOpportunity(true);     
+                    objLeadConvert.setConvertedStatus(objConvertStatus.MasterLabel); 
+                    list_LeadConvert.add(objLeadConvert);                   
+                }
+            }
+
+            if (!list_LeadConvert.isEmpty()) {
+                List<Database.LeadConvertResult> list_leadConvertResults = Database.convertLead(list_LeadConvert,false);
+                List<String> list_Errors = new List<String>();
+                for (Database.LeadConvertResult objConvertResult : list_leadConvertResults) {
+                    if (!objConvertResult.isSuccess()) {
+                        for (Database.Error objError : objConvertResult.getErrors()) {
+                            String strErrorMessage = 'Lead Conversion failed for ' + 
+                                objConvertResult.getLeadId() + '. Error: ' + objError.getMessage() + 
+                                '. Status Code: ' + objError.getStatusCode();
+                            list_Errors.add(strErrorMessage);
+                        }
+                    }
+                }
+                list_ConsolidatedDMLErrors.addAll(list_Errors);                
             }
 
             for (Lead objProspect : [SELECT 
