@@ -4,23 +4,28 @@ public class OppClassTrigger {
 
     public static testMethod void  populateValuesInsertTrigger01(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account Parent';
+        acct.Is_Parent__c = true;
         insert acct;
 
         Account acct1 = new Account();
         acct1.Name='Test Account1';
+        acct1.Is_Parent__c = true;
         insert acct1;
         
         Account acct2 = new Account();
         acct2.Name='Test Account2';
+        acct2.Is_Parent__c = true;
         insert acct2;        
 
         Account acct3 = new Account();
         acct3.Name='Test Account3';
+        acct3.Is_Parent__c = true;
         insert acct3;
 
         Account acct4 = new Account();
         acct4.Name='Test Account4';
+        acct4.Is_Parent__c = true;
         insert acct4;
         
 /*        Account acct5 = new Account();
@@ -107,6 +112,7 @@ public class OppClassTrigger {
     {
         // added on 6th May 2021
         Account acc=new Account(Name='Y Ramanji');
+        acc.Is_Parent__c = true;
         insert acc;
         Contact conTest=new Contact(FirstName='Y',LastName='Ram',Email='ramanji123@dhruvsoft.com');
         insert conTest;
@@ -132,7 +138,8 @@ public class OppClassTrigger {
     public static testMethod void  populateValuesInsertTrigger02(){
         
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 5';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';
@@ -156,7 +163,8 @@ public class OppClassTrigger {
 
     public static testMethod void populateValuesInsertTrigger03(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 6';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';
@@ -179,7 +187,8 @@ public class OppClassTrigger {
 
     public static testMethod void  populateValuesInsertTrigger04(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 7';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';
@@ -200,7 +209,8 @@ public class OppClassTrigger {
 
     public static testMethod void  populateValuesInsertTrigger05(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 8';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';
@@ -227,7 +237,8 @@ public class OppClassTrigger {
 
     public static testMethod void populateValuesInsertTrigger06(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 9';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';
@@ -248,7 +259,8 @@ public class OppClassTrigger {
 
     public static testMethod void  populateValuesInsertTrigger07(){
         Account acct = new Account();
-        acct.Name='Test Account';
+        acct.Name='Test Account 10';
+        acct.Is_Parent__c = true;
         insert acct;
         Product2 prod = new Product2();
         prod.Name='Test Product';

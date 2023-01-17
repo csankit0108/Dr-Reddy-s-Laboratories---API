@@ -153,6 +153,7 @@ public with sharing class DRL_ConvertLeadProspectController {
             //set account information
             if (objaccount.Id == Null){
                 objaccount.Lead_Converted_From__c = objlead.Id;
+                objaccount.Is_Parent__c = true;
                 List<Database.SaveResult> list_Results = new List<Database.SaveResult>();
                 list_Results.add(Database.insert(objaccount, false));
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));

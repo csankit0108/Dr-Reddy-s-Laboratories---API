@@ -17,18 +17,18 @@ public class DRL_CampaignInfluenceTriggerHelperTest {
     public static Boolean blnThrowException = false;
     @TestSetup
     static void createData() { 
-    Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
-        .setCampaignName('Test Campaign')
-        .setAllowMassEmail('No')  
-        .setDescription('Test Campaign Description')
-        .setIsActive(true)  
-        .createCampaign();
-    insert objCampaign;
+        Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
+            .setCampaignName('Test Campaign')
+            .setAllowMassEmail('No')  
+            .setDescription('Test Campaign Description')
+            .setIsActive(true)  
+            .createCampaign();
+        insert objCampaign;
      
-    Account objAccount = new DRL_TestUtility.AccountBuilder()
-        .setName('Test Account')
-        .createAccount();
-    insert objAccount; 
+        Account objAccount = new DRL_TestUtility.AccountBuilder()
+            .setName('Test Account')
+            .createAccount();
+        insert objAccount; 
 
         Contact objContact = new DRL_TestUtility.ContactBuilder()
             .setFirstName('Test')
