@@ -25,7 +25,6 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             }
             intIndex++;
         }
-
         String strQuery = 'SELECT ' + strAllFields + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
         return Database.getQueryLocator(strQuery);
     }
@@ -48,7 +47,8 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                                                             = new Map<String, DRL_ProspectLeadStatusMapping__mdt>();    
             Map<String, Lead> map_ConvertedProspects = new Map<String, Lead>();
             List<Lead> list_LeadsToConvert = new List<Lead>();
-            List<Database.LeadConvert> list_LeadConvert = new List<Database.LeadConvert>();         
+            List<Database.LeadConvert> list_LeadConvert = new List<Database.LeadConvert>();
+            Map<String, Lead> map_ProspectsToUpdate = new Map<String, Lead>();         
 
             for (DRL_ProspectLeadStatusMapping__mdt objProspectLeadStatusMapping : DRL_ProspectLeadStatusMapping__mdt.getAll().values()) {
                 if (objProspectLeadStatusMapping.Active__c) {
@@ -79,7 +79,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                     objLead.RecordTypeId = map_RecordTypeIdByDeveloperName.get('DRL_Prospect');
                     objLead.Product_Lookup__c = null;
                     objLead.Product__c = null;
-                    list_ProspectsToUpdate.add(objLead); 
+                    map_ProspectsToUpdate.put(objLead.Email, objLead); 
                 } else {
                     if (objLead.Email != null) {
                         set_LeadEmails.add(objLead.Email);
@@ -90,14 +90,30 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 }
             }
     
-            if (!list_ProspectsToUpdate.isEmpty()) {
-                List<Database.SaveResult> list_UpdateResults = Database.update(list_ProspectsToUpdate, false);
+            if (!map_ProspectsToUpdate.values().isEmpty()) {
+                List<Database.SaveResult> list_UpdateResults = Database.update(map_ProspectsToUpdate.values(), false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
             if (!list_LeadsToCreate.isEmpty()) {
                 List<Database.SaveResult> list_CreateResults = Database.insert(list_LeadsToCreate, false);
+                for (Lead objLead : list_LeadsToCreate) {
+                    if (
+                        objLead.Id == null && 
+                        map_ProspectsToUpdate.containsKey(objLead.DRL_Email__c) && 
+                        objLead.Product_Lookup__c != null
+                        ) {
+                        Lead objProspect = new Lead();
+                        objProspect.Id = map_ProspectsToUpdate.get(objLead.DRL_Email__c).Id;
+                        objProspect.Product_Lookup__c = objLead.Product_Lookup__c;
+                        list_ProspectsToUpdate.add(objProspect);
+                    }
+                }
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_CreateResults, 'Insert'));
+            }
+            if (!list_ProspectsToUpdate.isEmpty()) {
+                List<Database.SaveResult> list_UpdateResults = Database.update(list_ProspectsToUpdate, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
             }
 
             LeadStatus objConvertStatus = [SELECT Id, MasterLabel, IsConverted
@@ -145,7 +161,7 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
                 map_ProspectsByEmail.put(objProspect.Email, objProspect);
             }
             
-            Map<String, Lead> map_ProspectsToUpdate = new Map<String, Lead>();
+            map_ProspectsToUpdate = new Map<String, Lead>();
             for (Lead objLead : list_LeadsToUpdate) {
                 if (objLead.Email != null && map_ProspectsByEmail.containsKey(objLead.Email)) {
                     Lead objProspect = map_ProspectsByEmail.get(objLead.Email);
