@@ -5,6 +5,7 @@ public class OpportunityTriggerHandlerTest {
     static void makeData(){
 
         Account objAccount = new Account(Name='Raghu Ram Enterprises');
+        objAccount.Is_Parent__c = true;
         insert objAccount;
 
         Contact objContact = new Contact(

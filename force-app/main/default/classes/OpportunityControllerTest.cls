@@ -4,7 +4,7 @@ public static testMethod void testOppty() {
     
     Test.startTest();
     
-    	Account acc=new Account(Name='Test ACC');
+    	Account acc=new Account(Name='Test ACC', Is_Parent__c = true);
     	insert acc;
     
     	Contact c=new Contact(Lastname='Test Contact',Email='test@test.com',AccountId=acc.Id);
