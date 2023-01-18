@@ -77,6 +77,7 @@
 		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<members>DRL_LeadConvertFormController__mdt</members>
 		<members>DRL_ConvertLeadSuccessConfiguration__mdt</members>
+		<members>Lead</members>
 		<name>CustomObject</name>
 	</types>  
 	<types>
