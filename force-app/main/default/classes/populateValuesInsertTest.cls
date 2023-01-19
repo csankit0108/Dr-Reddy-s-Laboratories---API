@@ -3,7 +3,7 @@ public class populateValuesInsertTest {
     @TestSetup
     static void makeData(){
 
-        Account objAccount = new Account(Name='Raghu Ram Enterprises');
+        Account objAccount = new Account(Name='Raghu Ram Enterprises', Is_Parent__c = true);
         insert objAccount;
 
         Contact objContact = new Contact(
@@ -311,7 +311,7 @@ public class populateValuesInsertTest {
                                                             StageName = 'New Opportunity');
         insert objAPIPlusOpportunity;
 
-        Account objAccount2=new Account(Name='Raja Lakshman Corporation');
+        Account objAccount2=new Account(Name='Raja Lakshman Corporation', Is_Parent__c = true);
         insert objAccount2;
         
         objAPIPlusOpportunity.AccountId = objAccount2.Id;

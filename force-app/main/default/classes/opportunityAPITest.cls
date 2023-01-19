@@ -7,6 +7,7 @@ Public class opportunityAPITest {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
+        a.Is_Parent__c = true;
         insert a;
         
         product2 p = new product2();
@@ -44,6 +45,7 @@ Public class opportunityAPITest {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
+        a.Is_Parent__c = true;
         insert a;
         product2 p = new product2();
         p.name = 'test';
@@ -75,6 +77,7 @@ Public class opportunityAPITest {
         Account a = new Account();
         a.name = 'testaccount';
         a.Geography__c = 'Europe';
+        a.Is_Parent__c = true;
         insert a;
         product2 p = new product2();
         p.name = 'test';
@@ -126,6 +129,7 @@ Public class opportunityAPITest {
         Account objaccount = new Account();
         objaccount.name = 'testaccount';
         objaccount.Geography__c = 'Europe';
+        objAccount.Is_Parent__c = true;
         insert objaccount;
         
         product2 objproduct2 = new product2();
@@ -189,6 +193,7 @@ Public class opportunityAPITest {
         Account objaccount = new Account();
         objaccount.name = 'testaccount';
         objaccount.Geography__c = 'Europe';
+        objAccount.Is_Parent__c = true;
         insert objaccount;
         product2 objproduct2 = new product2();
         objproduct2.name = 'test';
