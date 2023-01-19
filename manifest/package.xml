@@ -77,6 +77,7 @@
 		<members>DRL_ProspectLeadStatusMapping__mdt</members>
 		<members>DRL_LeadConvertFormController__mdt</members>
 		<members>DRL_ConvertLeadSuccessConfiguration__mdt</members>
+		<members>Lead</members>
 		<name>CustomObject</name>
 	</types>  
 	<types>
@@ -216,6 +217,11 @@
 		<members>Marketing Manager User</members>
 		<members>Marketing Manager User with Account Creation Permissions</members>
 		<name>Profile</name>
+	</types>
+	<types>
+		<members>Lead.Leads</members>
+		<members>Lead.Prospects</members>
+		<name>ListView</name>
 	</types>
 	<types>
 		<members>DRL_Prospect_Record_Page</members>
