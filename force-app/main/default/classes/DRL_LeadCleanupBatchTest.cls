@@ -161,6 +161,7 @@ public class DRL_LeadCleanupBatchTest {
             objLead.Product_Lookup__c = objProduct.Id;
             objLead.Select_Country__c = 'India';
             objLead.DRL_IsProspect__c = true;
+            objLead.Status = 'Converted';
             insert objLead;
             Database.LeadConvert objLeadConvert = new Database.LeadConvert();
             objLeadConvert.setLeadId(objLead.Id);
@@ -176,5 +177,34 @@ public class DRL_LeadCleanupBatchTest {
             System.assert(objLead.IsConverted, 'Lead COnversion Successful');
 
         }
+    }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  test method to test the Updation of product information back on Prospect
+    **/
+    @isTest
+    private static void testAddProductInformationOnProspect() {
+        User objUser = [SELECT Id FROM User WHERE Email = 'testuser@email.com' LIMIT 1];
+        Product2 objProduct = [SELECT Id FROM Product2 LIMIT 1];
+        Lead objLead = new Lead();
+        System.runAs(objuser) {
+            DRL_LeadTriggerHelper.blnSkipTrigger = true;
+            objLead.FirstName = 'Test';
+            objLead.LastName = 'Lead1';
+            objLead.Email = 'testlead1@yopmail.com';
+            objLead.Company = 'Test Lead 1';
+            objLead.Product_Lookup__c = objProduct.Id;
+            objLead.Select_Country__c = 'India';
+            objLead.DRL_IsProspect__c = true;
+            insert objLead;
+        }
+        objUser.IsActive = false ;
+        update objUser;
+        Test.startTest();
+        Database.executeBatch(new DRL_LeadCleanupBatch());
+        Test.stopTest();
+        objLead = [SELECT Id,Product_Lookup__c FROM Lead WHERE Recordtype.Developername = 'DRL_Prospect' ];
+        System.assert(objLead.Product_Lookup__c == objProduct.Id, 'Failed to update Product Information back on prospect');            
     }
 }
