@@ -126,4 +126,25 @@
         <shortDescription>contactWithEmailExistError</shortDescription>
         <value>Email already exists!</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00019</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>selectAccountRelatedOpportunity</shortDescription>
+        <value>Please choose selected account related Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00020</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error while loading Opportunity details</shortDescription>
+        <value>Error While retrieving Opportunity details</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00021</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>blankOpportunityError</shortDescription>
+        <value>Opportunity Cannot be Blank</value>
+    </labels>
 </CustomLabels>

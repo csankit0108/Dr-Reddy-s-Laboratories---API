@@ -227,14 +227,25 @@ public with sharing class DRL_ConvertLeadProspectController {
             }
             else{
                 String strContentIds = getOrderedContents(list_contentCatalogs);
-                objopportunity = setOpportunityDetails(objopportunity,objaccount.Id,objcontact.Id,objlead,strContentIds,strrunAfter);
-                List<Database.SaveResult> list_Results=new List<Database.SaveResult>();
-                list_Results.add(Database.insert(objopportunity, false));
-                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
+                objopportunity = setOpportunityDetails(objopportunity,objaccount.Id,objcontact.Id,objlead,strContentIds,strrunAfter);                
+                List<Database.UpsertResult> list_UpsertResult=new List<Database.UpsertResult >();
+                list_UpsertResult.add(Database.upsert(objopportunity, false));
+                List<String> list_Errors = new List<String>();
+                for (Database.UpsertResult ObjUpsertResult : list_UpsertResult) {
+                    if (!ObjUpsertResult.isSuccess()) {
+                        for (Database.Error objError : ObjUpsertResult.getErrors()) {
+                            String strErrorMessage = 'Upsert failed for ' + 
+                                ObjUpsertResult.getId() + '. Error: ' + objError.getMessage() + 
+                                '. Status Code: ' + objError.getStatusCode();
+                            list_Errors.add(strErrorMessage);
+                        }
+                    }                    
+                }
+                list_ConsolidatedDMLErrors.addAll(list_Errors);
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
                     DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'convertLead', list_ConsolidatedDMLErrors);
                     database.rollback(save);
-                    throw new CustomDMLException(getErroMessage(list_Results[0].getErrors()[0],'Opportunity','Insertion'));
+                    throw new CustomDMLException(getErroMessage(list_UpsertResult[0].getErrors()[0],'Opportunity','Upsertion'));
                 } 
                 List<Lead> list_leadsToUpdate = new List<Lead>();
                 List<Database.LeadConvert> list_LeadsToConvert = new List<Database.LeadConvert>();
@@ -261,7 +272,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 objlead.Converted_Opportunity__c = objopportunity.Id;
                 objlead.Status = 'Converted';
                 list_leadsToUpdate.add(objlead);
-                list_Results=new List<Database.SaveResult>();
+                List<Database.SaveResult> list_Results=new List<Database.SaveResult>();
                 list_Results.addAll(Database.update(list_leadsToUpdate, false));
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Update'));
                 if (!list_ConsolidatedDMLErrors.isEmpty()) {
@@ -423,22 +434,52 @@ public with sharing class DRL_ConvertLeadProspectController {
                                                      Lead objlead,
                                                      String strContentIds,
                                                      String strrunAfter) {
-        objopportunity.AccountId = straccountId;
-        objopportunity.Contact__c = strcontactId;
-        objopportunity.Lead_Converted_to_Opp__c = 'Yes';
-        if(objlead.CPR__c != null){
-            objopportunity.CPR__c = objlead.CPR__c;
-        }
-        if(objlead.Target_Region__c != null){
-            objopportunity.Target_Region__c = objlead.Target_Region__c;
-        }
-        if(objlead.Reporting_Region__c != null){
-            objopportunity.Reporting_Region__c = objlead.Reporting_Region__c;
-        }
-        Id recordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API Plus').getRecordTypeId();
-        if (objopportunity.RecordTypeId != recordTypeId){
-            objopportunity.Product__c = objlead.Product_Lookup__c;
-        }        
+        if(objopportunity.Id == null){
+            objopportunity.AccountId = straccountId;
+            objopportunity.Contact__c = strcontactId;
+            objopportunity.Lead_Converted_to_Opp__c = 'Yes';
+            if(objlead.CPR__c != null){
+                objopportunity.CPR__c = objlead.CPR__c;
+            }
+            if(objlead.Target_Region__c != null){
+                objopportunity.Target_Region__c = objlead.Target_Region__c;
+            }
+            if(objlead.Reporting_Region__c != null){
+                objopportunity.Reporting_Region__c = objlead.Reporting_Region__c;
+            }
+            Id recordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API Plus').getRecordTypeId();
+            if (objopportunity.RecordTypeId != recordTypeId){
+                objopportunity.Product__c = objlead.Product_Lookup__c;
+            }             
+        } else if(
+            objopportunity.Id != null && 
+            objopportunity.RecordTypeId == Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId() &&
+            objopportunity.Contact__c != null && 
+            objopportunity.Contact__c != strcontactId){
+            List <OpportunityContactRole> list_ExistingContactRoles = [ SELECT Id 
+                                                                        FROM OpportunityContactRole 
+                                                                        WHERE ContactId=:strcontactId and OpportunityId =:objopportunity.Id ];
+            if (list_ExistingContactRoles.isEmpty()) {
+                OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
+                objOpportunityContactRole.ContactId = strcontactId;
+                objOpportunityContactRole.OpportunityId = objopportunity.Id;
+                List<Database.SaveResult> list_Results = new List<Database.SaveResult>();
+                List<String> list_ConsolidatedDMLErrors = new List<String>();
+                list_Results.add(Database.insert(objOpportunityContactRole, false));
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
+                if (!list_ConsolidatedDMLErrors.isEmpty()) {
+                    DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'setOpportunityDetails', list_ConsolidatedDMLErrors);
+                    database.rollback(save);
+                    for(Database.SaveResult objSaveResult:list_Results){
+                        if(objSaveResult.getErrors().size()>0){
+                            throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Opportunity','Insertion'));
+                        }
+                    }                
+                }
+            }
+        } else if (objopportunity.Id != null && objopportunity.Contact__c == null){
+            objopportunity.Contact__c = strcontactId;
+        }               
         Boolean blnstageBelowDevelopment = (objopportunity.StageName == 'Lead Generation' || 
                                         objopportunity.StageName == 'Sample' || 
                                         objopportunity.StageName == 'Discussion');
@@ -567,6 +608,30 @@ public with sharing class DRL_ConvertLeadProspectController {
             throw objException;
         }  
         
+    }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to retrieve selected Opportunity records
+    * @ params       :  strOpportunityId - Opportunity Id
+    * @ return       :  returns Opportunity
+    **/
+    
+    @AuraEnabled
+    public static Opportunity getOpportunity(String strOpportunityId){
+        try{
+            Opportunity objOpportunity = new Opportunity();
+            objOpportunity = strOpportunityId != null ? Database.query('SELECT ' + DRLUtil.getsObjectFieds('Opportunity') + 'FROM Opportunity WHERE Id =:strOpportunityId') : null;
+            return objOpportunity;
+        } catch(Exception objException) {
+            DRLUtil.logException(
+                'DRL_ConvertLeadProspectController',
+                'getOpportunity',
+                objException,
+                true
+            );
+            throw objException;
+        } 
     }
 
     /**
