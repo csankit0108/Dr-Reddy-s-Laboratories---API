@@ -75,4 +75,3 @@
 11. Execute the DRL_LeadCleanupBatch batch job.
 12. Turn on Email Deliverablity.
 13. Reactivate all the above rules that were deativated in the previous steps.
-14. Deactivate "Opportunity Contact Role Creation Flow"
