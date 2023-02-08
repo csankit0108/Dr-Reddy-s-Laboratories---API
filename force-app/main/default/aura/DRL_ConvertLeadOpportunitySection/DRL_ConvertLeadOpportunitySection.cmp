@@ -9,7 +9,7 @@
 *   04-11-2022      |  Kishore Pedireddy            |  1.0          |  Initial Version
 *
 -->
-<aura:component>
+<aura:component controller="DRL_ConvertLeadProspectController">
 
     <aura:attribute name="objOpportunity" type="Opportunity" />
     <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
@@ -18,28 +18,94 @@
     <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
     <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
     <aura:attribute name="map_FieldTypes" type="Object" default="{}" />
+    <aura:attribute name="blnIsProspect" type="Boolean" default="true" />
+    <aura:attribute name="blnIsOpportunityCreationSelected" type="Boolean" default="true" />
+    <aura:attribute name="blnIsOpportunitySelectionSelected" type="Boolean" default="false" />
+    <aura:attribute name="blnIsOpportunityCreationDisabled" type="Boolean" default="false" />
+    <aura:attribute name="blnIsOpportunitySelectionDisabled" type="Boolean" default="true" />
+    <aura:attribute name="strSelectedOpportunityId" type="String" default = ""/>
+    <aura:attribute name="strSelectedopportunity" type="String" default = ""/>
+    <aura:attribute name="strSelectedAccountId" type="String" default = ""/>
+    <aura:attribute name="strDefaultRecordTypeId" type="String" default=""/>
+    <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}"/>
+    <aura:attribute name="blnIsInvalidOpportunity" type="Boolean" default = "false"/>     
+    <aura:attribute name="strOpportunityOptionSelected" type="String" default = "CREATE"/>   
+
 
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+    <aura:handler event="c:DRL_ConvertLeadSelectedAccount" action="{!c.handleSelectedAccountEvent}"/>
 
     <div class="opportunitySection slds-border_bottom">
         <span class="header slds-theme_alt-inverse">
             <span class="headerLabel">Opportunity</span>
         </span>
-        <div class="opportunityFormSection">            
+        <div class="opportunityFormSection">       
+            <aura:if isTrue="{!!v.blnIsProspect}">
+                <div class="opportunityFormSectionContainer">
+                    <lightning:input type="radio" 
+                                     label="Choose Existing"
+                                     name="OpportunityOptions"
+                                     class="opportunityRadioButton" 
+                                     onchange="{!c.handleRadioChange}"
+                                     value="SELECT"
+                                     checked="{!v.blnIsOpportunitySelectionSelected}" 
+                                     disabled="{!v.blnIsOpportunitySelectionDisabled}"/>
+                    <lightning:recordEditForm objectApiName="Lead">
+                    <label for="nameField" class="slds-form-element__label slds-no-flex">
+                        <span style="color:#c64541;">*&nbsp;</span>Opportunity Search</label>
+                        <lightning:inputField aura:id="nameField" 
+                                              fieldName="Opportunity__c" 
+                                              variant="label-hidden" 
+                                              disabled="{!!v.blnIsOpportunitySelectionSelected}" 
+                                              value = "{!v.strSelectedopportunity}"
+                                              messageWhenBadInput="Please choose an existing account or create a new one."
+                                              onchange="{!c.handleLookup}" />                        
+                        <aura:if isTrue="{!v.blnIsInvalidOpportunity}">
+                            <div class="slds-text-color_error">
+                                {!$Label.c.CLDRL00019}
+                            </div>
+                        </aura:if>                 
+                </lightning:recordEditForm>
+                </div>              
+            </aura:if>  
+
             <div class="opportunityFormSectionContainer">
-                <lightning:input type="radio" label="Create New"
-                                        class="opportunityRadioButton" checked="true" disabled="true"/>
+                <aura:if isTrue="{!!v.blnIsProspect}">
+                    <lightning:input type="radio" 
+                                 label="Create New"
+                                 name="OpportunityOptions"
+                                 class="opportunityRadioButton" 
+                                 value="CREATE"
+                                 checked="{!v.blnIsOpportunityCreationSelected}" 
+                                 onchange="{!c.handleRadioChange}"
+                                 disabled="{!v.blnIsOpportunityCreationDisabled}"/>
+                    <aura:set attribute="else">
+                        <lightning:input type="radio" 
+                                 label="Create New"
+                                 class="opportunityRadioButton" 
+                                 checked="true" 
+                                 disabled="true"/>
+                    </aura:set>
+                </aura:if>
+                
                 <lightning:recordEditForm aura:id="opportunityForm"  objectApiName="Opportunity">
                     <lightning:messages />
                     <div class="slds-form formContainer">
                         <div class="slds-col slds-size_1-of-1">
                             <aura:iteration items="{!v.list_FieldsToRender}" var="objField" indexVar="name">
                                 <aura:if isTrue="{!objField.name == 'RecordTypeId'}">
-                                    <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objOpportunity.RecordTypeId}">
-                                        <aura:iteration items="{!v.list_OpportunityRecordTypes}" var="recordType">
-                                            <option value="{!recordType.key}">{!recordType.value}</option>
-                                        </aura:iteration>
-                                    </lightning:select>
+                                    <aura:if isTrue="{!!objField.disabled}">
+                                        <lightning:select class="slds-form-element_stacked" name="Record Type" label="Record Type" required="true" value="{!v.objOpportunity.RecordTypeId}">
+                                            <aura:iteration items="{!v.list_OpportunityRecordTypes}" var="recordType">
+                                                <option value="{!recordType.key}">{!recordType.value}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        <aura:set attribute="else">
+                                            <lightning:inputField fieldName="{!objField.name}" value="{!objField.value}"
+                                                disabled="{!objField.disabled}"
+                                                class="slds-form-element"/>
+                                        </aura:set>
+                                    </aura:if>
                                 </aura:if>
                                 <aura:if isTrue="{!objField.name != 'RecordTypeId'}">
                                     <aura:if isTrue="{!objField.required}">
@@ -51,17 +117,17 @@
                                                 disabled="{!objField.disabled}"
                                                 class="slds-form-element" onchange="{!c.handleValueChange}"/>
                                         </aura:set>
-                                    </aura:if>
-                                    
-                                </aura:if>
-                                
+                                    </aura:if>                                    
+                                </aura:if>                                
                             </aura:iteration>
                         </div>
                     </div>
                 </lightning:recordEditForm>
             </div>
-            <div class="opportunityFormSectionContainer">
-            </div>
+            <aura:if isTrue="{!v.blnIsProspect}">
+                <div class="opportunityFormSectionContainer">
+                </div>              
+            </aura:if> 
         </div>
     </div>
 </aura:component>

@@ -31,8 +31,10 @@
     <aura:attribute name="blnIsAccountSelectionSelected" type="Boolean" default = "false"/>
     <aura:attribute name="objLead" type="Lead" default="{ 'sobjectType': 'Lead'}" />
     <aura:attribute name="map_FieldTypes" type="Object" default="{}" />
+    <aura:attribute name="blnIsProspect" type="Boolean" default="true" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:registerEvent name="DRL_ConvertLeadSelectedAccount" type="c:DRL_ConvertLeadSelectedAccount"/>
     
     <!--Start-->
         <div class="accountSection slds-border_bottom">            

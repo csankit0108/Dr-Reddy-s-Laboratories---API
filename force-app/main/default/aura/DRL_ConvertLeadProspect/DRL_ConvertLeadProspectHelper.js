@@ -244,15 +244,26 @@
             return true;
         }
         else{
+            let strOpportunityOptionSelected = component.get('v.strOpportunityOptionSelected');
             let objOpportunity=component.get("v.objOpportunity");
-            let list_mandatoryFields=helper.getMandatoryFields(component,objOpportunity.StageName,helper);
-            for (const strfield of list_mandatoryFields) {
-                if(helper.isNullCheck(objOpportunity[strfield])){
-                    component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
-                    component.set("v.blnShowErrorMessage",true);
-                    return false;
-                }                
+
+            if(strOpportunityOptionSelected == 'SELECT') {
+                if(helper.isNullCheck(objOpportunity.Id)){
+                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00021"),"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                }
+            } else {
+                let list_mandatoryFields=helper.getMandatoryFields(component,objOpportunity.StageName,helper);
+                for (const strfield of list_mandatoryFields) {
+                    if(helper.isNullCheck(objOpportunity[strfield])){
+                        component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
+                        component.set("v.blnShowErrorMessage",true);
+                        return false;
+                    }                
+                }
             }
+            
             return true;
         }
     },

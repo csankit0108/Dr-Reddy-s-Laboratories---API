@@ -66,6 +66,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     OpportunityContactRole oc = new OpportunityContactRole();
                     oc.ContactId=tempOpp.Contact__c;
                     oc.OpportunityId=tempOpp.Id;
+                    oc.IsPrimary = true;
                     String opCon = String.ValueOf(oc.ContactId)+String.ValueOf(oc.OpportunityId);
                     if(oc.ContactId!=null&&!optyRoleMap.containsKey(opCon)) oclist.add(oc);
                 }
@@ -149,6 +150,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     OpportunityContactRole oc = new OpportunityContactRole();
                     oc.ContactId=tempOpp.Contact__c;
                     oc.OpportunityId=tempOpp.Id;
+                    oc.IsPrimary = true;
                     String opCon = String.ValueOf(oc.ContactId)+String.ValueOf(oc.OpportunityId);
                     if(oc.ContactId!=null&&!optyRoleMap.containsKey(opCon)) oclist.add(oc);
                 }
