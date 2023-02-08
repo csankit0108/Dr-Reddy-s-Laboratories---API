@@ -147,4 +147,11 @@
         <shortDescription>blankOpportunityError</shortDescription>
         <value>Opportunity Cannot be Blank</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00022</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultCampaignMemberStatus</shortDescription>
+        <value>Sent</value>
+    </labels>
 </CustomLabels>
