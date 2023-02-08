@@ -248,11 +248,13 @@
             let objOpportunity=component.get("v.objOpportunity");
 
             if(strOpportunityOptionSelected == 'SELECT') {
-                if(helper.isNullCheck(objOpportunity.Id)){
-                    helper.showMessage("Error!",$A.get("$Label.c.CLDRL00021"),"error","dismissible");
+                var strAccountId = component.get("v.strAccountId");
+                if(helper.isNullCheck(objOpportunity.Id) || objOpportunity.AccountId != strAccountId){
+                    let strErrorMessage = helper.isNullCheck(objOpportunity.Id)?$A.get("$Label.c.CLDRL00021"):$A.get("$Label.c.CLDRL00019");
+                    helper.showMessage("Error!",strErrorMessage,"error","dismissible");
                     component.set('v.blnIsLoading', false);
                     return false;   
-                }
+                } 
             } else {
                 let list_mandatoryFields=helper.getMandatoryFields(component,objOpportunity.StageName,helper);
                 for (const strfield of list_mandatoryFields) {
