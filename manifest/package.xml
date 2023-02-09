@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>Contact_Role_Validation_Message</members>
-		<name>CustomLabel</name>
-	</types>
-	<types>
 		<members>DRL_OpportunityContactRoleTrigger</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
-		<members>DRL_OppContactRoleTriggerHelperTest</members>
-		<members>DRL_TestUtility</members>
 		<members>DRL_OpportunityContactRoleTriggerHelper</members>
 		<name>ApexClass</name>
 	</types>
