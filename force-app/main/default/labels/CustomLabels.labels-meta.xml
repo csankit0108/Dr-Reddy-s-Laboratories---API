@@ -154,4 +154,18 @@
         <shortDescription>defaultCampaignMemberStatus</shortDescription>
         <value>Sent</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00023</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultPrimaryContactRoleStatus</shortDescription>
+        <value>Decision Maker</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00024</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultSecondaryContactRoleStatus</shortDescription>
+        <value>Influencer</value>
+    </labels>
 </CustomLabels>

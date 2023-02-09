@@ -460,9 +460,11 @@ public with sharing class DRL_ConvertLeadProspectController {
                                                                         FROM OpportunityContactRole 
                                                                         WHERE ContactId=:strcontactId and OpportunityId =:objopportunity.Id ];
             if (list_ExistingContactRoles.isEmpty()) {
+                String strDefaultSecondaryContactRole = System.Label.CLDRL00024;
                 OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
                 objOpportunityContactRole.ContactId = strcontactId;
                 objOpportunityContactRole.OpportunityId = objopportunity.Id;
+                objOpportunityContactRole.Role = strDefaultSecondaryContactRole;
                 List<Database.SaveResult> list_Results = new List<Database.SaveResult>();
                 List<String> list_ConsolidatedDMLErrors = new List<String>();
                 list_Results.add(Database.insert(objOpportunityContactRole, false));

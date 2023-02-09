@@ -57,7 +57,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
             }
             
             List<OpportunityContactRole> oclist = new List<OpportunityContactRole>();
-            
+            String strDefaultPrimaryContactRole = System.Label.CLDRL00023;            
             for(Opportunity tempOpp :trigger.new)
             {
                 if(tempOpp.RecordTypeId==optyRecordTypeID)
@@ -67,6 +67,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     oc.ContactId=tempOpp.Contact__c;
                     oc.OpportunityId=tempOpp.Id;
                     oc.IsPrimary = true;
+                    oc.Role = strDefaultPrimaryContactRole;
                     String opCon = String.ValueOf(oc.ContactId)+String.ValueOf(oc.OpportunityId);
                     if(oc.ContactId!=null&&!optyRoleMap.containsKey(opCon)) oclist.add(oc);
                 }
@@ -142,7 +143,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
             }
             
             List<OpportunityContactRole> oclist = new List<OpportunityContactRole>();
-            
+            String strDefaultPrimaryContactRole = System.Label.CLDRL00023;
             for(Opportunity tempOpp :trigger.new)
             {
                 if(tempOpp.RecordTypeId==optyRecordTypeID)
@@ -151,6 +152,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     oc.ContactId=tempOpp.Contact__c;
                     oc.OpportunityId=tempOpp.Id;
                     oc.IsPrimary = true;
+                    oc.Role = strDefaultPrimaryContactRole;
                     String opCon = String.ValueOf(oc.ContactId)+String.ValueOf(oc.OpportunityId);
                     if(oc.ContactId!=null&&!optyRoleMap.containsKey(opCon)) oclist.add(oc);
                 }
