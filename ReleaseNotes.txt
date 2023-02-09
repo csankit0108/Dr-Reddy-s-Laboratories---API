@@ -14,8 +14,13 @@
     -SKIP_ZAP_Account
     -DRL_ConvertedLeadStatusCannotbeUpdated
 5. Deactivate the "leadContentUpdate" trigger on Lead.
-6. Perform the data update for Leads & Contacts.
-7. Reactivate the Lookup filter,validation rules & triggers that had been deactivated.
+6. Add the below values to the 'Role' picklist on OpporutnityContactRole and remomve ll other values.
+    - Decision Maker
+    - Influencer
+    - Detractor
+    - Neutral
+7. Perform the data update for Leads & Contacts.
+8. Reactivate the Lookup filter,validation rules & triggers that had been deactivated.
 
 -- DEPLOYMENT --
 
