@@ -31,7 +31,7 @@
 		<members>DRL_LeadCleanupBatchTest</members>
 		<members>DRL_LeadCleanupBatch</members>
 		<members>DRL_OpportunityContactRoleTriggerHelper</members>
-		<members>DRL_OpportunityContactRoleTriggerHelperTest</members>
+		<members>DRL_OpportunityContactRoleTriggerTest</members>
 		<members>DRL_OpportunityContactRoleTriggerHandler</members>
 		<name>ApexClass</name>
 	</types>

@@ -1,6 +1,6 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_OpportunityContactRoleTriggerHelperTest
+* @ Name            :   DRL_OpportunityContactRoleTriggerTest
 * @ Purpose         :   Test class for DRL_OpportunityContactRoleTriggerHelper
 * @ Author          :   Mahalakshmi Sadhananthan
 *
@@ -9,7 +9,7 @@
 *   08-02-2023      |  mahalakshmi.sadhanantham@absyz.com   |  1.0          |  Initial Version
 *******************************************************************************************************/
 @isTest
-public class DRL_OpportunityContactRoleTriggerHelperTest {
+public class DRL_OpportunityContactRoleTriggerTest {
     @TestSetup
     static void createData() {
         /**

@@ -36,7 +36,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 		
 		//Fetch all the contact Ids into Set
 		for (OpportunityContactRole objOpportunityContactRole : list_OpportunityContactRoles) {
-			String.isNotBlank(objOpportunityContactRole.ContactId) {
+			if (String.isNotBlank(objOpportunityContactRole.ContactId)) {
 				set_ContactIds.add(objOpportunityContactRole.ContactId);
 			}
 		}
