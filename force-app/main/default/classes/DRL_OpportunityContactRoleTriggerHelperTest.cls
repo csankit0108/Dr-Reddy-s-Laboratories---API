@@ -1,6 +1,6 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   DRL_OppContactRoleTriggerHelperTest
+* @ Name            :   DRL_OpportunityContactRoleTriggerHelperTest
 * @ Purpose         :   Test class for DRL_OpportunityContactRoleTriggerHelper
 * @ Author          :   Mahalakshmi Sadhananthan
 *
@@ -8,10 +8,8 @@
 * ======================================================================================================
 *   08-02-2023      |  mahalakshmi.sadhanantham@absyz.com   |  1.0          |  Initial Version
 *******************************************************************************************************/
-
 @isTest
-public class DRL_OppContactRoleTriggerHelperTest {
-
+public class DRL_OpportunityContactRoleTriggerHelperTest {
     @TestSetup
     static void createData() {
         /**
@@ -74,13 +72,13 @@ public class DRL_OppContactRoleTriggerHelperTest {
             .createOpportunity();
         insert objOpportunity;
         
-         OpportunityContactRole OpportunityContactRole = new DRL_TestUtility.OpportunityContactRoleBuilder()
+        OpportunityContactRole OpportunityContactRole = new DRL_TestUtility.OpportunityContactRoleBuilder()
             .setOpportunityId(objOpportunity.Id)
             .setContactId(objContact.Id)
             .createOpportunityContactRole();
-        Insert OpportunityContactRole;
-        
+        insert OpportunityContactRole;
     }
+
     /**
     * @ author       :  Mahalakshmi S
     * @ description  :  This method is used to test the condition - Validation to prevent duplicate contacts from being added to the same opportunity  
@@ -92,21 +90,19 @@ public class DRL_OppContactRoleTriggerHelperTest {
                               FROM Contact 
                               LIMIT 1];
         Opportunity objOpportunity = [SELECT 
-                              Id
-                              FROM Opportunity 
-                              LIMIT 1];
+                                      Id
+                                      FROM Opportunity 
+                                      LIMIT 1];
         Test.startTest();
-        
-        try{
+        try {
             OpportunityContactRole OpportunityContactRole = new DRL_TestUtility.OpportunityContactRoleBuilder()
-            .setOpportunityId(objOpportunity.Id)
-            .setContactId(objContact.Id)
-            .createOpportunityContactRole();
-        Insert OpportunityContactRole;
-        }catch(Exception objException) {
-            Assert.isTrue(objException.getMessage().contains(System.Label.Contact_Role_Validation_Message),'Trigger Exception Handling');
+                .setOpportunityId(objOpportunity.Id)
+                .setContactId(objContact.Id)
+                .createOpportunityContactRole();
+        insert OpportunityContactRole;
+        } catch(Exception objException) {
+            System.assert(objException.getMessage().contains(System.Label.CLDRL00025));
         }
         Test.stopTest();
     }
-    
 }

@@ -1,10 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
-        <fullName>Contact_Role_Validation_Message</fullName>
+        <fullName>CLDRL00001</fullName>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Contact Role Validation Message</shortDescription>
+        <shortDescription>API Campaign Influence Model Name</shortDescription>
+        <value>DRL_APICampaignsDistributionModel</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00002</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CLDRL00002</shortDescription>
+        <value>Contact can not be blank</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00003</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConvertLeadDataLoadError</shortDescription>
+        <value>error while loading Lead Details</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00004</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>accountBlankError</shortDescription>
+        <value>Account cannot be blank</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00005</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadDuplicateContactError</shortDescription>
+        <value>Duplicate Contact Found, Please select existing contact</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00006</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConvertLeadError</shortDescription>
+        <value>error while Converting Lead.</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00007</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadHeader</shortDescription>
+        <value>Convert Lead</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00008</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadRequiredFieldsError</shortDescription>
+        <value>Please fill (*) required fields</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00009</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadSuccessOpportunityColumnsLoadError</shortDescription>
+        <value>Error Retrieving Opportunity fields to show</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00010</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LeadAlreadyConvertedMessage</shortDescription>
+        <value>Lead has already Converted</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00011</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>selectedContactLinkedToAccountError</shortDescription>
+        <value>Please select Contact not linked to any other Account or create new Contact</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00012</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>leadConvertSuccessMessage</shortDescription>
+        <value>Leads Converted successfully</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00013</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Product field is empty</shortDescription>
+        <value>Please update the Product field and convert the Lead</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00014</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ConvertLeadNoContentAvailable</shortDescription>
+        <value>No documents available to run automated campaign</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00015</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadAutomationJourneyError</shortDescription>
+        <value>Please fill Start Automation Journery</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00016</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>convertLeadDocumentsRequiredError</shortDescription>
+        <value>Please add the documents and convert</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00017</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>accountNotRelatedToContactError</shortDescription>
+        <value>Existing Account should be related to existing Contact</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00018</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>contactWithEmailExistError</shortDescription>
+        <value>Email already exists!</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00019</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>selectAccountRelatedOpportunity</shortDescription>
+        <value>Please choose selected account related Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00020</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error while loading Opportunity details</shortDescription>
+        <value>Error While retrieving Opportunity details</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00021</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>blankOpportunityError</shortDescription>
+        <value>Opportunity Cannot be Blank</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00022</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultCampaignMemberStatus</shortDescription>
+        <value>Sent</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00023</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultPrimaryContactRoleStatus</shortDescription>
+        <value>Decision Maker</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00024</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultSecondaryContactRoleStatus</shortDescription>
+        <value>Influencer</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00025</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Duplicate Contact Role Validation Message</shortDescription>
         <value>There&apos;s a contact role already added for this Contact.</value>
     </labels>
 </CustomLabels>
