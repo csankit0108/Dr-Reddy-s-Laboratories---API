@@ -577,12 +577,12 @@ public class DRL_convertLeadProspectTest {
         objContact1.Job_Level__c = 'Manager';
         objContact1.Department__c = 'Quality';
         insert objContact1;
-        Opportunity objOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'testProspectLead' LIMIT 1] ;
+        Opportunity objOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'testProspectLead' LIMIT 1] ;               
+        Test.startTest();
         objOpportunity.Contact__c = objContact1.Id;
-        update objOpportunity;
+        update objOpportunity; 
         objOpportunity = DRL_ConvertLeadProspectController.getOpportunity(objOpportunity.Id);
         Lead objLead = [SELECT Id FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
-        Test.startTest();
         DRL_ConvertLeadProspectController.convertLead(
             objLead.Id,
             objAccount,
