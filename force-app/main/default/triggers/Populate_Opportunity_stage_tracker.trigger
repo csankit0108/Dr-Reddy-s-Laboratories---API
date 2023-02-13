@@ -132,7 +132,7 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
             list<id> oppcollector = new list<id>();
             
             Map<String,OpportunityContactRole> optyRoleMap = new Map<String,OpportunityContactRole>();
-            List<OpportunityContactRole> existlist = [Select Id,ContactId,OpportunityId from OpportunityContactRole where OpportunityId IN:Trigger.newMap.KeySet()];
+            List<OpportunityContactRole> existlist = [Select Id,ContactId,OpportunityId,IsPrimary from OpportunityContactRole where OpportunityId IN:Trigger.newMap.KeySet()];
             if(existlist.size()>0)
             {
                 for(OpportunityContactRole op:existlist)
@@ -146,15 +146,21 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
             String strDefaultPrimaryContactRole = System.Label.CLDRL00023;
             for(Opportunity tempOpp :trigger.new)
             {
-                if(tempOpp.RecordTypeId==optyRecordTypeID)
+                if(tempOpp.RecordTypeId == optyRecordTypeID && tempOpp.Contact__c != null)
                 {
-                    OpportunityContactRole oc = new OpportunityContactRole();
-                    oc.ContactId=tempOpp.Contact__c;
-                    oc.OpportunityId=tempOpp.Id;
-                    oc.IsPrimary = true;
-                    oc.Role = strDefaultPrimaryContactRole;
-                    String opCon = String.ValueOf(oc.ContactId)+String.ValueOf(oc.OpportunityId);
-                    if(oc.ContactId!=null&&!optyRoleMap.containsKey(opCon)) oclist.add(oc);
+                    String strOpportunityContactKey = String.ValueOf(tempOpp.Contact__c)+String.ValueOf(tempOpp.Id);
+                    if (optyRoleMap.containsKey(strOpportunityContactKey) && !optyRoleMap.get(strOpportunityContactKey).IsPrimary) {
+                        OpportunityContactRole objOpportunityContactRole = optyRoleMap.get(strOpportunityContactKey);
+                        objOpportunityContactRole.IsPrimary = true;
+                        oclist.add(objOpportunityContactRole);                            
+                    } else if(!optyRoleMap.containsKey(strOpportunityContactKey)){
+                        OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
+                        objOpportunityContactRole.ContactId = tempOpp.Contact__c;
+                        objOpportunityContactRole.OpportunityId = tempOpp.Id;
+                        objOpportunityContactRole.IsPrimary = true;
+                        objOpportunityContactRole.Role = strDefaultPrimaryContactRole;
+                        oclist.add(objOpportunityContactRole);                            
+                    } 
                 }
                 
             } 
@@ -205,10 +211,15 @@ trigger Populate_Opportunity_stage_tracker on Opportunity (after insert,after up
                     }
                 }
             }
-            /*Added by Absyz to create OpportunityContactRole when 
+            /*Added by Absyz to create/update OpportunityContactRole when 
             Contact is associated to an Opportunity*/
             if (!oclist.isEmpty()) {
-                insert oclist;
+                List<String> list_ConsolidatedDMLErrors = new List<String>();
+                List<Database.UpsertResult> list_Results = Database.upsert(oclist, false);
+                list_ConsolidatedDMLErrors.addAll(DRLUtil.processUpsertResult(list_Results));
+                if (!list_ConsolidatedDMLErrors.isEmpty()) {
+                    DRLUtil.logDMLException('Populate_Opportunity_stage_tracker', String.valueOf(Trigger.operationType), list_ConsolidatedDMLErrors);
+                }
             }
 
             system.debug('---**'+oppcollector);
