@@ -168,4 +168,11 @@
         <shortDescription>defaultSecondaryContactRoleStatus</shortDescription>
         <value>Influencer</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00025</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Duplicate Contact Role Validation Message</shortDescription>
+        <value>There&apos;s a contact role already added for this Contact.</value>
+    </labels>
 </CustomLabels>

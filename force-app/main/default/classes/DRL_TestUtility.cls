@@ -865,4 +865,31 @@ public class DRL_TestUtility {
             return objMom;
         }
     }
+
+    /**
+    * @ Name     :  OpportunityContactRoleBuilder
+    * @ Purpose  :  To create OpportunityContactRole
+    * @ Author   :  Mahalakshmi S
+    **/
+    public class OpportunityContactRoleBuilder{
+        private Id idContactId;
+        private Id idOpportunityId;
+        
+        public OpportunityContactRoleBuilder setContactId(Id idValue) {
+            this.idContactId = idValue;
+            return this;
+        }
+
+        public OpportunityContactRoleBuilder setOpportunityId(Id idValue) {
+            this.idOpportunityId = idValue;
+            return this;
+        } 
+
+        public OpportunityContactRole createOpportunityContactRole() {
+            OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
+            objOpportunityContactRole.OpportunityId = this.idOpportunityId;
+            objOpportunityContactRole.ContactId = this.idContactId;
+            return objOpportunityContactRole;
+        }
+    }
 }

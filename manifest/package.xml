@@ -30,6 +30,9 @@
 		<members>OppClassTrigger</members>		
 		<members>DRL_LeadCleanupBatchTest</members>
 		<members>DRL_LeadCleanupBatch</members>
+		<members>DRL_OpportunityContactRoleTriggerHelper</members>
+		<members>DRL_OpportunityContactRoleTriggerTest</members>
+		<members>DRL_OpportunityContactRoleTriggerHandler</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -38,6 +41,7 @@
 		<members>campaignInfluenceAttributes</members>
 		<members>Populate_Opportunity_stage_tracker</members>
 		<members>leadContentUpdate</members>
+		<members>DRL_OpportunityContactRoleTrigger</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -67,6 +71,7 @@
 		<members>DRL_LeadConvertFormController__mdt.FieldSetAPIName__c</members>
 		<members>DRL_ConvertLeadSuccessConfiguration__mdt.FieldAPINames__c</members>
 		<members>Disable_Trigger__c.DisableOpportunityTrigger__c</members>
+		<members>Disable_Trigger__c.DisableOpportunityContactRoleTrigger__c</members>
 		<members>Lead.DRL_IsProspect__c</members>
 		<name>CustomField</name>
 	</types> 
