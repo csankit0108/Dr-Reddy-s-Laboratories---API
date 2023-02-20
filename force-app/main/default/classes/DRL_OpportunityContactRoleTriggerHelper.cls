@@ -20,8 +20,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 	public static String strModelDeveloperName = Label.CLDRL00001;
 	//Map of Opportunity By Id
 	public static Map<Id, Opportunity> map_OpportunityById = new Map<Id, Opportunity>();
-	//Map of Contact By Id
-	public static Map<Id, Contact> map_ContactById = new Map<Id, Contact>();
 	//Map of Leads By Id
 	public static Map<Id, Lead> map_LeadsById = new Map<Id, Lead>();
 	//Map of CampaignInfluence record by combinaation of Opp Id+Contact Id+Campaign Id
@@ -57,7 +55,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 
 	/**
 	* @ author       :  Ankit C
-	* @ description  :  This method handles all the logic that should be performed in the beforeInsert trigger contaxt.
+	* @ description  :  This method handles all the logic that should be performed in the beforeInsert trigger context.
 	* @ params       :  list_OpportunityContactRoles - List of OpportunityContactRole from trigger.new
 	* @ return       :  N/A
 	**/
@@ -65,14 +63,19 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 		duplicateContactValidation(list_OpportunityContactRoles);
 	}
 
-    //method headers
+    /**
+	* @ author       :  Ankit C
+	* @ description  :  This method handles all the logic that should be performed in the afterInsert trigger context.
+	* @ params       :  list_OpportunityContactRoles - List of OpportunityContactRole from trigger.new
+	* @ return       :  N/A
+	**/
 	public static void onAfterInsert(List<OpportunityContactRole> list_OpportunityContactRoles) {
         calculateCampaignInfluence(list_OpportunityContactRoles);
     }
     
     /**
 	* @ author       :  Mahalakshmi Sadhananthan
-	* @ description  :  This method recalculates the campaign influence percentage after associated contact record from Opportunity Contact Role is Deleted.
+	* @ description  :  This method handles all the logic that should be performed in the afterDelete trigger context.
 	* @ params       :  list_OpportunityContactRoles - List of OpportunityContactRole from trigger.old
 	* @ return       :  N/A
 	**/
@@ -93,7 +96,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 		Map<Id, Set<Id>> map_OpportunityIdsByContactId = new Map<Id, Set<Id>>();
 		
         try {
-            
             //Fetch all the contact Ids into Set
             for (OpportunityContactRole objOpportunityContactRole : list_OpportunityContactRoles) {
                 if (String.isNotBlank(objOpportunityContactRole.ContactId)) {
@@ -111,16 +113,16 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                                                                          IsPrimary
                                                                          FROM OpportunityContactRole
                                                                          WHERE ContactId IN :set_ContactIds]
-                    ) {
-                        if(!map_OpportunityIdsByContactId.containsKey(objOpportunityContactRole.ContactId)) {
-                            map_OpportunityIdsByContactId.put(
-                                objOpportunityContactRole.ContactId, 
-                                new set<Id>{ objOpportunityContactRole.OpportunityId }
-                            );
-                        } else {
-                            map_OpportunityIdsByContactId.get(objOpportunityContactRole.ContactId).add(objOpportunityContactRole.OpportunityId);
-                        }
+                ) {
+                    if(!map_OpportunityIdsByContactId.containsKey(objOpportunityContactRole.ContactId)) {
+                        map_OpportunityIdsByContactId.put(
+                            objOpportunityContactRole.ContactId, 
+                            new set<Id> { objOpportunityContactRole.OpportunityId }
+                        );
+                    } else {
+                        map_OpportunityIdsByContactId.get(objOpportunityContactRole.ContactId).add(objOpportunityContactRole.OpportunityId);
                     }
+                }
             }
             
             //Check if ID exist in the Map and display Error message
@@ -132,7 +134,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                     objOpportunityContactRole.addError(System.Label.CLDRL00025);
                 }
             } 
-            
         } catch(Exception objException) {
             DRLUtil.logException(
                 'DRL_OpportunityContactRoleTriggerHelper',
@@ -141,7 +142,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                 true
             );
         }
-		
 	}
 
 	/**
@@ -249,16 +249,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                 } 
             }
             
-            map_ContactById = new Map<Id, Contact>([SELECT 
-                                                    Id, 
-                                                    Name,
-                                                    Campaign_Id__c ,
-                                                    Lead_Converted_From__c
-                                                    FROM Contact 
-                                                    WHERE Id IN :set_ContactIds]);
-            
-            system.debug('map_ContactById'+map_ContactById);
-            
             if(!set_LeadIds.isEmpty()) {
                 map_LeadsById = new Map<Id, Lead>([SELECT 
                                                    Id,
@@ -294,15 +284,15 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                                                      AND HasResponded = true
                                                      ORDER BY FirstRespondedDate DESC,
                                                      CreatedDate DESC]
-                ) {
-                    set_CampaignIds.add(objCampaignMember.CampaignId);
-                    if (!map_CampaignMemberByContactId.containsKey(objCampaignMember.ContactId)) {
-                        map_CampaignMemberByContactId.put(objCampaignMember.ContactId, objCampaignMember);
-                    }  
+            ) {
+                set_CampaignIds.add(objCampaignMember.CampaignId);
+                if (!map_CampaignMemberByContactId.containsKey(objCampaignMember.ContactId)) {
+                    map_CampaignMemberByContactId.put(objCampaignMember.ContactId, objCampaignMember);
+                }  
                     
-                    String strKey = objCampaignMember.CampaignId + '' + objCampaignMember.LeadId;
-                    map_CampaignMemberByUniqueKey.put(strKey, objCampaignMember);
-                }
+                String strKey = objCampaignMember.CampaignId + '' + objCampaignMember.LeadId;
+                map_CampaignMemberByUniqueKey.put(strKey, objCampaignMember);
+            }
             
             map_CampaignById = new Map<Id, Campaign>([SELECT 
                                                       Id,
@@ -353,6 +343,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                 if (objOpportunity.Id == null) {
                     continue;
                 }
+
                 Decimal decTotalInfluenceSum = 0.0;
                 Map<Id, CampaignInfluence> map_LastTouchCampaignInfluenceByContactId = new Map<Id, CampaignInfluence>();
                 
@@ -513,18 +504,13 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                             } 
                         }
                     } else if (objOpportunity.OpportunityContactRoles.size() > 1) {
-                        
-                        
-                        system.debug('('+decExistingInfluenceCombined+')/'+intCountofContactsWithLastTouchCampaign);
                         Decimal decNewInfluenceValue = (decExistingInfluenceCombined/intCountofContactsWithLastTouchCampaign).setScale(2, System.RoundingMode.DOWN);
-                        system.debug('decNewInfluenceValue'+decNewInfluenceValue);
                         //Give influence to Last Touch Campaign
                         if (objNewContactRoleWrapper.objLastTouchCampaign != null) {
                             CampaignInfluence objCampaignInfluence = map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKeyWithLastTouchCampaignId)
-                                    ? map_CampaignInfluenceByUniqueKey.get(strUniqueKeyWithLastTouchCampaignId)
-                                    : new CampaignInfluence();
-                            //create CI for source campaign
-                            //use map_CampaignInfluenceByUniqueKey to upsert based on unique key
+                                ? map_CampaignInfluenceByUniqueKey.get(strUniqueKeyWithLastTouchCampaignId)
+                                : new CampaignInfluence();
+                            //Create CI for source campaign
                             objCampaignInfluence = createCampaignInfluence(
                                 objCampaignInfluence,
                                 strLastTouchCampaignId,
@@ -534,7 +520,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                             );
                                 
                             map_CampaignInfluenceByUniqueKey.put(strUniqueKeyWithLastTouchCampaignId, objCampaignInfluence);
-                            //use map_LastTouchCampaignInfluenceByContactId.values() instead of objOpportunity.CampaignInfluences
                             for (CampaignInfluence objOldCampaignInfluence : map_LastTouchCampaignInfluenceByContactId.values()) {
                                 objOldCampaignInfluence.Influence = decNewInfluenceValue;
                                 map_CampaignInfluenceByUniqueKey.put(
@@ -548,8 +533,10 @@ public class DRL_OpportunityContactRoleTriggerHelper {
             }
             
             if (!map_OpportunitiesToUpdate.isEmpty()) {
+                DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger = true;
                 List<Database.SaveResult> list_UpdateResults = Database.update(map_OpportunitiesToUpdate.values(), false);
                 list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));
+                DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger = false;
             }
     
             if (!map_CampaignInfluenceByUniqueKey.isEmpty()) {
@@ -558,7 +545,11 @@ public class DRL_OpportunityContactRoleTriggerHelper {
             }
             
             if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                DRLUtil.logDMLException('DRL_OpportunityContactRoleTriggerHelper', 'createCampaignInfluence', list_ConsolidatedDMLErrors);
+                DRLUtil.logDMLException(
+                    'DRL_OpportunityContactRoleTriggerHelper', 
+                    'createCampaignInfluence', 
+                    list_ConsolidatedDMLErrors
+                );
             }             
         } catch(Exception objException) {
             DRLUtil.logException(
@@ -569,7 +560,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
             );
         }
 	}
-    
 
     /**
 	* @ author       :  Mahalakshmi Sadhananthan
@@ -582,8 +572,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
         Set<Id> set_OpportunityIds = new Set<Id>();
         //Set of deleted contacts
         Set<Id> set_DeletedContactIds = new Set<Id>();
-        //Set of existing contacts
-        Set<Id> set_ExistingContactIds = new Set<Id>();
         //Map of Opportunities by Ids
         Map<Id, Opportunity> map_OpportunityById = new Map<Id, Opportunity>();
         //Map of Campaign Influence by Opportunity Id
@@ -602,12 +590,9 @@ public class DRL_OpportunityContactRoleTriggerHelper {
         Map<Id, CampaignInfluence> map_CampaignInfluenceByContactId = new Map<Id, CampaignInfluence>();
         
         try {
-            
             for (OpportunityContactRole objOpportunityContactRole : list_OpportunityContactRoles) {
                 set_OpportunityIds.add(objOpportunityContactRole.OpportunityId);
                 set_DeletedContactIds.add(objOpportunityContactRole.ContactId);
-                System.debug('set_DeletedContactIds::' + set_DeletedContactIds);
-                System.debug('Set_oppId::' + set_OpportunityIds);
             }
             
             map_OpportunityById = new Map<Id, Opportunity>([
@@ -647,6 +632,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                         Decimal decExistingCampaignInfluenceWeitage = objCampaignInfluence.Influence + map_CombinedInfluenceByOpportunityId.get(objCampaignInfluence.OpportunityId);
                         map_CombinedInfluenceByOpportunityId.put(objCampaignInfluence.OpportunityId, decExistingCampaignInfluenceWeitage);
                     }
+
                     if (set_DeletedContactIds.contains(objCampaignInfluence.ContactId)) {
                         if (!map_CampaignInfluenceByOpportunityId.containsKey(objCampaignInfluence.OpportunityId)) {
                             map_CampaignInfluenceByOpportunityId.put(objCampaignInfluence.OpportunityId, objCampaignInfluence.Influence);
@@ -665,15 +651,16 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                         }
                     } else {
                         if (
-                        String.isNotBlank(objOpportunity.DRL_SourceCampaignId__c) &&
-                        !objOpportunity.DRL_SourceLastTouchMatch__c
+                            String.isNotBlank(objOpportunity.DRL_SourceCampaignId__c) &&
+                            !objOpportunity.DRL_SourceLastTouchMatch__c
                         ) {
-                        if (!map_CampaignInfluenceByContactId.containsKey(objCampaignInfluence.ContactId) &&
-                            (objCampaignInfluence.CampaignId != objOpportunity.DRL_SourceCampaignId__c ||
-                            (objCampaignInfluence.CampaignId == objOpportunity.DRL_SourceCampaignId__c &&
-                             objCampaignInfluence.ContactId != objOpportunity.DRL_SourceCampaignContactId__c))) {
-                                 map_CampaignInfluenceByContactId.put(objCampaignInfluence.ContactId, objCampaignInfluence);
-                             }
+                            if (!map_CampaignInfluenceByContactId.containsKey(objCampaignInfluence.ContactId) &&
+                                (objCampaignInfluence.CampaignId != objOpportunity.DRL_SourceCampaignId__c ||
+                                (objCampaignInfluence.CampaignId == objOpportunity.DRL_SourceCampaignId__c &&
+                                objCampaignInfluence.ContactId != objOpportunity.DRL_SourceCampaignContactId__c))
+                            ) {
+                                map_CampaignInfluenceByContactId.put(objCampaignInfluence.ContactId, objCampaignInfluence);
+                            }
                         } else if (!map_CampaignInfluenceByContactId.containsKey(objCampaignInfluence.ContactId)) {
                             map_CampaignInfluenceByContactId.put(objCampaignInfluence.ContactId, objCampaignInfluence);
                         }
@@ -685,23 +672,20 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                 Opportunity objOpportunity = map_OpportunityById.containsKey(objOpportunityContactRole.OpportunityId)
                     ? map_OpportunityById.get(objOpportunityContactRole.OpportunityId)
                     : null;
+                Integer intCountofContacts = objOpportunity.OpportunityContactRoles.size();
                 if (
                     objOpportunity == null ||
                     (map_CombinedInfluenceByOpportunityId.containsKey(objOpportunity?.Id) &&
-                     map_CombinedInfluenceByOpportunityId.get(objOpportunity?.Id) > 99.0)
-                    
+                     map_CombinedInfluenceByOpportunityId.get(objOpportunity?.Id) > 99.0) ||
+                    intCountofContacts == 0
                 ) {
                     continue;
                 }
                 
-                Integer intCountofContacts = objOpportunity.OpportunityContactRoles.size();
-                system.debug('intCountofContacts:: ' + intCountofContacts);
                 Decimal decExistingInfluenceValue = map_CampaignInfluenceByOpportunityId.containsKey(objOpportunity.Id)
                     ? map_CampaignInfluenceByOpportunityId.get(objOpportunity.Id)
                     : 0.0;
                 Decimal decNewInfluenceValue = (decExistingInfluenceValue/intCountofContacts).setScale(2, System.RoundingMode.DOWN);
-                system.debug('decExistingInfluenceValue:: ' + decExistingInfluenceValue);
-                system.debug('decNewInfluenceValue:: ' + decNewInfluenceValue);
                 
                 if (map_CampaignInfluencesByOpportunityId.containsKey(objOpportunity.Id)) {
                     list_CampaignInfluencestoDelete.addAll(map_CampaignInfluencesByOpportunityId.get(objOpportunity.Id));

@@ -21,11 +21,11 @@ public with sharing class DRL_OpportunityTriggerHelper {
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
 	public static String strModelDeveloperName = Label.CLDRL00001;
     //Quering the Value of DeveloperName 
-	public static CampaignInfluenceModel objCampaignInfluenceModel = [  SELECT 
-                                                                        Id,
-                                                                        DeveloperName 
-                                                                        FROM CampaignInfluenceModel 
-                                                                        WHERE DeveloperName = :strModelDeveloperName];
+	public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                                      Id,
+                                                                      DeveloperName 
+                                                                      FROM CampaignInfluenceModel 
+                                                                      WHERE DeveloperName = :strModelDeveloperName];
     //Map of OpportunityIds by List Of Influences
     public static Map<Id, Boolean> map_HasInfluenceByOpportunityId = new Map<Id, Boolean>();
     /**
