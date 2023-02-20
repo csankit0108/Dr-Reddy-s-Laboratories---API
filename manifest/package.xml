@@ -33,6 +33,7 @@
 		<members>DRL_OpportunityContactRoleTriggerHelper</members>
 		<members>DRL_OpportunityContactRoleTriggerTest</members>
 		<members>DRL_OpportunityContactRoleTriggerHandler</members>
+		<members>DRL_OpportunityTriggerHandler</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
