@@ -221,9 +221,11 @@ public with sharing class DRL_ConvertLeadProspectController {
                 for (Opportunity objChildleadOpportunity : list_leadOpportunities) {
                     set_OpportunitiesToUpdate.add(objChildleadOpportunity.Id) ;                                  
                 }
+
                 if (!set_OpportunitiesToUpdate.isEmpty()) {
-                    updateContactOnOpportunity(JSON.serialize(set_OpportunitiesToUpdate),objcontact.Id,true);
+                    updateContactOnOpportunity(JSON.serialize(set_OpportunitiesToUpdate), objcontact.Id, true);
                 }
+
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
                 if(list_leadOpportunities!=null && list_leadOpportunities.size() > 0){
@@ -231,8 +233,7 @@ public with sharing class DRL_ConvertLeadProspectController {
                 }
                 
                 objresponse.strstatus = 'Success';
-            }
-            else{
+            } else {
                 String strContentIds = getOrderedContents(list_contentCatalogs);
                 Boolean blnIsContactUpdateRequired = (objopportunity.Id == null || objopportunity.Contact__c == null);
                 objopportunity = setOpportunityDetails(objopportunity,objaccount.Id,objcontact.Id,objlead,strContentIds,strrunAfter); 
@@ -304,8 +305,9 @@ public with sharing class DRL_ConvertLeadProspectController {
                 List<Database.LeadConvertResult> list_leadConvertResult = Database.convertLead(list_LeadsToConvert);
                 DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = false;
                 if (blnIsContactUpdateRequired) {
-                    updateContactOnOpportunity(objopportunity.Id,objcontact.Id,false);
-                }                
+                    updateContactOnOpportunity(objopportunity.Id, objcontact.Id, false);
+                } 
+
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
                 objresponse.objopportunity = objopportunity;                              
@@ -318,22 +320,22 @@ public with sharing class DRL_ConvertLeadProspectController {
             objresponse.strmessage = objException.getMessage();
             objresponse.strstatus = 'Fail';
             DRLUtil.logException(
-                        'DRL_ConvertLeadProspectController',
-                        'convertLead',
-                        objException,
-                        true
-                    );
+                'DRL_ConvertLeadProspectController',
+                'convertLead',
+                objException,
+                true
+            );
             return objresponse;         
         } Catch (Exception objException){
             database.rollback(save);
             objresponse.strmessage = objException.getMessage();
             objresponse.strstatus = 'Fail';
             DRLUtil.logException(
-                        'DRL_ConvertLeadProspectController',
-                        'convertLead',
-                        objException,
-                        true
-                    );
+                'DRL_ConvertLeadProspectController',
+                'convertLead',
+                objException,
+                true
+            );
             return objresponse;         
         }
         return objresponse;
@@ -1051,24 +1053,28 @@ public with sharing class DRL_ConvertLeadProspectController {
     * @ return       :  Returns String  error message 
     **/
     @future
-    public static void updateContactOnOpportunity(String strOpportunityIds, String strContactId,Boolean blnIsProspect) {
+    public static void updateContactOnOpportunity(String strOpportunityIds, String strContactId, Boolean blnIsProspect) {
         List<Opportunity> list_Opportunitiestoupdate = new List<Opportunity>();
         List<OpportunityContactRole> list_OpportunityContactRole = new List<OpportunityContactRole> ();
         if (blnIsProspect) {
-            Set<Id> set_OpportunityIds = (Set<Id>)JSON.deserialize(strOpportunityIds,Set<Id>.class);
-            list_OpportunityContactRole = [SELECT Id FROM OpportunityContactRole 
-                                                                    WHERE OpportunityId IN :set_OpportunityIds 
-                                                                    AND ContactId=:strContactId];
+            Set<Id> set_OpportunityIds = (Set<Id>)JSON.deserialize(strOpportunityIds, Set<Id>.class);
+            list_OpportunityContactRole = [SELECT 
+                                           Id 
+                                           FROM OpportunityContactRole 
+                                           WHERE OpportunityId IN :set_OpportunityIds 
+                                           AND ContactId = :strContactId];
             for (Id OpportunityId : set_OpportunityIds) {
-                list_Opportunitiestoupdate.add(new Opportunity(Id=OpportunityId,Contact__c = strContactId));
+                list_Opportunitiestoupdate.add(new Opportunity(Id=OpportunityId, Contact__c = strContactId));
             }
-
         } else {
-            list_OpportunityContactRole = [SELECT Id FROM OpportunityContactRole 
-                                                                    WHERE OpportunityId=:strOpportunityIds 
-                                                                    AND ContactId=:strContactId];
-            list_Opportunitiestoupdate.add(new Opportunity(Id=strOpportunityIds,Contact__c = strContactId)) ;          
+            list_OpportunityContactRole = [SELECT 
+                                           Id 
+                                           FROM OpportunityContactRole 
+                                           WHERE OpportunityId = :strOpportunityIds 
+                                           AND ContactId = :strContactId];
+            list_Opportunitiestoupdate.add(new Opportunity(Id=strOpportunityIds, Contact__c = strContactId));          
         }
+
         List<String> list_ConsolidatedDMLErrors = new List<String>();
         if (!list_OpportunityContactRole.isEmpty()) {
             DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = true;
@@ -1076,16 +1082,18 @@ public with sharing class DRL_ConvertLeadProspectController {
             list_ConsolidatedDMLErrors.addAll(DRLUtil.processDeleteResult(list_Results));            
             DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = false;
         }
+
         if (!list_Opportunitiestoupdate.isEmpty()) {   
             List<Database.SaveResult> list_Results = Database.update(list_Opportunitiestoupdate, false);
             list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results,'Update'));        
         }
+
         if (!list_ConsolidatedDMLErrors.isEmpty()) {
             DRLUtil.logDMLException(
-                    'DRL_ConvertLeadProspectController',
-                    'updateContactOnOpportunity',
-                    list_ConsolidatedDMLErrors
-                );
+                'DRL_ConvertLeadProspectController',
+                'updateContactOnOpportunity',
+                list_ConsolidatedDMLErrors
+            );
         }        
     }
 
