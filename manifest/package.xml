@@ -74,6 +74,9 @@
 		<members>Disable_Trigger__c.DisableOpportunityTrigger__c</members>
 		<members>Disable_Trigger__c.DisableOpportunityContactRoleTrigger__c</members>
 		<members>Lead.DRL_IsProspect__c</members>
+		<members>Opportunity.DRL_SourceCampaignContactId__c</members>
+		<members>Opportunity.DRL_SourceCampaignId__c</members>
+		<members>Opportunity.DRL_SourceLastTouchMatch__c</members>
 		<name>CustomField</name>
 	</types> 
 	<types>
