@@ -540,6 +540,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 			}
 	
 			if (!map_CampaignInfluenceByUniqueKey.isEmpty()) {
+				CaseStaticVars.allowInfluenceInTrigger = false;
 				List<Database.UpsertResult> list_UpsertResults = Database.upsert(map_CampaignInfluenceByUniqueKey.values(), false);
 				list_ConsolidatedDMLErrors.addAll(DRLUtil.processUpsertResult(list_UpsertResults));
 			}
@@ -700,6 +701,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 				}
 			}
 			
+			CaseStaticVars.allowInfluenceInTrigger = false;
 			if (!list_CampaignInfluencesToUpdate.isEmpty()) {
 				List<Database.SaveResult> list_UpdateResults = Database.update(list_CampaignInfluencesToUpdate, false);
 				list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_UpdateResults, 'Update'));

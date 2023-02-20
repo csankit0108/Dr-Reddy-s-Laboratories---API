@@ -10,7 +10,7 @@
 *  10-02-2023       |  Kishore pedireddy             |  1.0          |  Initial version
 *********************************************************************************************************/
 
-public with sharing class DRL_OpportunityTriggerHelper {    
+public class DRL_OpportunityTriggerHelper {    
     public static boolean blnSkipOpportunityTrigger = false;
     //List of all the Errors occurred during DML operation
     public static List<String> list_ConsolidatedDMLErrors = new List<String>();
@@ -184,6 +184,7 @@ public with sharing class DRL_OpportunityTriggerHelper {
                 }
                 if (!list_CampaignInfluencesToUpsert.isEmpty()) {
                     blnSkipOpportunityTrigger = true;
+                    CaseStaticVars.allowInfluenceInTrigger = false;
                     List<Database.UpsertResult> list_Results = Database.upsert(list_CampaignInfluencesToUpsert, false);
                     blnSkipOpportunityTrigger = false;
                     list_ConsolidatedDMLErrors.addAll(DRLUtil.processUpsertResult(list_Results));

@@ -1,4 +1,4 @@
-public with sharing class DRL_OpportunityTriggerHandler extends TriggerHandler {
+public class DRL_OpportunityTriggerHandler extends TriggerHandler {
 	List<Opportunity> list_NewList = new List<Opportunity>();
 	Map<Id, Opportunity> map_NewMap = new Map<Id, Opportunity>();
 	List<Opportunity> list_OldList = new List<Opportunity>();
