@@ -304,23 +304,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                     map_CampaignMemberByUniqueKey.put(strKey, objCampaignMember);
                 }
             
-            /*for (CampaignMember objCampaignMember : [SELECT 
-                                                     CampaignId,
-                                                     ContactId,
-                                                     LeadId,
-                                                     CreatedDate,
-                                                     FirstRespondedDate,
-                                                     HasResponded
-                                                     FROM CampaignMember
-                                                     WHERE LeadId IN :set_ProspectIds
-                                                     AND CampaignId IN :map_SourceCampaignIdByLeadId.values()
-                                                     AND HasResponded = true]
-                ) {
-                    set_CampaignIds.add(objCampaignMember.CampaignId);
-                    String strKey = objCampaignMember.CampaignId + '' + objCampaignMember.LeadId;
-                    map_CampaignMemberByUniqueKey.put(strKey, objCampaignMember);
-                }*/
-            
             map_CampaignById = new Map<Id, Campaign>([SELECT 
                                                       Id,
                                                       Name
@@ -361,7 +344,6 @@ public class DRL_OpportunityContactRoleTriggerHelper {
                 
                 String strUniqueWrapperKey = objOpportunityContactRole.OpportunityId + '' + objOpportunityContactRole.ContactId;
                 map_OpportunityContactRoleWrapperByContactId.put(strUniqueWrapperKey, objWrapper);
-              
             }
             
             for (OpportunityContactRole objOpportunityContactRole : list_OpportunityContactRoles) {
