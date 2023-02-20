@@ -36,6 +36,18 @@
         <apexClass>DRL_OpportunityTriggerHelper</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>DRL_OpportunityContactRoleTriggerHandler</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>DRL_OpportunityContactRoleTriggerHelper</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>DRL_OpportunityTriggerHandler</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <fieldPermissions>
         <editable>true</editable>
         <field>Lead.DRL_SourceCampaign__c</field>
@@ -64,6 +76,21 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Campaign.DRL_ValueBioBatchOrderedOpportunities__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.DRL_SourceCampaignContactId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.DRL_SourceLastTouchMatch__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.DRL_SourceCampaignId__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <layoutAssignments>
