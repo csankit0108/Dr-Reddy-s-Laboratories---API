@@ -214,4 +214,24 @@ public class DRLUtilTest {
         );
         Test.stopTest();
     }
+
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  Test method for processDeleteResult() 
+    **/
+    @IsTest
+    private static void testProcessDeleteResult() {
+        List<Account> list_Accounts = [SELECT Id FROM Account WHERE Name = 'Test ACC'];
+        delete list_Accounts;
+        DRL_ExceptionLog__c objExceptionLog = new DRL_ExceptionLog__c();
+        Test.startTest();
+        List<Database.DeleteResult> list_SaveResults = Database.delete(list_Accounts, false);
+        List<String> list_Errors = DRLUtil.processDeleteResult(list_SaveResults); 
+        DRLUtil.logDMLException(
+            'DRLUtilTest',
+            'testProcessDeleteResult',
+            list_Errors
+        );
+        Test.stopTest();
+    }
 }
