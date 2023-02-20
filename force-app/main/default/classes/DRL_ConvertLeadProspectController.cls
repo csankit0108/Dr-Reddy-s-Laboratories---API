@@ -131,6 +131,7 @@ public with sharing class DRL_ConvertLeadProspectController {
         save = database.setSavepoint();
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
+        Boolean blnCreateContactRole = false;
 
         ConvertLeadDataWrapper objresponse = new ConvertLeadDataWrapper();
         try{
@@ -236,6 +237,15 @@ public with sharing class DRL_ConvertLeadProspectController {
             } else {
                 String strContentIds = getOrderedContents(list_contentCatalogs);
                 Boolean blnIsContactUpdateRequired = (objopportunity.Id == null || objopportunity.Contact__c == null);
+                if (
+                    objopportunity.Id != null && 
+                    objopportunity.RecordTypeId == Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId() &&
+                    objopportunity.Contact__c != null && 
+                    objopportunity.Contact__c != objcontact.Id
+                ) {
+                    blnCreateContactRole = true;
+                }
+                
                 objopportunity = setOpportunityDetails(objopportunity,objaccount.Id,objcontact.Id,objlead,strContentIds,strrunAfter); 
                 DRL_OpportunityTriggerHelper.blnSkipOpportunityTrigger = true;               
                 List<Database.UpsertResult> list_UpsertResult=new List<Database.UpsertResult >();
@@ -305,9 +315,28 @@ public with sharing class DRL_ConvertLeadProspectController {
                 List<Database.LeadConvertResult> list_leadConvertResult = Database.convertLead(list_LeadsToConvert);
                 DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = false;
                 if (blnIsContactUpdateRequired) {
-                    updateContactOnOpportunity(objopportunity.Id, objcontact.Id, false);
-                } 
-
+                    updateContactOnOpportunity(objopportunity.Id,objcontact.Id,false);
+                }   
+                
+                if (blnCreateContactRole) {
+                    List <OpportunityContactRole> list_ExistingContactRoles = [SELECT Id 
+                                                                               FROM OpportunityContactRole 
+                                                                               WHERE ContactId= :objContact.Id AND 
+                                                                               OpportunityId = :objopportunity.Id];
+                    if (!list_ExistingContactRoles.isEmpty()) {
+                        DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = true;
+                        delete list_ExistingContactRoles;
+                    }
+                    
+                    DRL_OpportunityContactRoleTriggerHelper.blnSkipOpportunityContactRoleTrigger = false;
+                    String strDefaultSecondaryContactRole = System.Label.CLDRL00024;
+                    OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
+                    objOpportunityContactRole.ContactId = objContact.Id;
+                    objOpportunityContactRole.OpportunityId = objopportunity.Id;
+                    objOpportunityContactRole.Role = strDefaultSecondaryContactRole;
+                    insert objOpportunityContactRole;
+                }
+                
                 objresponse.objaccount = objaccount;
                 objresponse.objcontact = objcontact;
                 objresponse.objopportunity = objopportunity;                              
@@ -468,35 +497,7 @@ public with sharing class DRL_ConvertLeadProspectController {
             if (objopportunity.RecordTypeId != recordTypeId){
                 objopportunity.Product__c = objlead.Product_Lookup__c;
             }             
-        } else if(
-            objopportunity.Id != null && 
-            objopportunity.RecordTypeId == Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API').getRecordTypeId() &&
-            objopportunity.Contact__c != null && 
-            objopportunity.Contact__c != strcontactId){
-            List <OpportunityContactRole> list_ExistingContactRoles = [ SELECT Id 
-                                                                        FROM OpportunityContactRole 
-                                                                        WHERE ContactId=:strcontactId and OpportunityId =:objopportunity.Id ];
-            if (list_ExistingContactRoles.isEmpty()) {
-                String strDefaultSecondaryContactRole = System.Label.CLDRL00024;
-                OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
-                objOpportunityContactRole.ContactId = strcontactId;
-                objOpportunityContactRole.OpportunityId = objopportunity.Id;
-                objOpportunityContactRole.Role = strDefaultSecondaryContactRole;
-                List<Database.SaveResult> list_Results = new List<Database.SaveResult>();
-                List<String> list_ConsolidatedDMLErrors = new List<String>();
-                list_Results.add(Database.insert(objOpportunityContactRole, false));
-                list_ConsolidatedDMLErrors.addAll(DRLUtil.processDMLErrors(list_Results, 'Insert'));
-                if (!list_ConsolidatedDMLErrors.isEmpty()) {
-                    DRLUtil.logDMLException('DRL_ConvertLeadProspectController', 'setOpportunityDetails', list_ConsolidatedDMLErrors);
-                    database.rollback(save);
-                    for(Database.SaveResult objSaveResult:list_Results){
-                        if(objSaveResult.getErrors().size()>0){
-                            throw new CustomDMLException(getErroMessage(objSaveResult.getErrors()[0],'Opportunity','Insertion'));
-                        }
-                    }                
-                }
-            }
-        }               
+        }             
         Boolean blnstageBelowDevelopment = (objopportunity.StageName == 'Lead Generation' || 
                                         objopportunity.StageName == 'Sample' || 
                                         objopportunity.StageName == 'Discussion');
