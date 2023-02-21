@@ -505,6 +505,10 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 						}
 					} else if (objOpportunity.OpportunityContactRoles.size() > 1) {
 						Decimal decNewInfluenceValue = (decExistingInfluenceCombined/intCountofContactsWithLastTouchCampaign).setScale(2, System.RoundingMode.DOWN);
+						if (decNewInfluenceValue == 0.0) {
+                            continue;
+                        }
+						
 						//Give influence to Last Touch Campaign
 						if (objNewContactRoleWrapper.objLastTouchCampaign != null) {
 							CampaignInfluence objCampaignInfluence = map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKeyWithLastTouchCampaignId)
