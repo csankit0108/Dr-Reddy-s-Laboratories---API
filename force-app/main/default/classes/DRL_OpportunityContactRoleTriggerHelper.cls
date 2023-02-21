@@ -677,20 +677,23 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 				if (
 					objOpportunity == null ||
 					(map_CombinedInfluenceByOpportunityId.containsKey(objOpportunity?.Id) &&
-					 map_CombinedInfluenceByOpportunityId.get(objOpportunity?.Id) > 99.0) ||
-					intCountofContacts == 0
+					 map_CombinedInfluenceByOpportunityId.get(objOpportunity?.Id) > 99.0) 
 				) {
 					continue;
 				}
 				
+				if (map_CampaignInfluencesByOpportunityId.containsKey(objOpportunity.Id)) {
+					list_CampaignInfluencestoDelete.addAll(map_CampaignInfluencesByOpportunityId.get(objOpportunity.Id));
+				}
+
+				if (intCountofContacts == 0) {
+					continue;
+				}
+
 				Decimal decExistingInfluenceValue = map_CampaignInfluenceByOpportunityId.containsKey(objOpportunity.Id)
 					? map_CampaignInfluenceByOpportunityId.get(objOpportunity.Id)
 					: 0.0;
 				Decimal decNewInfluenceValue = (decExistingInfluenceValue/intCountofContacts).setScale(2, System.RoundingMode.DOWN);
-				
-				if (map_CampaignInfluencesByOpportunityId.containsKey(objOpportunity.Id)) {
-					list_CampaignInfluencestoDelete.addAll(map_CampaignInfluencesByOpportunityId.get(objOpportunity.Id));
-				}
 				
 				for (OpportunityContactRole objExistingOpportunityContactRole : objOpportunity.OpportunityContactRoles) {
 					if (map_CampaignInfluenceByContactId.containsKey(objExistingOpportunityContactRole.ContactId)) {
