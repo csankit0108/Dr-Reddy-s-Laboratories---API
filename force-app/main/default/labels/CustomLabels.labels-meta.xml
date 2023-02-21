@@ -152,7 +152,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>defaultCampaignMemberStatus</shortDescription>
-        <value>Responded</value>
+        <value>Sent</value>
     </labels>
     <labels>
         <fullName>CLDRL00023</fullName>
