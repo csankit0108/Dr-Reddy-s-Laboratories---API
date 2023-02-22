@@ -389,7 +389,25 @@ else{
         return map_RecordTypeIdByDeveloperName;
     }
 
-
-
-
+    /**
+    * @ author       :  Kishore Pedireddy
+    * @ description  :  This method is used to process the errors occured in an delete operation
+    * @ params       :  list_DeleteResults - List of Database.DeleteResult records from delete operation
+    * @ return       :  list_Errors - List of Error messages from the failed DML operations.
+    **/
+    public static List<String> processDeleteResult(List<Database.DeleteResult> list_DeleteResults) {
+        List<String> list_Errors = new List<String>();
+        for (Database.DeleteResult objDeleteResult : list_DeleteResults) {
+            if (!objDeleteResult.isSuccess()) {
+                for (Database.Error objError : objDeleteResult.getErrors()) {
+                    String strErrorMessage = 'Delete failed for ' + 
+                        objDeleteResult.getId() + '. Error: ' + objError.getMessage() + 
+                        '. Status Code: ' + objError.getStatusCode();
+                    list_Errors.add(strErrorMessage);
+                }
+            }
+        }
+        
+        return list_Errors;
+    }
 }

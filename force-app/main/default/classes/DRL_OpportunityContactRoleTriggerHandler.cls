@@ -33,4 +33,30 @@ public class DRL_OpportunityContactRoleTriggerHandler extends TriggerHandler {
 			);
 		}
 	}
+
+	public override void afterInsert() {
+		try {
+			DRL_OpportunityContactRoleTriggerHelper.onAfterInsert(list_NewList);
+		} catch (Exception objException) {
+			DRLUtil.logException(
+				'DRL_OpportunityContactRoleTriggerHandler',
+				'onAfterInsert',
+				objException,
+				true
+			);
+		}
+	}
+
+	public override void afterDelete() {
+		try {
+			DRL_OpportunityContactRoleTriggerHelper.onAfterDelete(list_OldList);
+		} catch (Exception objException) {
+			DRLUtil.logException(
+				'DRL_OpportunityContactRoleTriggerHandler',
+				'onAfterDelete',
+				objException,
+				true
+			);
+		}
+	}
 }
