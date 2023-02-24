@@ -147,7 +147,8 @@ public with sharing class DRL_ConvertLeadProspectController {
                             Reporting_Region__c,
                             RecordType.DeveloperName,
                             DRL_Prospect__r.IsConverted,
-                            DRL_Prospect__c
+                            DRL_Prospect__c,
+                            Product__c
                             FROM Lead
                             WHERE Id = :strleadRecordId];
 
@@ -492,6 +493,9 @@ public with sharing class DRL_ConvertLeadProspectController {
             }
             if(objlead.Reporting_Region__c != null){
                 objopportunity.Reporting_Region__c = objlead.Reporting_Region__c;
+            }
+            if(objlead.Product__c != null){
+                objopportunity.Panorama_Product__c = objlead.Product__c;
             }
             Id recordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('API Plus').getRecordTypeId();
             if (objopportunity.RecordTypeId != recordTypeId){
