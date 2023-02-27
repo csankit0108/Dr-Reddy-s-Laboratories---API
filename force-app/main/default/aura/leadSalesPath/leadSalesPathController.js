@@ -19,6 +19,8 @@
                 }                    
                 console.log(response.getReturnValue().ld.IsConverted);
                 console.log(response.getReturnValue());
+                component.set("v.leadData",response.getReturnValue().ld);
+                component.set("v.oldLeadData",response.getReturnValue().ld);
                 component.set("v.spin",false);
             }
             component.set('v.blnIsComponentRendered',true);
@@ -85,53 +87,66 @@
                 var reasonForOnhold = response.getReturnValue().ld.Reason_for_On_Hold_Postponed__c;
                 var declinedReason = response.getReturnValue().ld.Reason_for_Decline__c;
                 var convertReason = response.getReturnValue().ld.Reason_for_Convert__c;
+                var selectedCountry = response.getReturnValue().ld.Select_Country__c;
                 //alert(product);
                 console.log('===c1a===');
                 
                 if(component.get("v.getStep")=='Converted')
                 {
                    
-                    // if((product!=undefined&&product!=null&&product!='') )
-                    // {
-                       /* if((convertReason==null || convertReason==undefined || convertReason=='')){
-                            var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            "type": "error",
-                            "title": "Error !",
-                            "message": "Please update Reason for Convert"
-                        });
-                        toastEvent.fire();
-                        $A.get('e.force:refreshView').fire();
-                        } */
-                        //else{
-                            var openwindow=component.get("v.openPopup");
-                        	component.set("v.openPopup","Open");
-                       // }  
-                    
-                    
-                    var loop=false;
-                    
-                    if(openwindow=='false')
+                    if((product!=undefined&&product!=null&&product!='') )
                     {
-                        component.set("v.openPopup","Open");
-                        loop=true;
+                        console.log('Product is not empty--->');
+                        if(component.get("v.leadData").Status == 'Open' || component.get("v.leadData").Status == 'Unqualified'){
+                            
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "type": "error",
+                                "title": "Error !",
+                                "message": "Lead should not be in Open/Unqualified stage while converting."
+                            });
+                            toastEvent.fire();
+                            $A.get('e.force:refreshView').fire();
+                        }
+                        else if(component.get("v.leadData").Status == 'Converted'){
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "type": "error",
+                                "title": "Error !",
+                                "message": "Lead is already converted"
+                            });
+                            toastEvent.fire();
+                            $A.get('e.force:refreshView').fire();
+                        }
+                        else{
+                            var openwindow=component.get("v.openPopup");
+                            component.set("v.openPopup","Open");
+                        }
+
+                }
+                else
+                    {
+                        if(component.get("v.leadData").Status == 'Open' || component.get("v.leadData").Status == 'Unqualified'){
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "type": "error",
+                                "title": "Error !",
+                                "message": "Lead should not be in Open/Unqualified stage while converting."
+                            });
+                            toastEvent.fire();
+                            $A.get('e.force:refreshView').fire();
+                        }
+                        else{
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "type": "error",
+                                "title": "Error !",
+                                "message": "Please update the Product field"
+                            });
+                            toastEvent.fire();
+                            component.set("v.openQualifiedPopup",true);
+                        }                
                     }
-                    if(loop==false&&openwindow=='Close')
-                        component.set("v.openPopup","Open");
-                    if(loop==false&&openwindow=='Open')
-                        component.set("v.openPopup","Close");    
-                    // } 
-                    // else
-                    // {
-                    //     var toastEvent = $A.get("e.force:showToast");
-                    //     toastEvent.setParams({
-                    //         "type": "error",
-                    //         "title": "Error !",
-                    //         "message": "Please update the Product field and update the Status"
-                    //     });
-                    //     toastEvent.fire();
-                    //     $A.get('e.force:refreshView').fire();
-                    // }
                 }
                 else
                 {
@@ -139,10 +154,24 @@
                     var leadStatus=component.get("v.getStep");
                     //alert(leadStatus);
                     component.set("v.openConvertLeadWindow",false);
-                     if((leadStatus=='On Hold/Postponed') &&(reasonForOnhold==null || reasonForOnhold=='' || reasonForOnhold==undefined) ){
-                           //alert('Hi');
-                            
-                            var toastEvent = $A.get("e.force:showToast");
+                    if(((leadStatus=='Contacted'||leadStatus=='Qualified')&&(selectedCountry==undefined||selectedCountry==null||selectedCountry=='')))
+                        {
+                            /*var toastEvent = $A.get("e.force:showToast");
+                        
+                        toastEvent.setParams({
+                            "type": "error",
+                            "title": "Error !",
+                            "message": "Please update the Product field and update the Status"
+                        });
+                        toastEvent.fire();
+                        $A.get('e.force:refreshView').fire(); */
+                        component.set("v.openQualifiedPopup",true);
+                        
+                    }
+                    if((leadStatus=='On Hold/Postponed') &&(reasonForOnhold==null || reasonForOnhold=='' || reasonForOnhold==undefined) ){
+                        //alert('Hi');
+                        
+                        /* var toastEvent = $A.get("e.force:showToast");
                             
                             toastEvent.setParams({
                                 "type": "error",
@@ -151,12 +180,13 @@
                             });
                             toastEvent.fire();
                            //window.location.reload();
-                           $A.get('e.force:refreshView').fire();
-                        }
+                           $A.get('e.force:refreshView').fire(); */
+                         component.set("v.openQualifiedPopup",true);
+                     }
                     else if((leadStatus=='Declined') &&(declinedReason==null || declinedReason=='' || declinedReason==undefined) ){
-                           //alert('Hi');
-                            
-                            var toastEvent = $A.get("e.force:showToast");
+                        //alert('Hi');
+                        
+                        /*  var toastEvent = $A.get("e.force:showToast");
                             
                             toastEvent.setParams({
                                 "type": "error",
@@ -166,80 +196,81 @@
                             toastEvent.fire();
                             //$A.get('e.force:refreshView').fire();
                            // window.location.reload();
-                           $A.get('e.force:refreshView').fire();
-                        }
-                    else if(((leadStatus=='Contacted'||leadStatus=='Converted')&&product!=undefined&&product!=null&&product!='')||((leadStatus=='Qualified')&&run!=undefined&&run!=null&&run!=''&&prospect!=undefined&&prospect!=null&&prospect!='')||(leadStatus!='Contacted'&&leadStatus!='Converted'&&leadStatus!='Qualified'))
-                    {
-                        //alert('Hi');
-                        
-                        
-                            if(component.get("v.markStatus")=='Mark as Current Status')
-                        {
-                            component.set("v.currentStep",component.get("v.getStep"));
-                            component.set("v.initialStep",component.get("v.currentStep"));
-                            component.set("v.markStatus","Mark Status as Complete");
-                            
-                            helper.updateLeadStatus(component,event,component.get("v.currentStep"));
-                            
-                            if(component.get("v.currentStep")==statusList[statusList.length-1] || component.get("v.initialStep")==statusList[statusList.length-1])
-                            {
-                                component.set("v.disableMark",true);
-                            }
-                            else
-                            {
-                                component.set("v.disableMark",false);
-                            }
-                            
-                            stopLoop=true;
-                        }
-                        if(component.get("v.markStatus")=='Mark Status as Complete' && stopLoop==false)
-                        {
-                            //alert(1);
-                            
-                            var next_status=0;
-                            for(var i=0;i<statusList.length;i++)
-                            {
-                                if(statusList[i]==component.get("v.getStep") || statusList[i]==component.get("v.initialStep"))
-                                {
-                                    if(i!=(statusList.length-1))
-                                    {
-                                        next_status=i+1;
-                                        break;
-                                    }
-                                    if(statusList[statusList.length-1]==component.get("v.getStep") || statusList[statusList.length-1]==component.get("v.initialStep"))
-                                    {
-                                        next_status=statusList.length-1;
-                                    }    
-                                }
-                            }
-                            
-                            
-                            //alert(next_status);
-                            
-                            component.set("v.currentStep",statusList[next_status]);
-                            component.set("v.initialStep",component.get("v.currentStep"));
-                            
-                            
-                            helper.updateLeadStatus(component,event,component.get("v.currentStep"));
-                            
-                            if(component.get("v.currentStep")==statusList[statusList.length-1])
-                            {
-                                component.set("v.disableMark",true);
-                                //component.set("v.finalStep",true);
-                            }
-                            else
-                            {
-                                component.set("v.disableMark",false);
-                                //component.set("v.finalStep",false);
-                            }
-                            //alert(statusList[next_status]);   
-                        }
-                        
-                        
+                           $A.get('e.force:refreshView').fire(); */
+                        component.set("v.openQualifiedPopup",true);
                     }
-                    else if(((leadStatus=='Contacted'||leadStatus=='Qualified')&&(run==undefined||run==null||run==''||prospect==undefined||prospect==null||prospect=='')))
-                    {
-                        var toastEvent = $A.get("e.force:showToast");
+                        else if(((leadStatus=='Contacted'||leadStatus=='Converted')&&product!=undefined&&product!=null&&product!='')||((leadStatus=='Qualified')&&run!=undefined&&run!=null&&run!=''&&prospect!=undefined&&prospect!=null&&prospect!='')||(leadStatus!='Contacted'&&leadStatus!='Converted'&&leadStatus!='Qualified'))
+                        {
+                            //alert('Hi');
+                            
+                            
+                            if(component.get("v.markStatus")=='Mark as Current Status')
+                            {
+                                component.set("v.currentStep",component.get("v.getStep"));
+                                component.set("v.initialStep",component.get("v.currentStep"));
+                                component.set("v.markStatus","Mark Status as Complete");
+                                
+                                helper.updateLeadStatus(component,event,component.get("v.currentStep"));
+                                
+                                if(component.get("v.currentStep")==statusList[statusList.length-1] || component.get("v.initialStep")==statusList[statusList.length-1])
+                                {
+                                    component.set("v.disableMark",true);
+                                }
+                                else
+                                {
+                                    component.set("v.disableMark",false);
+                                }
+                                
+                                stopLoop=true;
+                            }
+                            if(component.get("v.markStatus")=='Mark Status as Complete' && stopLoop==false)
+                            {
+                                //alert(1);
+                                
+                                var next_status=0;
+                                for(var i=0;i<statusList.length;i++)
+                                {
+                                    if(statusList[i]==component.get("v.getStep") || statusList[i]==component.get("v.initialStep"))
+                                    {
+                                        if(i!=(statusList.length-1))
+                                        {
+                                            next_status=i+1;
+                                            break;
+                                        }
+                                        if(statusList[statusList.length-1]==component.get("v.getStep") || statusList[statusList.length-1]==component.get("v.initialStep"))
+                                        {
+                                            next_status=statusList.length-1;
+                                        }    
+                                    }
+                                }
+                                
+                                
+                                //alert(next_status);
+                                
+                                component.set("v.currentStep",statusList[next_status]);
+                                component.set("v.initialStep",component.get("v.currentStep"));
+                                
+                                
+                                helper.updateLeadStatus(component,event,component.get("v.currentStep"));
+                                
+                                if(component.get("v.currentStep")==statusList[statusList.length-1])
+                                {
+                                    component.set("v.disableMark",true);
+                                    //component.set("v.finalStep",true);
+                                }
+                                else
+                                {
+                                    component.set("v.disableMark",false);
+                                    //component.set("v.finalStep",false);
+                                }
+                                //alert(statusList[next_status]);   
+                            }
+                            
+                            
+                        }
+                            else if(((leadStatus=='Contacted'||leadStatus=='Qualified')&&(run==undefined||run==null||run==''||prospect==undefined||prospect==null||prospect=='')))
+                            {
+                                /*var toastEvent = $A.get("e.force:showToast");
                         
                         toastEvent.setParams({
                             "type": "error",
@@ -247,12 +278,15 @@
                             "message": 'Please fill "Run Automation" and "Prospect/Customer" fields and save.'
                         });
                         toastEvent.fire();
-                        $A.get('e.force:refreshView').fire();
+                        $A.get('e.force:refreshView').fire();*/
+                        component.set("v.openQualifiedPopup",true);
+                        
                         
                     }
-                    else if(((leadStatus=='Contacted'||leadStatus=='Converted')&&(product==undefined||product==null||product=='')))
-                    {
-                        var toastEvent = $A.get("e.force:showToast");
+                    
+                        else if(((leadStatus=='Contacted'||leadStatus=='Converted')&&(product==undefined||product==null||product=='')))
+                        {
+                            /*var toastEvent = $A.get("e.force:showToast");
                         
                         toastEvent.setParams({
                             "type": "error",
@@ -260,9 +294,12 @@
                             "message": "Please update the Product field and update the Status"
                         });
                         toastEvent.fire();
-                        $A.get('e.force:refreshView').fire();
+                        $A.get('e.force:refreshView').fire(); */
+                        component.set("v.openQualifiedPopup",true);
+                        
                     }
-                           
+                    
+                    
                 }
                 
             }
@@ -335,5 +372,146 @@
                 });
             }
         }));
+    },
+    closeQualifiedModel : function (component, event, helper) {
+        component.set("v.openQualifiedPopup",false);
+        $A.get('e.force:refreshView').fire();
+    },
+    submitQualifiedDetails : function (component, event, helper) {
+        var leadDetails = component.get("v.leadData");
+        var leadStatus = component.get("v.getStep");
+        var status = 'success';
+        //leadDetails.Status = leadStatus;
+        //leadDetails.Id = component.get("v.recordId");
+        if(leadStatus == 'Qualified'){
+            if(leadDetails.Run_Automation__c == null || leadDetails.Run_Automation__c == undefined || leadDetails.Run_Automation__c == ''){
+                status = 'failed';
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "error",
+                    "title": "Error !",
+                    "message": "Please enter the Run Automation field."
+                });
+                toastEvent.fire();
+            }
+            else if(leadDetails.Prospect_Customer__c == null || leadDetails.Prospect_Customer__c == undefined || leadDetails.Prospect_Customer__c == ''){
+                status = 'failed';
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "error",
+                    "title": "Error !",
+                    "message": "Please enter the Prospect/Customer field."
+                });
+                toastEvent.fire();
+            }
+        }
+        else if(leadStatus == 'Contacted'){
+            if(leadDetails.Product_Lookup__c == null || leadDetails.Product_Lookup__c == undefined || leadDetails.Product_Lookup__c == ''){
+                status = 'failed';
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "error",
+                    "title": "Error !",
+                    "message": "Please enter the Product field."
+                });
+                toastEvent.fire();
+            }
+            
+        }
+            else if(leadStatus == 'On Hold/Postponed'){
+                if(leadDetails.Reason_for_On_Hold_Postponed__c == null || leadDetails.Reason_for_On_Hold_Postponed__c == undefined || leadDetails.Reason_for_On_Hold_Postponed__c == ''){
+                    status = 'failed';
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "type": "error",
+                        "title": "Error !",
+                        "message": "Please enter the Reason for On Hold/Postponed field."
+                    });
+                    toastEvent.fire();
+                }
+                
+            }
+                else if(leadStatus == 'Declined'){
+                    if(leadDetails.Reason_for_Decline__c == null || leadDetails.Reason_for_Decline__c == undefined || leadDetails.Reason_for_Decline__c == ''){
+                        status = 'failed';
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            "type": "error",
+                            "title": "Error !",
+                            "message": "Please enter the Reason for Decline field."
+                        });
+                        toastEvent.fire();
+                    }
+                    
+                }
+                    else if(leadStatus == 'Converted'){
+                        if(leadDetails.Product_Lookup__c == null || leadDetails.Product_Lookup__c == undefined || leadDetails.Product_Lookup__c == ''){
+                            status = 'failed';
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "type": "error",
+                                "title": "Error !",
+                                "message": "Please enter the value in Product field."
+                            });
+                            toastEvent.fire();
+                        }
+                        
+                    }
+        console.log(status);
+        if(status == 'success'){
+            var action = component.get("c.submitLeadDetails");
+            $A.enqueueAction(action);
+        }
+        /*   else{
+                var action = component.get("c.updateLeadToQualified");
+                action.setParams({leadData:leadDetails});
+                action.setCallback(this, function(response) {
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        component.set("v.openQualifiedPopup",false);
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            "type": "success",
+                            "title": "success !",
+                            "message": "Lead status updated successfully."
+                        });
+                        toastEvent.fire();
+                        //window.location.reload();
+                        $A.get('e.force:refreshView').fire();
+                    }
+                });
+                $A.enqueueAction(action);
+            } */
+        
+    },
+    submitLeadDetails : function (component, event, helper) {
+        var leadDetails = component.get("v.leadData");
+        var leadStatus = component.get("v.getStep");
+        if(leadStatus != 'Converted'){
+             leadDetails.Status = leadStatus;
+        }
+        var action = component.get("c.updateLeadToQualified");
+        action.setParams({leadData:leadDetails});
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.openQualifiedPopup",false);
+                if(leadStatus != 'Converted'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "success",
+                    "title": "success !",
+                    "message": "Lead status updated successfully."
+                });
+                toastEvent.fire();
+                //window.location.reload();
+                }
+                $A.get('e.force:refreshView').fire();
+                if(leadStatus == 'Converted'){
+                    component.set("v.openPopup","Open");
+                }
+            }
+        });
+        $A.enqueueAction(action);
     }
 })
