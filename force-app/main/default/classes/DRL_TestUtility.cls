@@ -251,37 +251,44 @@ public class DRL_TestUtility {
     public class CampaignInfluenceBuilder {
         private Id idCampaignId;
         private Id idOpportunityId;
+        private Id idContactId;
         private Decimal decInfluencePercentage;
         private Id idModelId;
 
-    public CampaignInfluenceBuilder setCampaignId(Id idValue) {
-        this.idCampaignId = idValue;
-        return this;
-    }
+        public CampaignInfluenceBuilder setCampaignId(Id idValue) {
+            this.idCampaignId = idValue;
+            return this;
+        }
 
-    public CampaignInfluenceBuilder setOpportunityId(Id idValue) {
-        this.idOpportunityId = idValue;
-        return this;
-    }
+        public CampaignInfluenceBuilder setOpportunityId(Id idValue) {
+            this.idOpportunityId = idValue;
+            return this;
+        }
 
-    public CampaignInfluenceBuilder setInfluence(Decimal decInfluencePercentage) {
-        this.decInfluencePercentage = decInfluencePercentage;
-        return this;
-    }
+        public CampaignInfluenceBuilder setInfluence(Decimal decInfluencePercentage) {
+            this.decInfluencePercentage = decInfluencePercentage;
+            return this;
+        }
 
-    public CampaignInfluenceBuilder setModelId(Id idValue) {
-        this.idModelId = idValue;
-        return this;
-    }
-    
-    public CampaignInfluence createCampaignInfluence() {
-        CampaignInfluence objCampaignInfluence = new CampaignInfluence();
-        objCampaignInfluence.CampaignId = this.idCampaignId;
-        objCampaignInfluence.OpportunityId = this.idOpportunityId;
-        objCampaignInfluence.Influence = this.decInfluencePercentage;
-        objCampaignInfluence.ModelId = this.idModelId;
-        return objCampaignInfluence;
-    }
+        public CampaignInfluenceBuilder setModelId(Id idValue) {
+            this.idModelId = idValue;
+            return this;
+        }
+        
+        public CampaignInfluence createCampaignInfluence() {
+            CampaignInfluence objCampaignInfluence = new CampaignInfluence();
+            objCampaignInfluence.CampaignId = this.idCampaignId;
+            objCampaignInfluence.OpportunityId = this.idOpportunityId;
+            objCampaignInfluence.ContactId = this.idContactId;
+            objCampaignInfluence.Influence = this.decInfluencePercentage;
+            objCampaignInfluence.ModelId = this.idModelId;
+            return objCampaignInfluence;
+        }
+
+        public CampaignInfluenceBuilder setContactId(Id idValue) {
+            this.idContactId = idValue;
+            return this;
+        }
 } 
 
     /**
@@ -463,6 +470,11 @@ public class DRL_TestUtility {
 
         public OpportunityBuilder setOppJourneyContentIds2(String strValue) {
             this.strOppJourneyContentIds2 = strValue;
+            return this;
+        }
+
+        public OpportunityBuilder setRecordTypeId(Id idValue) {
+            this.idRecordTypeId = idValue;
             return this;
         }
 
