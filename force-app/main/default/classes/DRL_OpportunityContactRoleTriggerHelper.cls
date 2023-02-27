@@ -677,7 +677,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 				Opportunity objOpportunity = map_OpportunityById.containsKey(objOpportunityContactRole.OpportunityId)
 					? map_OpportunityById.get(objOpportunityContactRole.OpportunityId)
 					: null;
-				Integer intCountofContacts = objOpportunity.OpportunityContactRoles.size();
+				Integer intCountofContacts = map_CampaignInfluenceByContactId.keySet().size();
 				if (
 					objOpportunity == null ||
 					(map_CombinedInfluenceByOpportunityId.containsKey(objOpportunity?.Id) &&
