@@ -562,4 +562,71 @@ public class DRL_convertLeadProspectTest {
             Test.stopTest();
         } 
     }
+
+    /**
+    * @ author       : Kishore Pedireddy
+    * @ description  : This method is used to test the contact role creation functionality
+    **/
+    @isTest
+    public static void testContactRoleCreation(){
+        Account objAccount = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1];
+        Contact objContact2 = [SELECT Id, Email,AccountId FROM Contact WHERE LastName = 'testExistingContact' LIMIT 1];
+        Contact objContact1 = new Contact();
+        objContact1.LastName = 'testContact1';
+        objContact1.Email = 'testContact1@email.com';
+        objContact1.Job_Level__c = 'Manager';
+        objContact1.Department__c = 'Quality';
+        insert objContact1;
+        Opportunity objOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'testProspectLead' LIMIT 1] ;               
+        Test.startTest();
+        objOpportunity.Contact__c = objContact1.Id;
+        update objOpportunity; 
+        objOpportunity = DRL_ConvertLeadProspectController.getOpportunity(objOpportunity.Id);
+        Lead objLead = [SELECT Id FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
+        DRL_ConvertLeadProspectController.convertLead(
+            objLead.Id,
+            objAccount,
+            objContact2,
+            objOpportunity,
+            null,
+            null, 
+            null,
+            null,
+            null,
+            null
+        );
+        Test.stopTest();
+        List<OpportunityContactRole> list_OpportunityContactRoles = [ SELECT Id 
+                                                                      FROM OpportunityContactRole 
+                                                                      WHERE ContactId =:objContact2.Id 
+                                                                      AND OpportunityId =:objOpportunity.Id ];
+        System.assert(!list_OpportunityContactRoles.isEmpty(),'Opportunity Contact Role Creation Failed');
+    }
+
+    /**
+    * @ author       : Kishore Pedireddy
+    * @ description  : This method is used to test getLeadDetails if prospect alreday converted
+    **/
+    @isTest
+    public static void testgetLeadDetails(){
+        Test.startTest();
+        Account objAccount = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1];
+        Contact objContact = [SELECT Id, Email,AccountId FROM Contact WHERE LastName = 'testExistingContact' LIMIT 1];
+        Lead objLead = [SELECT Id,DRL_Prospect__c FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
+        DRL_ConvertLeadProspectController.convertLead(
+                                                    objLead.DRL_Prospect__c,
+                                                    objAccount,
+                                                    objContact,
+                                                    null,
+                                                    new List<Opportunity>(),
+                                                    null,
+                                                    null, 
+                                                    null,
+                                                    null,
+                                                    null
+                                                );
+        DRL_ConvertLeadProspectController.getLeadDetails(objLead.Id);
+        DRL_ConvertLeadProspectController.getLeadDetails(objLead.DRL_Prospect__c);
+        Test.stopTest();
+    }
 }

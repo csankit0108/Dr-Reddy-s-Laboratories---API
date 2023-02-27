@@ -145,6 +145,8 @@ public without sharing class DRL_LeadTriggerHelper {
             List<CampaignMember> list_CampaignMembers = new List<CampaignMember>();         
             //List of all the Errors occurred during DML operation
             List<String> list_ConsolidatedDMLErrors = new List<String>();   
+            //String to store default Campaign member Status
+            String strCampaignMemberStatus = System.Label.CLDRL00022;
 
             list<Lead> list_LeadsToUpdate = [SELECT 
                                              Id,
@@ -193,6 +195,7 @@ public without sharing class DRL_LeadTriggerHelper {
                     CampaignMember objCampaignMember = new CampaignMember();
                     objCampaignMember.CampaignId = objLead.DRL_SourceCampaign__c;
                     objCampaignMember.LeadId = objLead.DRL_Prospect__c;
+                    objCampaignMember.Status = strCampaignMemberStatus;
                     if (
                         map_ProspectById.containsKey(objLead.DRL_Prospect__c) &&
                         map_ProspectById.get(objLead.DRL_Prospect__c).IsConverted &&

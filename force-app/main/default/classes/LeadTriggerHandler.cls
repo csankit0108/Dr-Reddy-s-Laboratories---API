@@ -22,18 +22,77 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
                 true
             );
         }
+        for(Lead ld : newList){
+            if(ld.Status == 'Open'){
+                ld.Open_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+                
+            }
+            else if(ld.Status == 'Unqualified'){
+                ld.Unqualified_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            else if(ld.Status == 'Qualified'){
+                ld.Qualified_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            else if(ld.Status == 'Contacted'){
+                ld.Contacted_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            else if(ld.Status == 'On Hold/Postponed'){
+                ld.On_Hold_Postponed_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            
+            else if(ld.Status == 'Declined'){
+                ld.Declined_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            else if(ld.Status == 'Converted'){
+                ld.Converted_Date__c = System.today();
+                ld.Previous_Status__c = ld.Status;
+            }
+            
+            
+        } 
     }
 
     public override void beforeUpdate(){
-        List<Lead> leadList = new List<Lead>();
         for(Lead ld : newList){
-            if(ld.Status != oldMap.get(ld.Id).Status && ld.CPR__c != null){
-                leadList.add(ld);
+            if(ld.Status == 'Open' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Open_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
             }
+            else if(ld.Status == 'Unqualified' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Unqualified_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            else if(ld.Status == 'Qualified' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Qualified_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            else if(ld.Status == 'Contacted' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Contacted_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            else if(ld.Status == 'On Hold/Postponed' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.On_Hold_Postponed_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            
+            else if(ld.Status == 'Declined' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Declined_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            else if(ld.Status == 'Converted' && ld.Status != oldMap.get(ld.Id).Status){
+                ld.Converted_Date__c = System.today();
+                ld.Previous_Status__c = oldMap.get(ld.Id).Status;
+            }
+            
+            
         }
-        if(leadList.size()>0){
-            LeadTriggerHandler.sendLeadToPanorama(leadList);
-        }
+       
     }
     
     public override void afterInsert() {
@@ -52,6 +111,15 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
                 objException,
                 true
             );
+        }
+        List<Lead> leadList = new List<Lead>();
+        for(Lead ld : newList){
+            if(ld.Status != oldMap.get(ld.Id).Status && ld.CPR__c != null){
+                leadList.add(ld);
+            }
+        }
+        if(leadList.size()>0){
+            LeadTriggerHandler.sendLeadToPanorama(leadList);
         }
     }
         
@@ -126,10 +194,10 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         system.debug('Opportunity list size--->'+optyList.size());
         if(optyList.size()>0)
         {
-           for(Opportunity op:optyList)
-           {
-               optyMap.put(op.Lead_Converted_From__c,op);
-           }
+            for(Opportunity op:optyList)
+            {
+                optyMap.put(op.Lead_Converted_From__c,op);
+            }
         }
         // getting lead related Opportunities
         List<row> rows = new List<row>();
@@ -138,9 +206,65 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         for(Lead ld : leadList){
             jsonWrapper json = new jsonWrapper();
             json.Lead_Id = ld.Id;
+            //if(ld.Company != null){
+                json.Company = ld.Company; 
+           // }
+           // else{
+                //json.Company = ld.Account_Name__c;
+            //}
+            //updating current timestamp and previous timestamp
+            json.Reason_For_Decline = ld.Reason_for_Decline__c;
+            if(ld.Status == 'Open'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Open_Date__c);
+                
+            }
+            else if(ld.Status == 'Unqualified'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Unqualified_Date__c);
+            }
+            else if(ld.Status == 'Qualified'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Qualified_Date__c);
+            }
+            else if(ld.Status == 'Contacted'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Contacted_Date__c);
+            }
+            else if(ld.Status == 'On Hold/Postponed'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.On_Hold_Postponed_Date__c);
+            }
             
-            json.Company = ld.Account_Name__c;
-            json.Product = ld.Product_Name__c;
+            else if(ld.Status == 'Declined'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Declined_Date__c);
+                
+            }
+            else if(ld.Status == 'Converted'){
+                json.Current_Status_TimeStamp = String.valueOf(ld.Converted_Date__c);
+            }
+            
+            if(ld.Previous_Status__c == 'Open'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Open_Date__c);
+                
+            }
+            else if(ld.Previous_Status__c == 'Unqualified'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Unqualified_Date__c);
+            }
+            else if(ld.Previous_Status__c == 'Qualified'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Qualified_Date__c);
+            }
+            else if(ld.Previous_Status__c == 'Contacted'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Contacted_Date__c);
+            }
+            else if(ld.Previous_Status__c == 'On Hold/Postponed'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.On_Hold_Postponed_Date__c);
+            }
+            
+            else if(ld.Previous_Status__c == 'Declined'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Declined_Date__c);
+            }
+            else if(ld.Previous_Status__c == 'Converted'){
+                json.Previous_Status_TimeStamp = String.valueOf(ld.Converted_Date__c);
+            }
+            json.Reason = '';
+            json.Reason_For_Loss = '';
+            json.Product = ld.Product__c;
             json.Target_Region = ld.Target_Region__c;
             //json.CPR = opp.CPR__c;
             
@@ -149,43 +273,70 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
             
             json.Event_Timestamp=string.valueof(system.now());
             json.Comment='';
-    		json.Lead_stage = ld.Status;
+            json.Lead_stage = ld.Status;
             if(ld.Status == 'Converted')
             {
                 json.Opportunity_Id = optyMap.containsKey(ld.Id)?optyMap.get(ld.Id).Id:null;
-            	json.Stage_Name = optyMap.containsKey(ld.Id)?optyMap.get(ld.Id).StageName:null;
+                json.Stage_Name = optyMap.containsKey(ld.Id)?optyMap.get(ld.Id).StageName:null;
                 json.Lead_Converted_to_Opp = optyMap.containsKey(ld.Id)?optyMap.get(ld.Id).Lead_Converted_to_Opp__c:null;
                 json.Existing_Opportunity = true;
             }
             else
             {
                 json.Opportunity_Id = '';
-            	json.Stage_Name = '';
+                json.Stage_Name = '';
                 json.Lead_Converted_to_Opp = '';
                 json.Existing_Opportunity = false;
             }
             row.json = json;
-           	rows.add(row);
+            rows.add(row);
             system.debug('json response---->'+rows);
         }
         Map<String,Object> requestMap = new Map<String,Object>{'rows' => rows };
-        futurePost(System.json.serialize(requestMap));
+            futurePost(System.json.serialize(requestMap));
     }
-    @future (callout=true)
+     @future (callout=true)
     public static void futurePost(String requestBody){ 
         system.debug('request body----->'+requestBody);
         String accessToken=Panorama_update_from_Salesforce_to_GCP.getAccessTokenJWT('GCP_Access_token');
+        //String accessToken='';
         system.debug('Access Token--->'+accessToken);
-        HTTPRequest req = Panorama_update_from_Salesforce_to_GCP.getHttpRequest('Send_to_GCP', '', requestBody);
-        req.setHeader('Authorization', 'Bearer ' + accessToken);
-        Http http = new Http();
-        HTTPResponse res = HTTP.send(req);
+        if(accessToken == '' || accessToken == null){
+            LeadTriggerhandler.sendEmailalert(requestBody);
+        }
+        else{
+            HTTPRequest req = Panorama_update_from_Salesforce_to_GCP.getHttpRequest('Send_to_GCP', '', requestBody);
+            req.setHeader('Authorization', 'Bearer ' + accessToken);
+            Http http = new Http();
+            HTTPResponse res = HTTP.send(req);
+            System.debug('response body---->'+res.getBody());
+        }
         
-        System.debug('response body---->'+res.getBody());
+        
+    }
+    public static void sendEmailAlert(String requestBody){
+        List<String> emails = System.Label.Panorama_Lead_Status_Failure_Alert.split(',');
+        Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
+        message.toAddresses = emails;
+        message.subject = 'Lead not synced to Salesforce due to Access token is null';
+        String htmlBody = 'Hi Team,<br/><br/>';
+        htmlBody = htmlBody + 'The following CPR details not synced to GCP due to access token is null.<br/>';
+        htmlBody = htmlBody + 'CPR Details: '+requestBody;
+        message.setHtmlBody(htmlBody);
+        Messaging.SingleEmailMessage[] messages = 
+            new List<Messaging.SingleEmailMessage> {message};
+                Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
+        if (results[0].success) {
+            System.debug('The email was sent successfully.');
+        } else {
+            System.debug('The email failed to send: '
+                         + results[0].errors[0].message);
+        }
+        
     }
     public class jsonWrapper{
         
-     	public String Lead_Id{ get; set; }
+        public String Lead_Id{ get; set; }
         public String Opportunity_Id{ get; set; }
         
         public String Stage_Name{ get; set; }
@@ -199,14 +350,19 @@ public with sharing class LeadTriggerHandler extends TriggerHandler {
         //public String CPR{ get; set; }
         
         public Boolean Existing_Opportunity{ get; set; }
-
+        
         public String Reporting_Region{ get; set; }
         public Boolean New_Lead{ get; set; }
         public String Lead_Converted_to_Opp{ get; set; }
         public String Event_Timestamp{ get; set; }
+        public String Reason_For_Decline{ get; set; }
+        public String Current_Status_TimeStamp{ get; set; }
+        public String Previous_Status_TimeStamp{ get; set; }
+        public String Reason{ get; set; }
+        public String Reason_For_Loss{ get; set; }
         public String Comment{ get; set; }
         public String Lead_stage { get; set; }
-     
+        
         
     }
     

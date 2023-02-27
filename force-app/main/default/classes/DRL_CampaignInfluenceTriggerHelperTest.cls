@@ -17,12 +17,19 @@ public class DRL_CampaignInfluenceTriggerHelperTest {
     public static Boolean blnThrowException = false;
     @TestSetup
     static void createData() { 
+        
+        Product2 objProduct = new DRL_TestUtility.ProductBuilder()
+            .setName('Test Product')
+            .createProduct();
+        insert objProduct;
+        
         Campaign objCampaign = new DRL_TestUtility.CampaignBuilder()
             .setCampaignName('Test Campaign')
             .setAllowMassEmail('No')  
             .setDescription('Test Campaign Description')
             .setIsActive(true)  
             .createCampaign();
+        objCampaign.Product__c = objProduct.Id;
         insert objCampaign;
      
         Account objAccount = new DRL_TestUtility.AccountBuilder()
@@ -35,12 +42,7 @@ public class DRL_CampaignInfluenceTriggerHelperTest {
             .setLastName('Contact')
             .setAccountId(objAccount.Id)
             .createContact();
-        insert objContact;
-        
-        Product2 objProduct = new DRL_TestUtility.ProductBuilder()
-            .setName('Test Product')
-            .createProduct();
-        insert objProduct;
+        insert objContact;        
 
         Opportunity objOpportunity = new DRL_TestUtility.OpportunityBuilder()
             .setName('Test Opportunity')
