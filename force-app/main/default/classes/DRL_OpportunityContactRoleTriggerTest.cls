@@ -8,7 +8,6 @@
 * ======================================================================================================
 *   08-02-2023      |  mahalakshmi.sadhanantham@absyz.com   |  1.0          |  Initial Version
 *******************************************************************************************************/
-
 @isTest
 public class DRL_OpportunityContactRoleTriggerTest {
     public static Boolean blnThrowExceptionWhileCalculatingInfluence = false;
@@ -18,23 +17,21 @@ public class DRL_OpportunityContactRoleTriggerTest {
     //Custom Label with Value 'DRL_APICampaignsDistributionModel'
 	public static String strModelDeveloperName = Label.CLDRL00001;
     //Quering the Value of DeveloperName 
-	public static CampaignInfluenceModel objCampaignInfluenceModel = [  SELECT 
-                                                                        Id,
-                                                                        DeveloperName 
-                                                                        FROM CampaignInfluenceModel 
-                                                                        WHERE DeveloperName = :strModelDeveloperName]; 
+	public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                                      Id,
+                                                                      DeveloperName 
+                                                                      FROM CampaignInfluenceModel 
+                                                                      WHERE DeveloperName = :strModelDeveloperName]; 
     /**
     * @ author       :  Mahalakshmi S
     * @ description  :  This method is used to setup data for testing apex class 'DRL_OpportunityContactRoleTriggerHelper'
     **/                                                                        
     @TestSetup
     static void createData() {
-        
         Account objAccount = new DRL_TestUtility.AccountBuilder()
             .setName('Test Account')
             .createAccount();
         insert objAccount;
-        
 
         List<Contact> list_Contacts = new List<Contact>();
         Contact objContact = new DRL_TestUtility.ContactBuilder()
@@ -138,8 +135,8 @@ public class DRL_OpportunityContactRoleTriggerTest {
         list_Leads.add(objLead1);
         insert list_Leads;
         
-        objLead1 = [SELECT DRL_Prospect__c FROM Lead WHERE Id =: objLead1.Id];
-        Lead objProspect = [SELECT Id FROM Lead WHERE Id =: objLead1.DRL_Prospect__c ];  
+        objLead1 = [SELECT DRL_Prospect__c FROM Lead WHERE Id = :objLead1.Id];
+        Lead objProspect = [SELECT Id FROM Lead WHERE Id = :objLead1.DRL_Prospect__c];  
         
         CampaignMember objCampaignMember = new DRL_TestUtility.CampaignMemberBuilder()
             .setCampaignId(objCampaign1.Id)
@@ -212,14 +209,14 @@ public class DRL_OpportunityContactRoleTriggerTest {
         insert list_Opportunity;
         
         List<CampaignMember> list_CampaignMember = [SELECT 
-                                                   Id,
-                                                   LeadId,
-                                                   ContactId,
-                                                   CampaignId
-                                                   FROM
-                                                   CampaignMember
-                                                   WHERE
-                                                   LeadId =:objProspect.Id];
+                                                    Id,
+                                                    LeadId,
+                                                    ContactId,
+                                                    CampaignId
+                                                    FROM
+                                                    CampaignMember
+                                                    WHERE
+                                                    LeadId = :objProspect.Id];
         
         if(!list_CampaignMember.isEmpty()) {
             list_CampaignMember[0].Status = 'Responded';
@@ -260,14 +257,14 @@ public class DRL_OpportunityContactRoleTriggerTest {
         
        
         List<CampaignMember> list_CampaignMember1 = [SELECT 
-                                                   Id,
-                                                   LeadId,
-                                                   ContactId,
-                                                   CampaignId
-                                                   FROM
-                                                   CampaignMember
-                                                   WHERE
-                                                   LeadId =:objProspect2.Id];
+                                                     Id,
+                                                     LeadId,
+                                                     ContactId,
+                                                     CampaignId
+                                                     FROM
+                                                     CampaignMember
+                                                     WHERE
+                                                     LeadId = :objProspect2.Id];
         
         if(!list_CampaignMember1.isEmpty()) {
             list_CampaignMember1[0].Status = 'Responded';
@@ -347,17 +344,17 @@ public class DRL_OpportunityContactRoleTriggerTest {
                                       FROM Opportunity 
                                       LIMIT 1];
         
-        
-        try{
+        try {
             OpportunityContactRole objOpportunityContactRole = new DRL_TestUtility.OpportunityContactRoleBuilder()
                 .setOpportunityId(objOpportunity.Id)
                 .setContactId(objContact.Id)
                 .createOpportunityContactRole();
-            Insert objOpportunityContactRole;
+            insert objOpportunityContactRole;
             
-        }catch(Exception objException) {
-            Assert.isTrue(objException.getMessage().contains(System.Label.CLDRL00025),'Trigger Exception Handling');
+        } catch(Exception objException) {
+            System.assert(objException.getMessage().contains(System.Label.CLDRL00025));
         }
+
         Test.stopTest();
     }
     
@@ -373,24 +370,21 @@ public class DRL_OpportunityContactRoleTriggerTest {
                               LastName
                               FROM Contact
                               WHERE LastName = 'Contact_3'
-                              LIMIT 1
-                             ];
+                              LIMIT 1];
         
         Map<String, Id> map_OppRecordTypeIdByDeveloperName = DRLUtil.getRecordTypeDeveloperNameIdMap('Opportunity');
         Opportunity objOpportunity = [SELECT 
                                       Id
                                       FROM Opportunity
                                       WHERE RecordTypeId = :map_OppRecordTypeIdByDeveloperName.get('API')
-                                      LIMIT 1
-                                     ];
+                                      LIMIT 1];
         
         List<OpportunityContactRole> objOpportunityContactRole = [SELECT 
-                                                            Id,
-                                                            ContactId
-                                                            FROM OpportunityContactRole
-                                                            WHERE ContactId =: objContact.Id
-                                                            LIMIT 1
-                                                           ];
+                                                                  Id,
+                                                                  ContactId
+                                                                  FROM OpportunityContactRole
+                                                                  WHERE ContactId = :objContact.Id
+                                                                  LIMIT 1];
         
         delete objOpportunityContactRole;
         Test.stopTest();          
@@ -400,27 +394,26 @@ public class DRL_OpportunityContactRoleTriggerTest {
 	* @ author       :  Deeksha Suvarna
 	* @ description  :  This method is used to test the condition - Campaign Influence Calculation on insertion of Opportunity Contact Role
 	**/
-    
     @isTest
-    private static void CalculateInfluenceCase1() {
+    private static void calculateInfluenceCase1() {
         Test.startTest();
         Opportunity objOpportunity = [SELECT Id FROM Opportunity WHERE StageName = 'Lead Generation' AND Planned_Year__c = '2002' LIMIT 1];
    
         
         List<OpportunityContactRole> list_OpportunityContactRole = [SELECT 
-                                                                   Id,
-                                                                   ContactId
-                                                                   FROM
-                                                                   OpportunityContactRole
-                                                                   WHERE OpportunityId =:objOpportunity.Id];
+                                                                    Id,
+                                                                    ContactId
+                                                                    FROM
+                                                                    OpportunityContactRole
+                                                                    WHERE OpportunityId = :objOpportunity.Id];
                 
-        Decimal decCampaignInfluence =  (decimal)[  SELECT 
-                                                    SUM(Influence)sum 
-                                                    FROM CampaignInfluence 
-                                                    WHERE OpportunityId =:objOpportunity.Id 
-                                                    AND ModelId =:objCampaignInfluenceModel.Id
-                                                    GROUP BY OpportunityId][0].get('sum');   
-        System.assert(decCampaignInfluence==20, 'Campaign Influence updated Incorrectly');
+        Decimal decCampaignInfluence =  (Decimal)[SELECT 
+                                                  SUM(Influence)sum 
+                                                  FROM CampaignInfluence 
+                                                  WHERE OpportunityId = :objOpportunity.Id 
+                                                  AND ModelId = :objCampaignInfluenceModel.Id
+                                                  GROUP BY OpportunityId][0].get('sum');   
+        System.assert(decCampaignInfluence == 20, 'Campaign Influence updated Incorrectly');
         Test.stopTest();
     }
     
@@ -435,7 +428,6 @@ public class DRL_OpportunityContactRoleTriggerTest {
         Opportunity objOpportunity = [SELECT Id FROM Opportunity WHERE StageName = 'Lead Generation' AND Planned_Year__c = '2002' LIMIT 1];
    		Account objAccount = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1];
         Campaign objCampaign = [SELECT Id FROM Campaign WHERE Name = 'Test Campaign1' LIMIT 1];
-        
         
         objOpportunity.StageName = 'Discussion';
         update objOpportunity;
@@ -453,39 +445,33 @@ public class DRL_OpportunityContactRoleTriggerTest {
         objCampaignMember.Status = 'Responded';
         insert objCampaignMember;
         
-        
         OpportunityContactRole objOpportunityContactRole = new OpportunityContactRole();
         objOpportunityContactRole.ContactId = objContact.Id;
         objOpportunityContactRole.Role = 'Influencer';
         objOpportunityContactRole.OpportunityId = objOpportunity.Id;
         insert objOpportunityContactRole;
         
-        
         List<OpportunityContactRole> list_OpportunityContactRole = [SELECT 
-                                                                   Id,
-                                                                   ContactId
-                                                                   FROM
-                                                                   OpportunityContactRole
-                                                                   WHERE OpportunityId =:objOpportunity.Id];
+                                                                    Id,
+                                                                    ContactId
+                                                                    FROM
+                                                                    OpportunityContactRole
+                                                                    WHERE OpportunityId = :objOpportunity.Id];
                 
-        Decimal decCampaignInfluence =  (decimal)[  SELECT 
-                                                    SUM(Influence)sum 
-                                                    FROM CampaignInfluence 
-                                                    WHERE OpportunityId =:objOpportunity.Id 
-                                                    AND ModelId =:objCampaignInfluenceModel.Id
-                                                    GROUP BY OpportunityId][0].get('sum');   
-        System.assert(decCampaignInfluence==55, 'Campaign Influence updated Incorrectly');
-        
+        Decimal decCampaignInfluence = (Decimal)[SELECT 
+                                                 SUM(Influence)sum 
+                                                 FROM CampaignInfluence 
+                                                 WHERE OpportunityId = :objOpportunity.Id 
+                                                 AND ModelId = :objCampaignInfluenceModel.Id
+                                                 GROUP BY OpportunityId][0].get('sum');   
+        System.assert(decCampaignInfluence == 55, 'Campaign Influence updated Incorrectly');
         Test.stopTest();
     }   
-    
-    
     
     /**
 	* @ author       :  Deeksha Suvarna
 	* @ description  :  This method is used to test the condition - Campaign Influence Calculation on insertion of Opportunity Contact Role
 	**/
-    
     @isTest
     private static void CalculateInfluenceCase3() {
 		Test.startTest();
@@ -495,7 +481,7 @@ public class DRL_OpportunityContactRoleTriggerTest {
         Campaign objCampaign = [SELECT Id FROM Campaign WHERE Name ='Test Campaign'];
         Campaign objCampaign1 = [SELECT Id FROM Campaign WHERE Name ='Test Campaign1'];
         
-        System.runAs(objUser){   
+        System.runAs(objUser) {   
             Lead objLead = new Lead();
             objLead.Company = 'Raghu Ram Enterprises';
             objLead.Select_Country__c = 'India';
@@ -520,12 +506,13 @@ public class DRL_OpportunityContactRoleTriggerTest {
                                                        FROM
                                                        CampaignMember
                                                        WHERE
-                                                       LeadId =:objProspect.Id];
+                                                       LeadId = :objProspect.Id];
         
-            if(!list_CampaignMember.isEmpty()) {
+            if (!list_CampaignMember.isEmpty()) {
                 list_CampaignMember[0].Status = 'Responded';
                 update list_CampaignMember;                
             }
+
             CampaignMember objCampaignMember = new DRL_TestUtility.CampaignMemberBuilder()
                 .setCampaignId(objCampaign1.Id)
                 .createCampaignMember();
@@ -572,13 +559,12 @@ public class DRL_OpportunityContactRoleTriggerTest {
     
     @isTest
     public static void testExceptions() {
-
         DRL_OpportunityContactRoleTriggerTest.blnThrowExceptionWhileCalculatingInfluence = true;
         DRL_OpportunityContactRoleTriggerTest.blnThrowExceptionWhileAddingDuplicate = true;
         DRL_OpportunityContactRoleTriggerTest.blnThrowExceptionWhileDeletingContactRole = true;
-        Campaign objCampaign = [SELECT Id FROm Campaign LIMIT 1];
+        Campaign objCampaign = [SELECT Id FROM Campaign LIMIT 1];
 
-        Opportunity objOpportunity = [SELECT Id,AccountId FROM Opportunity LIMIT 1];
+        Opportunity objOpportunity = [SELECT Id, AccountId FROM Opportunity LIMIT 1];
         Contact objContact = new DRL_TestUtility.ContactBuilder()
             .setFirstName('Test')
             .setLastName('Contact_4')
@@ -598,7 +584,9 @@ public class DRL_OpportunityContactRoleTriggerTest {
             .setOpportunityId(objOpportunity.Id)
             .setContactId(objContact.Id)
             .createOpportunityContactRole();
-        Insert objOpportunityContactRole;
-        delete objOpportunityContactRole;        
+        Test.startTest();
+        insert objOpportunityContactRole;
+        delete objOpportunityContactRole;     
+        Test.stopTest();   
     }
 }
