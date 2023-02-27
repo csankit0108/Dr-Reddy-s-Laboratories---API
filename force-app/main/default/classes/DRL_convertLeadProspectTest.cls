@@ -602,4 +602,31 @@ public class DRL_convertLeadProspectTest {
                                                                       AND OpportunityId =:objOpportunity.Id ];
         System.assert(!list_OpportunityContactRoles.isEmpty(),'Opportunity Contact Role Creation Failed');
     }
+
+    /**
+    * @ author       : Kishore Pedireddy
+    * @ description  : This method is used to test getLeadDetails if prospect alreday converted
+    **/
+    @isTest
+    public static void testgetLeadDetails(){
+        Test.startTest();
+        Account objAccount = [SELECT Id FROM Account WHERE Name = 'Test Existing Account' LIMIT 1];
+        Contact objContact = [SELECT Id, Email,AccountId FROM Contact WHERE LastName = 'testExistingContact' LIMIT 1];
+        Lead objLead = [SELECT Id,DRL_Prospect__c FROM Lead WHERE LastName = 'testChildLead' and RecordType.DeveloperName='DRL_Lead' LIMIT 1 ];
+        DRL_ConvertLeadProspectController.convertLead(
+                                                    objLead.DRL_Prospect__c,
+                                                    objAccount,
+                                                    objContact,
+                                                    null,
+                                                    new List<Opportunity>(),
+                                                    null,
+                                                    null, 
+                                                    null,
+                                                    null,
+                                                    null
+                                                );
+        DRL_ConvertLeadProspectController.getLeadDetails(objLead.Id);
+        DRL_ConvertLeadProspectController.getLeadDetails(objLead.DRL_Prospect__c);
+        Test.stopTest();
+    }
 }
