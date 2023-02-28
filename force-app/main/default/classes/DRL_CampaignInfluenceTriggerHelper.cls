@@ -12,6 +12,14 @@
 *  07-11-2022       |  dinesh.chandra@absyz.com            |  1.0          |    Initial Version            
 *******************************************************************************************************/
 public with sharing class DRL_CampaignInfluenceTriggerHelper {
+    //Custom Label with Value 'DRL_APICampaignsDistributionModel'
+    public static String strModelDeveloperName = Label.CLDRL00001;
+    //Quering the Value of DeveloperName 
+    public static CampaignInfluenceModel objCampaignInfluenceModel = [SELECT 
+                                                                     Id,
+                                                                     DeveloperName 
+                                                                     FROM CampaignInfluenceModel 
+                                                                     WHERE DeveloperName = :strModelDeveloperName];
     public static void calculateValueOfBioBatch(List<CampaignInfluence> list_CampaignInfluences) {
         //List of all the Errors occurred during DML operation
         List<String> list_ConsolidatedDMLErrors = new List<String>();
@@ -21,6 +29,7 @@ public with sharing class DRL_CampaignInfluenceTriggerHelper {
         List<Campaign> list_Campaigns = new List<Campaign>();
         //Set of all CampaignIds
         Set<Id> set_CampaignIds = new Set<Id>();
+        
         try {
             for (CampaignInfluence objCampaignInfluence : list_CampaignInfluences) {
                 set_CampaignIds.add(objCampaignInfluence.CampaignId);
@@ -30,7 +39,8 @@ public with sharing class DRL_CampaignInfluenceTriggerHelper {
                                                           CampaignId,
                                                           SUM(RevenueShare) RevenueShareSum
                                                           FROM CampaignInfluence 
-                                                          WHERE CampaignId 
+                                                          WHERE ModelId = :objCampaignInfluenceModel.Id
+                                                          AND CampaignId 
                                                           IN :set_CampaignIds GROUP BY CampaignId];
             for (AggregateResult objAggregateResult : list_AggregateResults) {
                 map_ValueOfBioBatchByCampaignId.put(
