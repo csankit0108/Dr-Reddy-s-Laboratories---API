@@ -11,6 +11,11 @@
 *  29-12-2022       |  kishore.pedireddy@absyz.com   |  1.0        |    Initial Version   
 *******************************************************************************************************/
 public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<sObject> {    
+    public String strQueryFilter;
+    public DRL_LeadCleanupBatch(){}
+    public DRL_LeadCleanupBatch(String strQueryFilter){
+        this.strQueryFilter = strQueryFilter;
+    }
     public Database.QueryLocator start(Database.BatchableContext objBatchableContext) {  
         List<Schema.SObjectField> list_AllFields = Schema.getGlobalDescribe().get('Lead').getDescribe().fields.getMap().values();
         Integer intIndex = 1;
@@ -25,7 +30,12 @@ public without sharing class DRL_LeadCleanupBatch implements Database.Batchable<
             }
             intIndex++;
         }
-        String strQuery = 'SELECT ' + strAllFields + ' FROM Lead ORDER BY DRL_IsProspect__c DESC';
+        String strQuery = 'SELECT ' + strAllFields + ' FROM Lead';
+        strQuery +=' WHERE RecordType.Name!=\'Lead\' AND RecordType.Name!=\'Prospect\'';
+        if (strQueryFilter != null) {
+            strQuery += ' '+strQueryFilter;
+        }
+        strQuery += ' ORDER BY DRL_IsProspect__c DESC';
         return Database.getQueryLocator(strQuery);
     }
 
