@@ -50,7 +50,6 @@
     *Add Influenced Opportunities related list
 5. Add following changes on Opportunity-Opportunity API (Layout)
     *Add Campaign Influence related list
-    *remove RelatedContactRoleList related list 
 6. Add following changes on Lead-Lead Layout (Layout)
     *Add Lead.DRL_Prospect__c(Leads) related list
     *Add Following fields
