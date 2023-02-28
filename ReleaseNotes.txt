@@ -14,7 +14,7 @@
     -SKIP_ZAP_Account
     -DRL_ConvertedLeadStatusCannotbeUpdated
 5. Deactivate the "leadContentUpdate" trigger on Lead.
-6. Add the below values to the 'Role' picklist on OpporutnityContactRole and remomve ll other values.
+6. Add the below values to the 'Role' picklist on OpporutnityContactRole and remomve all other values.
     - Decision Maker
     - Influencer
     - Detractor
@@ -39,7 +39,7 @@
 
 -- POST-DEPLOYMENT STEPS --
 1. Activate the Calculate Potential at Launch on Opportunity flow.
-2. Assign the DRL_Prospect_Record_Page lead record page to the Prospect record for API Sales app and for below profiles.
+2. Assign the DRL_Prospect_Record_Page lead record page to the Prospect record type for API Sales app and for below profiles.
     - Admin
     - Marketing Manager User
     - Marketing Manager User with Account Creation Permissions
@@ -50,7 +50,6 @@
     *Add Influenced Opportunities related list
 5. Add following changes on Opportunity-Opportunity API (Layout)
     *Add Campaign Influence related list
-    *remove RelatedContactRoleList related list 
 6. Add following changes on Lead-Lead Layout (Layout)
     *Add Lead.DRL_Prospect__c(Leads) related list
     *Add Following fields
