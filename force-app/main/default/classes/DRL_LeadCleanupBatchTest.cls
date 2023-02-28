@@ -202,7 +202,7 @@ public class DRL_LeadCleanupBatchTest {
         objUser.IsActive = false ;
         update objUser;
         Test.startTest();
-        Database.executeBatch(new DRL_LeadCleanupBatch());
+        Database.executeBatch(new DRL_LeadCleanupBatch(' AND CreatedDate < '+Datetime.now().formatGmt('yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'')));
         Test.stopTest();
         objLead = [SELECT Id,Product_Lookup__c FROM Lead WHERE Recordtype.Developername = 'DRL_Prospect' ];
         System.assert(objLead.Product_Lookup__c == objProduct.Id, 'Failed to update Product Information back on prospect');            

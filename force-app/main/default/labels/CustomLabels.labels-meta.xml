@@ -126,4 +126,53 @@
         <shortDescription>contactWithEmailExistError</shortDescription>
         <value>Email already exists!</value>
     </labels>
+    <labels>
+        <fullName>CLDRL00019</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>selectAccountRelatedOpportunity</shortDescription>
+        <value>Please choose selected account related Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00020</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>error while loading Opportunity details</shortDescription>
+        <value>Error While retrieving Opportunity details</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00021</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>blankOpportunityError</shortDescription>
+        <value>Opportunity Cannot be Blank</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00022</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultCampaignMemberStatus</shortDescription>
+        <value>Sent</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00023</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultPrimaryContactRoleStatus</shortDescription>
+        <value>Decision Maker</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00024</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>defaultSecondaryContactRoleStatus</shortDescription>
+        <value>Influencer</value>
+    </labels>
+    <labels>
+        <fullName>CLDRL00025</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Duplicate Contact Role Validation Message</shortDescription>
+        <value>There&apos;s a contact role already added for this Contact.</value>
+    </labels>
 </CustomLabels>

@@ -26,7 +26,9 @@
     <aura:attribute name="openConvertLeadWindow" type="Boolean" default="false" />
     <aura:attribute name="openPopup" type="String" default="false" />
     <aura:attribute name="blnIsComponentRendered" type="Boolean" default="false" />
-    
+    <aura:attribute name="openQualifiedPopup" type="boolean" default="false"/>
+    <aura:attribute name="leadData" type="Lead" default="{'sObjectType' : 'Lead'}"/>
+    <aura:attribute name="oldLeadData" type="Lead"/>
     <aura:if isTrue="{!v.blnIsComponentRendered}">
         <aura:if isTrue="{!and(v.formFactor!='DESKTOP')}">
             <div>
@@ -97,7 +99,93 @@
                 </article>
             </div>
         </aura:if>
-
+		<aura:if isTrue="{!v.openQualifiedPopup}">
+             
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeQualifiedModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">Mandatory Fields</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium pickVal" id="modal-content-id-1">
+                         
+                        <lightning:recordEditForm aura:id="recordEditForm" recordId="{!v.recordId}" objectApiName="Lead">
+                            <aura:if isTrue="{!v.getStep == 'Qualified'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Run_Automation__c)}">
+                                    <lightning:inputField fieldName="Run_Automation__c" value="{!v.leadData.Run_Automation__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Prospect_Customer__c)}">
+                                    <lightning:inputField fieldName="Prospect_Customer__c" value="{!v.leadData.Prospect_Customer__c}"/>
+                                </aura:if>
+                                
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'Contacted'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                                <lightning:inputField fieldName="Product_Lookup__c" value="{!v.leadData.Product_Lookup__c}"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'On Hold/Postponed'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Reason_for_On_Hold_Postponed__c)}">
+                                    <lightning:inputField fieldName="Reason_for_On_Hold_Postponed__c" value="{!v.leadData.Reason_for_On_Hold_Postponed__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Update__c)}">
+                                    <lightning:inputField fieldName="Update__c" value="{!v.leadData.Update__c}"/>
+                                </aura:if>
+                                
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'Declined'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Reason_for_Decline__c)}">
+                                    <lightning:inputField fieldName="Reason_for_Decline__c" value="{!v.leadData.Reason_for_Decline__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Update__c)}">
+                                    <lightning:inputField fieldName="Update__c" value="{!v.leadData.Update__c}"/>
+                                </aura:if>
+                                
+                                
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!v.getStep == 'Converted'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Product_Lookup__c)}">
+                                    <lightning:inputField fieldName="Product_Lookup__c" value="{!v.leadData.Product_Lookup__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                            </aura:if>
+                           <!-- <aura:if isTrue="true">
+                            	<lightning:inputField fieldName="Status" value="Qualified" value="{!v.leadData.Prospect_Customer__c}"/>
+                            </aura:if> -->
+                        </lightning:recordEditForm>
+             
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        <center>
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeQualifiedModel }"/>
+                        <lightning:button variant="brand"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{!c.submitQualifiedDetails}"/>
+                            </center>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
         <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
             <!--<c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />-->
             <c:DRL_ConvertLeadProspect recordId="{!v.recordId}" blnrenderfrompath="true"/>

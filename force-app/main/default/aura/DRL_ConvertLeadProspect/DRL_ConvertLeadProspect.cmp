@@ -56,7 +56,8 @@
     <aura:attribute name="map_ListDocumentCategoriesAvailable" type="Map"/>
     <aura:attribute name="map_StrRunAfter" type="Map"/>
     <aura:attribute name="map_ListFinalSelectedContentCatalogs" type="Map"/>
-    
+    <aura:attribute name="strOpportunityOptionSelected" type="String" default="CREATE"/>
+
     
     
     <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
@@ -73,6 +74,7 @@
                         strRadioButtonSelected = "{!v.strAccountRadioButtonSelected}" 
                         strAccountId = '{!v.strAccountId}'
                         objAccount = "{!v.objAccount}"
+                        blnIsProspect = "{!v.blnIsProspect}"
                         list_AccountFields = '{!v.list_AccountFieldSet}'
                         blnIsParentProspectConverted="{!v.blnIsParentProspectConverted}"/>
 
@@ -107,6 +109,11 @@
 
                         <c:DRL_ConvertLeadOpportunitySection
                             objOpportunity="{!v.objOpportunity}"  
+                            strDefaultRecordTypeId="{!v.strDefaultRecordTypeId}"
+                            objLead = "{!v.objLead}"
+                            strSelectedAccountId = "{!v.strAccountId}"
+                            blnIsProspect = "{!v.blnIsProspect}"
+                            strOpportunityOptionSelected = "{!v.strOpportunityOptionSelected}"
                             list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
                             list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
                             map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"

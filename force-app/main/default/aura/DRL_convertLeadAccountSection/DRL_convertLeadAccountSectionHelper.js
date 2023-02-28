@@ -61,9 +61,18 @@
             component.set('v.blnIsAccountCreationAvailable', false);
             component.set('v.blnIsAccountCreationSelected', false);
             component.set('v.blnIsAccountSelectionSelected', true);
+            helper.notifyAccountInformation(component,event,helper);
         }else{
             helper.generateAccount(component, event, helper);
         }
+     },
+     notifyAccountInformation : function (component, event, helper) {
+        var objDRL_ConvertLeadSelectedAccount = $A.get("e.c:DRL_ConvertLeadSelectedAccount");
+        objDRL_ConvertLeadSelectedAccount.setParams({ 
+                                                    "strId" : component.get('v.strAccountId'),
+                                                    "blnIsExistingAccountSelected" : component.get('v.blnAllowAccountSelection')
+                                                 });
+        objDRL_ConvertLeadSelectedAccount.fire();
      }
 
 })

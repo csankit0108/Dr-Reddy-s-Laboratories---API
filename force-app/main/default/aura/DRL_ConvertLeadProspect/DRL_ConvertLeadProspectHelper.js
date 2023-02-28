@@ -244,15 +244,28 @@
             return true;
         }
         else{
+            let strOpportunityOptionSelected = component.get('v.strOpportunityOptionSelected');
             let objOpportunity=component.get("v.objOpportunity");
-            let list_mandatoryFields=helper.getMandatoryFields(component,objOpportunity.StageName,helper);
-            for (const strfield of list_mandatoryFields) {
-                if(helper.isNullCheck(objOpportunity[strfield])){
-                    component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
-                    component.set("v.blnShowErrorMessage",true);
-                    return false;
-                }                
+
+            if(strOpportunityOptionSelected == 'SELECT') {
+                var strAccountId = component.get("v.strAccountId");
+                if(helper.isNullCheck(objOpportunity.Id) || objOpportunity.AccountId != strAccountId){
+                    let strErrorMessage = helper.isNullCheck(objOpportunity.Id)?$A.get("$Label.c.CLDRL00021"):$A.get("$Label.c.CLDRL00019");
+                    helper.showMessage("Error!",strErrorMessage,"error","dismissible");
+                    component.set('v.blnIsLoading', false);
+                    return false;   
+                } 
+            } else {
+                let list_mandatoryFields=helper.getMandatoryFields(component,objOpportunity.StageName,helper);
+                for (const strfield of list_mandatoryFields) {
+                    if(helper.isNullCheck(objOpportunity[strfield])){
+                        component.set("v.strErrorMessage",$A.get("$Label.c.CLDRL00008"));
+                        component.set("v.blnShowErrorMessage",true);
+                        return false;
+                    }                
+                }
             }
+            
             return true;
         }
     },

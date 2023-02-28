@@ -30,6 +30,11 @@
 		<members>OppClassTrigger</members>		
 		<members>DRL_LeadCleanupBatchTest</members>
 		<members>DRL_LeadCleanupBatch</members>
+		<members>DRL_OpportunityContactRoleTriggerHelper</members>
+		<members>DRL_OpportunityContactRoleTriggerTest</members>
+		<members>DRL_OpportunityContactRoleTriggerHandler</members>
+		<members>DRL_OpportunityTriggerHandler</members>
+		<members>LeadStatusUpdate</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -38,6 +43,7 @@
 		<members>campaignInfluenceAttributes</members>
 		<members>Populate_Opportunity_stage_tracker</members>
 		<members>leadContentUpdate</members>
+		<members>DRL_OpportunityContactRoleTrigger</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -67,7 +73,11 @@
 		<members>DRL_LeadConvertFormController__mdt.FieldSetAPIName__c</members>
 		<members>DRL_ConvertLeadSuccessConfiguration__mdt.FieldAPINames__c</members>
 		<members>Disable_Trigger__c.DisableOpportunityTrigger__c</members>
+		<members>Disable_Trigger__c.DisableOpportunityContactRoleTrigger__c</members>
 		<members>Lead.DRL_IsProspect__c</members>
+		<members>Opportunity.DRL_SourceCampaignContactId__c</members>
+		<members>Opportunity.DRL_SourceCampaignId__c</members>
+		<members>Opportunity.DRL_SourceLastTouchMatch__c</members>
 		<name>CustomField</name>
 	</types> 
 	<types>
@@ -147,7 +157,6 @@
 	</types>
 	<types>
 		<members>DRL_CalculatePotentialAtLaunchOnOpportunity</members>
-		<members>DRL_ContactRoleRecordCreation</members>
 		<name>Flow</name>
 	</types>
 	<types>
@@ -187,6 +196,12 @@
 		<members>CLDRL00016</members>
 		<members>CLDRL00017</members>
 		<members>CLDRL00018</members>
+		<members>CLDRL00019</members>
+		<members>CLDRL00020</members>
+		<members>CLDRL00021</members>
+		<members>CLDRL00022</members>
+		<members>CLDRL00023</members>
+		<members>CLDRL00024</members>
 		<name>CustomLabel</name>
 	</types>
 	<types>
@@ -202,6 +217,7 @@
 		<members>DRL_convertLeadContactSection</members>
 		<members>DRL_ConvertLeadRunAutomationSection</members>
 		<members>leadSalesPath</members>
+		<members>DRL_ConvertLeadSelectedAccount</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
