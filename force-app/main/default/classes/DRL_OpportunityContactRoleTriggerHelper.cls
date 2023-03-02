@@ -423,17 +423,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 						CampaignInfluence objCampaignInfluence = map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKeyWithSourceCampaign)
 							? map_CampaignInfluenceByUniqueKey.get(strUniqueKeyWithSourceCampaign)
 							: new CampaignInfluence();
-						Decimal decStageInfluenceWeigtage = 0;
-						Integer intStageSortOrder;
-						intStageSortOrder = map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)
-							? Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c)
-							: map_CampaignInfluenceConfigurationBySortOrder.size();
-						
-						for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
-							if (map_CampaignInfluenceConfigurationBySortOrder.containsKey(intSortOrder)) {
-								decStageInfluenceWeigtage = decStageInfluenceWeigtage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
-							}
-						}
+						Decimal decStageInfluenceWeigtage = getCurrentStageInfluence(objOpportunity.StageName);
 						
 						objCampaignInfluence = createCampaignInfluence(
 							objCampaignInfluence,
@@ -469,17 +459,8 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 						//Creating Campaign influence for Last Touch Campaign
 						if (objNewContactRoleWrapper.objLastTouchCampaign != null) {
 							Decimal decLastTouchInfluence = 0;
-							Decimal decStageLastTouchInfluenceWeigtage = 0;
-							Integer intStageSortOrder;
-							intStageSortOrder = map_CampaignInfluenceConfigurationByLabel.containsKey(objOpportunity.StageName)
-								? Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(objOpportunity.StageName).SortOrder__c)
-								: map_CampaignInfluenceConfigurationBySortOrder.size();
-							for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
-								if (map_CampaignInfluenceConfigurationBySortOrder.containsKey(intSortOrder)) {
-									decStageLastTouchInfluenceWeigtage = decStageLastTouchInfluenceWeigtage + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
-								}
-							}
-							
+							Decimal decStageLastTouchInfluenceWeigtage = getCurrentStageInfluence(objOpportunity.StageName);
+														
 							if (decSourceCampaignInfluence != 0) {
 								decLastTouchInfluence = decStageLastTouchInfluenceWeigtage - decSourceCampaignInfluence; 
 							} else if (decSourceCampaignInfluence == 0) {
@@ -502,15 +483,15 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 					}
 				} else if (objOpportunity.OpportunityContactRoles.size() > 1) {
 					Decimal decNewInfluenceValue = (decExistingInfluenceCombined/intCountofContactsWithLastTouchCampaign).setScale(2, System.RoundingMode.DOWN);
-					if (decNewInfluenceValue == 0.0) {
-						continue;
-					}
 					
 					//Give influence to Last Touch Campaign
 					if (objNewContactRoleWrapper.objLastTouchCampaign != null) {
 						CampaignInfluence objCampaignInfluence = map_CampaignInfluenceByUniqueKey.containsKey(strUniqueKeyWithLastTouchCampaignId)
 							? map_CampaignInfluenceByUniqueKey.get(strUniqueKeyWithLastTouchCampaignId)
 							: new CampaignInfluence();
+						if (objOpportunity.CampaignInfluences.isEmpty()) {
+							decNewInfluenceValue = getCurrentStageInfluence(objOpportunity.StageName);
+						}
 						//Create CI for source campaign
 						objCampaignInfluence = createCampaignInfluence(
 							objCampaignInfluence,
@@ -744,5 +725,25 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 		objCampaignInfluence.Stage_Name__c = objOpportunity.StageName;
 		objCampaignInfluence.Stage_Updated_On__c = System.now();
 		return objCampaignInfluence;
+	}
+
+	/**
+	* @ author       :  Kishore Pedireddy
+	* @ description  :  This method calculates Influence for the current stage
+	* @ params       :  String - strStageName
+	* @ return       :  decimal CampaignInfluence value
+	**/
+	public static Decimal getCurrentStageInfluence(String strStageName) {
+		Integer intStageSortOrder;
+		Decimal decInfluenceValue = 0;
+		intStageSortOrder = map_CampaignInfluenceConfigurationByLabel.containsKey(strStageName)
+			? Integer.valueof(map_CampaignInfluenceConfigurationByLabel.get(strStageName).SortOrder__c)
+			: map_CampaignInfluenceConfigurationBySortOrder.size();
+		for (Integer intSortOrder = 1; intSortOrder <= intStageSortOrder; intSortOrder++) {
+			if (map_CampaignInfluenceConfigurationBySortOrder.containsKey(intSortOrder)) {
+				decInfluenceValue = decInfluenceValue + Integer.valueof(map_CampaignInfluenceConfigurationBySortOrder.get(intSortOrder).Weightage__c);
+			}
+		}
+		return decInfluenceValue;		
 	}
 }
