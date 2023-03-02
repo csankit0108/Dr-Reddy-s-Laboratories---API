@@ -604,7 +604,7 @@ public class DRL_OpportunityContactRoleTriggerHelper {
 		
 		for (Opportunity objOpportunity : map_OpportunityById.values()) { 
 			for (CampaignInfluence objCampaignInfluence : objOpportunity.CampaignInfluences) {
-				if (!map_CampaignInfluenceByOpportunityId.containsKey(objCampaignInfluence.OpportunityId)) {
+				if (!map_CombinedInfluenceByOpportunityId.containsKey(objCampaignInfluence.OpportunityId)) {
 					map_CombinedInfluenceByOpportunityId.put(objCampaignInfluence.OpportunityId, objCampaignInfluence.Influence);
 				} else {
 					Decimal decExistingCampaignInfluenceWeitage = objCampaignInfluence.Influence + map_CombinedInfluenceByOpportunityId.get(objCampaignInfluence.OpportunityId);
