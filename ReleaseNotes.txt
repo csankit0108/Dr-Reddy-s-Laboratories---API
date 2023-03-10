@@ -77,5 +77,6 @@
 9. Deactivate the "leadContentUpdate" trigger on Lead.
 10. Deactivate the "DRL_LeadProspectDuplicationRule" duplicate rule
 11. Execute the DRL_LeadCleanupBatch batch job.
-12. Turn on Email Deliverablity.
-13. Reactivate all the above rules that were deativated in the previous steps.
+12. Execute the DRL_UpdatePotentialAtLaunchBatch batch job.
+13. Turn on Email Deliverablity.
+14. Reactivate all the above rules that were deativated in the previous steps.

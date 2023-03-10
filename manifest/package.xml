@@ -218,6 +218,7 @@
 		<members>DRL_ConvertLeadRunAutomationSection</members>
 		<members>leadSalesPath</members>
 		<members>DRL_ConvertLeadSelectedAccount</members>
+		<members>API_Plus_New_OpportunityPage</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
