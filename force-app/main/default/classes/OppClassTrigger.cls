@@ -59,8 +59,9 @@ public class OppClassTrigger {
         opt1.Name=acct1.Name+prod.Name;
         opt1.Start_Date__c = System.Today();
         opt1.End_Date__c = opt1.Start_Date__c + 1; 
-        opt1.CloseDate = System.Today()+2;        
+        opt1.CloseDate = System.Today()+2;       
         opt1.StageName ='Postponed / Hold';
+        opt1.Reason__c = 'Due to Delay'; 
         list_Opportunities.add(opt1); 
         
         Opportunity opt2 = new Opportunity();
