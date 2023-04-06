@@ -1,0 +1,75 @@
+<!--
+* 
+* @ Name    :   DRL_ProspectRelatedChildLeads
+* @ Purpose :   to render related child leads and opportunity forms on lead selection
+* @ Author  :   Kishore pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   03-11-2022      |  Kishore pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:component 
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
+    controller="ConvertLeadCustomUIController">
+
+    <aura:attribute name="list_Columns" type="List" default="[]"/>
+    <aura:attribute name="blnIsChildRecordsFound" type="Boolean" default="false"/>  
+    <aura:attribute name="list_ProspectChildLeads" type="List" default="[]"/>
+    <aura:attribute name="list_SelectedLeads" type="List" default="[]"/>
+    <aura:attribute name="list_Opportunities" type="List" default="[]"/>
+    <aura:attribute name="list_OpportunityFormFieldsToRender" type="List" default="[]"/>
+    <aura:attribute name="map_StageToFieldSetMap" type="Map" default="{}"/>
+    <aura:attribute name="map_FieldSetToFieldsMap" type="Map" default="{}"/>
+    <aura:attribute name="list_OpportunityRecordTypes" type="List" default="[]"/>
+    <aura:attribute name="strDefaultRecordTypeId" type="String" default="" />
+    <aura:attribute name="list_SelectedRows" type="List" default="[]" />
+
+    <aura:attribute name="map_BlnContentAvailable" type="Map" />
+    <aura:attribute name="map_MapContentTotal" type="Map" />
+    <aura:attribute name="map_ListDocumentCategoriesAvailable" type="Map"/>
+    <aura:attribute name="map_StrRunAfter" type="Map"/>
+    <aura:attribute name="map_ListFinalSelectedContentCatalogs" type="Map"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+   
+    <aura:if isTrue="{!v.blnIsChildRecordsFound}">
+        <div class="header slds-theme_alt-inverse">
+            <p class="headerLabel">Child Leads</p>
+        </div>
+        <div class='childLeadList'>
+            <lightning:datatable
+                columns="{! v.list_Columns }"
+                data="{! v.list_ProspectChildLeads }"
+                keyField="Id"
+                selectedRows="{!v.list_SelectedRows}"
+                onrowselection="{! c.convertSelectedLead }"/>
+        </div>    
+        <aura:if isTrue="{!v.list_SelectedLeads.length>0}">
+            <lightning:tabset variant="scoped" >
+                <aura:iteration items="{!v.list_Opportunities}" var="objOpportunity" indexVar="Id">
+                    <lightning:tab label="{!objOpportunity.productName}" id="{!objOpportunity.Lead_Converted_From__c}">
+                        <c:DRL_ConvertLeadOpportunitySection
+                            objOpportunity="{!objOpportunity}"  
+                            list_OpportunityRecordTypes="{!v.list_OpportunityRecordTypes}"
+                            list_OpportunityFormFieldsToRender="{!v.list_OpportunityFormFieldsToRender}"
+                            map_FieldSetToFieldsMap="{!v.map_FieldSetToFieldsMap}"
+                            map_StageToFieldSetMap="{!v.map_StageToFieldSetMap}"/>
+
+                        <c:DRL_ConvertLeadRunAutomationSection      
+                            blnIsProspect="true"   
+                            strLeadId="{!objOpportunity.Lead_Converted_From__c}"                
+                            map_BlnContentAvailable="{!v.map_BlnContentAvailable}"
+                            map_MapContentTotal="{!v.map_MapContentTotal}"
+                            map_ListDocumentCategoriesAvailable="{!v.map_ListDocumentCategoriesAvailable}"
+                            map_StrRunAfter="{!v.map_StrRunAfter}"                            
+                            map_ListFinalSelectedContentCatalogs="{!v.map_ListFinalSelectedContentCatalogs}"/>
+
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+        </aura:if>
+        
+    </aura:if>
+</aura:component>

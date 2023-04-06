@@ -1,0 +1,198 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="LeadStatusUpdate">
+
+    <aura:attribute name="markStatus" type="String" default="Mark Status as Complete" />
+    <aura:attribute name="disableMark" type="Boolean" default="false" />
+    <aura:attribute name="picklistValues" type="List" />
+    <aura:attribute name="currentStep" type="String" default="Draft" />
+    <aura:attribute name="initialStep" type="String" default="" />
+    <aura:attribute name="getStep" type="String" />
+    <aura:attribute name="objLead" type="Lead" />
+    
+    <aura:attribute name="product" type="String" default="" />
+    
+    <aura:attribute name="objectType" type="String" default="Lead" />
+    <aura:attribute name="selectedField" type="String" default="Status" />
+    
+    <aura:attribute access="public" name="formFactor" type="String" default="{!$Browser.formFactor}"/>
+    <aura:attribute access="public" name="isIpad" type="String" default="{!$Browser.isIPad}"/>
+    <aura:attribute access="public" name="isTablet" type="String" default="{!$Browser.isTablet}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.getLeadStatus}" />
+    <aura:handler event="force:refreshView" action="{!c.getLeadStatus}" />
+    
+    <aura:attribute name="finalStep" type="Boolean" default="false" />
+    <aura:attribute name="spin" type="Boolean" default="true" />
+    
+    <aura:attribute name="openConvertLeadWindow" type="Boolean" default="false" />
+    <aura:attribute name="openPopup" type="String" default="false" />
+    <aura:attribute name="blnIsComponentRendered" type="Boolean" default="false" />
+    <aura:attribute name="openQualifiedPopup" type="boolean" default="false"/>
+    <aura:attribute name="leadData" type="Lead" default="{'sObjectType' : 'Lead'}"/>
+    <aura:attribute name="oldLeadData" type="Lead"/>
+    <aura:if isTrue="{!v.blnIsComponentRendered}">
+        <aura:if isTrue="{!and(v.formFactor!='DESKTOP')}">
+            <div>
+                <div dir="ltr" >
+                    
+                    <lightning:picklistPath recordId="{!v.recordId}"
+                                            variant="linear"
+                                            picklistFieldApiName="Status"
+                                            onselect="{!c.getPathStatus}" />
+                    
+                </div>
+                <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;background-color:white;">
+                    <aura:if isTrue="{!v.spin}">
+                        <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
+                    </aura:if>
+                    <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
+                        <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
+                    </lightning:button>
+                </div>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!and(v.formFactor=='DESKTOP')}">
+            <div class="runtime_sales_pathassistantPathAssistant">
+                <article class="slds-card">
+                    
+                    <div class="slds-card__body slds-card__body_inner" style="margin:0;padding:0;">
+                        <h2 class="slds-assistive-text">Path</h2>
+                        <div class="slds-path">
+                            <div class="runtime_sales_pathassistantCollapsibleDrawer">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container runtime_sales_pathassistantPathAssistantTabSet">
+                                        <div class="slds-path__scroller uiScroller scroller-wrapper scroll-horizontal">
+                                            <div class="slds-path__scroller_inner scroller" >
+                                                <div role="tablist">
+                                                    <div dir="ltr" >
+                                                        <lightning:picklistPath recordId="{!v.recordId}"
+                                                                                variant="linear"
+                                                                                picklistFieldApiName="Status"
+                                                                                onselect="{!c.getPathStatus}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-path__scroll-controls" >
+                                        </div>
+                                        <div class="tooltip tooltip-hidden" role="tooltip" id="pa-tooltip" >
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid slds-path__action runtime_sales_pathassistantPathAssistantHeader" style="margin:0;margin-top:11px;margin-bottom:11px;margin-right:11px;">
+                                        <aura:if isTrue="{!v.spin}">
+                                            <lightning:spinner aura:id="_spinner" variant="brand" size="medium"/>
+                                        </aura:if>
+                                        <lightning:button class="slds-button slds-button--brand slds-path__mark-complete stepAction current uiButton"  label="{!v.markStatus}" title="{!v.markStatus}" variant="brand" disabled="{!v.disableMark}" onclick="{!c.updatePathStatus}">
+                                            <aura:if isTrue="{!v.markStatus=='Mark Status as Complete'}"><lightning:icon class="slds-button__icon slds-button__icon_left icnD" size="x-small" iconName="utility:check"/></aura:if> {!v.markStatus}
+                                        </lightning:button>
+                                    </div>
+                                    
+                                </div>
+                                <div class="slds-path__content slds-is-collapsed" >
+                                    <div ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </aura:if>
+		<aura:if isTrue="{!v.openQualifiedPopup}">
+             
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeQualifiedModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">Mandatory Fields</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium pickVal" id="modal-content-id-1">
+                         
+                        <lightning:recordEditForm aura:id="recordEditForm" recordId="{!v.recordId}" objectApiName="Lead">
+                            <aura:if isTrue="{!v.getStep == 'Qualified'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Run_Automation__c)}">
+                                    <lightning:inputField fieldName="Run_Automation__c" value="{!v.leadData.Run_Automation__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Prospect_Customer__c)}">
+                                    <lightning:inputField fieldName="Prospect_Customer__c" value="{!v.leadData.Prospect_Customer__c}"/>
+                                </aura:if>
+                                
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'Contacted'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                                <lightning:inputField fieldName="Product_Lookup__c" value="{!v.leadData.Product_Lookup__c}"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'On Hold/Postponed'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Reason_for_On_Hold_Postponed__c)}">
+                                    <lightning:inputField fieldName="Reason_for_On_Hold_Postponed__c" value="{!v.leadData.Reason_for_On_Hold_Postponed__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Update__c)}">
+                                    <lightning:inputField fieldName="Update__c" value="{!v.leadData.Update__c}"/>
+                                </aura:if>
+                                
+                            </aura:if>
+                            <aura:if isTrue="{!v.getStep == 'Declined'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Reason_for_Decline__c)}">
+                                    <lightning:inputField fieldName="Reason_for_Decline__c" value="{!v.leadData.Reason_for_Decline__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Update__c)}">
+                                    <lightning:inputField fieldName="Update__c" value="{!v.leadData.Update__c}"/>
+                                </aura:if>
+                                
+                                
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!v.getStep == 'Converted'}">
+                                <aura:if isTrue="{!empty(v.oldLeadData.Product_Lookup__c)}">
+                                    <lightning:inputField fieldName="Product_Lookup__c" value="{!v.leadData.Product_Lookup__c}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!empty(v.oldLeadData.Select_Country__c)}">
+                                    <lightning:inputField fieldName="Select_Country__c" value="{!v.leadData.Select_Country__c}"/>
+                                </aura:if>
+                            </aura:if>
+                           <!-- <aura:if isTrue="true">
+                            	<lightning:inputField fieldName="Status" value="Qualified" value="{!v.leadData.Prospect_Customer__c}"/>
+                            </aura:if> -->
+                        </lightning:recordEditForm>
+             
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        <center>
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeQualifiedModel }"/>
+                        <lightning:button variant="brand"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{!c.submitQualifiedDetails}"/>
+                            </center>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+        <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
+            <!--<c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />-->
+            <c:DRL_ConvertLeadProspect recordId="{!v.recordId}" blnrenderfrompath="true"/>
+        </aura:if>
+        <!--  <aura:if isTrue="{!and(v.getStep=='Converted',v.openPopup=='Open')}">
+            <c:ConvertLeadCustomUI recordId="{!v.recordId}" renderFromPath="true" renderFromPath2="false" />
+        </aura:if> -->
+    </aura:if>
+    
+</aura:component>

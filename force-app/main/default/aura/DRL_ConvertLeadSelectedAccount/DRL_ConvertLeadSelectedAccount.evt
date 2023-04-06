@@ -1,0 +1,15 @@
+<!--
+* 
+* @ Name    :   DRL_ConvertLeadSelectedAccount
+* @ Purpose :   Convert Lead Account Selected Information
+* @ Author  :   Kishore Pedireddy
+*
+*   Date            |  Developer Name               |  Version      |  Changes
+* ======================================================================================================
+*   04-02-2023      |  Kishore Pedireddy            |  1.0          |  Initial Version
+*
+-->
+<aura:event type="APPLICATION" description="Convert Lead Account Selected Information">
+    <aura:attribute name="strId" type="String"/>
+    <aura:attribute name="blnIsExistingAccountSelected" type="Boolean"/>
+</aura:event>

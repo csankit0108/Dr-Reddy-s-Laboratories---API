@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckRunAutomation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+RecordType.DeveloperName = &apos;DRL_Lead&apos;,
+OR(
+TEXT( Status )==&apos;Qualified&apos;
+),
+OR(
+ISBLANK( TEXT(Run_Automation__c) ),
+ISBLANK( TEXT(Prospect_Customer__c) )
+)
+)</errorConditionFormula>
+    <errorMessage>Please fill &quot;Run Automation&quot; and &quot;Prospect/Customer&quot; fields and save.</errorMessage>
+</ValidationRule>
