@@ -270,6 +270,7 @@ public class OpportunityTriggerHandlerTest {
                                         Contact__c=objContact.Id,
                                         CloseDate=system.today(),
                                         StageName='Dropped',
+                                        Reason__c = 'Due to Delay',
                                         Source_type__c ='Primary Source',
                                         Launch_Date__c=system.today(),
                                         TotalOpportunityQuantity=10,
