@@ -28,8 +28,6 @@
 		<members>LeadTriggerHandlerTest</members>
 		<members>Testmomedit</members>
 		<members>OppClassTrigger</members>		
-		<members>DRL_LeadCleanupBatchTest</members>
-		<members>DRL_LeadCleanupBatch</members>
 		<members>DRL_OpportunityContactRoleTriggerHelper</members>
 		<members>DRL_OpportunityContactRoleTriggerTest</members>
 		<members>DRL_OpportunityContactRoleTriggerHandler</members>
