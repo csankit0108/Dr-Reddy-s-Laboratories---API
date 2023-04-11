@@ -28,8 +28,6 @@
 		<members>LeadTriggerHandlerTest</members>
 		<members>Testmomedit</members>
 		<members>OppClassTrigger</members>		
-		<members>DRL_LeadCleanupBatchTest</members>
-		<members>DRL_LeadCleanupBatch</members>
 		<members>DRL_OpportunityContactRoleTriggerHelper</members>
 		<members>DRL_OpportunityContactRoleTriggerTest</members>
 		<members>DRL_OpportunityContactRoleTriggerHandler</members>
@@ -202,6 +200,7 @@
 		<members>CLDRL00022</members>
 		<members>CLDRL00023</members>
 		<members>CLDRL00024</members>
+		<members>CLDRL00025</members>
 		<name>CustomLabel</name>
 	</types>
 	<types>
@@ -218,6 +217,7 @@
 		<members>DRL_ConvertLeadRunAutomationSection</members>
 		<members>leadSalesPath</members>
 		<members>DRL_ConvertLeadSelectedAccount</members>
+		<members>API_Plus_New_OpportunityPage</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
